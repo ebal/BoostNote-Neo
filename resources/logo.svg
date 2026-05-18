@@ -1,0 +1,27 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="96" y1="64" x2="416" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1FC7A6"/>
+      <stop offset="1" stop-color="#075A64"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App icon background -->
+  <rect x="48" y="48" width="416" height="416" rx="104" fill="url(#bg)"/>
+
+  <!-- Note / plane body -->
+  <path d="M132 238L382 132L296 386L248 282L132 238Z" fill="#FFFFFF"/>
+
+  <!-- Fold -->
+  <path d="M248 282L382 132L282 300L296 386L248 282Z" fill="#D9F5F0"/>
+
+  <!-- Inner fold highlight -->
+  <path d="M194 238L382 132L248 282L194 238Z" fill="#EAFBF8"/>
+
+  <!-- Developer cue: right-facing code chevron -->
+  <path d="M144 278L178 304L144 330" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Boost spark / retained motion cue -->
+  <path d="M205 330C180 338 164 356 160 384C187 384 211 371 226 348C215 354 202 357 190 356C197 349 202 340 205 330Z" fill="#FFFFFF"/>
+</svg>
