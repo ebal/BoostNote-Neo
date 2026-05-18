@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.18] - 2026-05-18
+
+### Added
+
+- Update app icon and logo to differentiate from previous versions ([`f2ea7fa0`](../../commit/f2ea7fa0)).
+
 ## [0.17.16] - 2026-05-14
 
 ### Removed
@@ -269,6 +275,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
+[0.17.18]: ../../compare/v0.17.17...v0.17.18
 [0.17.16]: ../../compare/v0.17.15...v0.17.16
 [0.17.15]: ../../compare/v0.17.14...v0.17.15
 [0.17.14]: ../../compare/v0.17.13...v0.17.14
