@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.20] - 2026-05-21
+
+### Fixed
+
+- Produce `.tar.gz` for macOS and `.zip` for Linux to match extension conventions ([`9b70e27b`](../../commit/9b70e27b)).
+
+### Changed
+
+- Remove `ISSUE_TEMPLATE.md` from repository ([`49a793a7`](../../commit/49a793a7)).
+- Update AGENTS.md, UPGRADE.md, CHANGELOG, CODEBASE_ANALYSIS, and license documentation ([`a9d448b6`](../../commit/a9d448b6)).
+
 ## [0.17.19] - 2026-05-21
 
 ### Fixed
@@ -297,6 +308,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.20]: ../../compare/v0.17.19...v0.17.20
 [0.17.9]: ../../compare/v0.17.8...v0.17.9
 [0.17.8]: ../../compare/v0.17.7...v0.17.8
 [0.17.7]: ../../compare/v0.17.6...v0.17.7
