@@ -15,8 +15,6 @@
 
 This is the **legacy** branch of Boostnote — a markdown-first, open-source note-taking application for developers. Notes are stored as local files (`.cson`) in user-defined storage directories.
 
-> The successor app (Boost Note) is at [github.com/BoostIO/BoostNote-App](https://github.com/BoostIO/BoostNote-App).
-
 ---
 
 ## Features
@@ -26,13 +24,13 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 - **Folder & tag-based organization**
 - **Full-text search** across all notes
 - **Multiple storage locations**
-- **21 interface languages**
+- **English interface**
 - **Full keyboard navigation**
 - **Vim/Emacs/Sublime keymaps** for CodeMirror
 
 ---
 
-## Recent updates (v0.16.x)
+## Recent updates (v0.17.x)
 
 | Version | What changed |
 |---------|-------------|
@@ -85,13 +83,13 @@ docker build --platform linux/arm64 \
   -t boostnote-legacy-arm64 .
 ```
 
-### Export packaged .app
+### Export all artifacts
 
 ```bash
 # Intel
-docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/
+docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64.zip ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
 # Apple Silicon
-docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
+docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/ && docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
 ```
 
 ---
@@ -122,7 +120,7 @@ docker run --rm boostnote-legacy npm run ava
 docker run --rm boostnote-legacy npm run jest
 ```
 
-> **Note:** Jest picks up test files inside `dist/Boostnote-darwin-*/` — pre-existing failures with environment mismatch. `createNote`/`createNoteFromUrl` Jest tests also have pre-existing test-data failures. These are unrelated to code changes.
+> **Note:** Jest picks up test files inside `dist/Boostnote-darwin-*/` — pre-existing failures with environment mismatch. `attachmentManagement` test fails with `fs-extra`/`graceful-fs` incompatibility; `normalizeEditorFontFamily` test fails with CSS quoting mismatch. These are unrelated to code changes.
 
 ---
 
@@ -162,5 +160,5 @@ browser/main/index.js (webpack entry → compiled/main.js)
 
 ## License
 
-[GPL v3](./LICENSE)
+[GPL v3](./LICENSE.md)
 

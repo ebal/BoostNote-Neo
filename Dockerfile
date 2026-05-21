@@ -47,18 +47,26 @@ COPY . .
 COPY --from=deps /app/yarn.lock ./yarn.lock
 RUN echo "$GIT_COMMIT" > /app/commit-hash.txt
 
-# Patch CodeMirror's on() function to mark touchstart/touchmove listeners as
-# passive. This eliminates Chrome violations that block smooth scrolling.
-RUN sed -i 's/emitter.addEventListener(type, f, false);/emitter.addEventListener(type, f, type === "touchstart" || type === "touchmove" ? { passive: true } : false);/' node_modules/codemirror/lib/codemirror.js
+# Patch CodeMirror's on() function to mark touchstart/touchmove/mousewheel
+# listeners as passive. This eliminates Chrome violations that block smooth
+# scrolling.
+RUN sed -i 's/emitter.addEventListener(type, f, false);/emitter.addEventListener(type, f, type === "touchstart" || type === "touchmove" || type === "mousewheel" || type === "DOMMouseScroll" ? { passive: true } : false);/' node_modules/codemirror/lib/codemirror.js
 
 # Patch react-sortable-hoc's componentDidMount to register touch events as
 # passive (handleStart/handleMove never call preventDefault).
 RUN sed -i 's/events\[key\], false);/events[key], { passive: true });/' node_modules/react-sortable-hoc/dist/commonjs/SortableContainer/index.js && \
     sed -i 's/events\[key\], false);/events[key], { passive: true });/' node_modules/react-sortable-hoc/dist/es6/SortableContainer/index.js
 
+# Strip sourceMappingURL comments from the external minified library.
+# These comments point to .map files that aren't shipped, causing DevTools
+# console warnings.
+RUN sed -i 's|//# sourceMappingURL=[^ ]*||g' node_modules/@rokt33r/js-sequence-diagrams/dist/sequence-diagram-min.js
+
 # Compile webpack production build, then copy to staging for packaging.
 # The staging copy avoids fs-extra overlayfs bug when electron-packager copies app dir.
 RUN npm run compile && \
+    # Strip sourceMappingURL comments from the compiled bundle (same reason)
+    sed -i 's|//# sourceMappingURL=[^ ]*||g' compiled/main.js && \
   mkdir -p /build && \
   cp -a /app /build/app && \
   cd /build/app && \
