@@ -5,11 +5,11 @@
 <h5 align="center">Built with Electron 11, React + Redux, Webpack 1, and CSSModules.</h5>
 
 <p align="center">
-  <a href="https://github.com/BoostIO/Boostnote">
+  <a href="https://github.com/ebal/BoostNote-Legacy">
     <img src="https://img.shields.io/badge/status-maintenance-yellow" alt="Maintenance" />
   </a>
-  <a href="https://github.com/BoostIO/Boostnote/releases">
-    <img src="https://img.shields.io/github/v/release/BoostIO/Boostnote" alt="Release" />
+  <a href="https://github.com/ebal/BoostNote-Legacy/releases">
+    <img src="https://img.shields.io/github/v/release/ebal/BoostNote-Legacy" alt="Release" />
   </a>
 </p>
 
