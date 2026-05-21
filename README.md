@@ -36,6 +36,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.19 | Patch CodeMirror and react-sortable-hoc touch listeners as passive; cleanup repo and workflow |
 | 0.17.18 | New app icon and logo, fix mouse wheel scroll in markdown editor-only mode |
 | 0.17.16 | Remove appdmg dead code, strip dead files from git history (23→18 MB), fix prettier |
 | 0.17.14 | Remove snap, docs, FAQ, TASKS, non-en locales, VSCode gitignore, stale code_style refs |

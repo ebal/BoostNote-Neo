@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.19] - 2026-05-21
+
+### Fixed
+
+- Patch CodeMirror and react-sortable-hoc to register `touchstart`/`touchmove` listeners as passive, eliminating Chrome [Violation] warnings that block smooth scrolling in the editor ([`4b0d0e72`](../../commit/4b0d0e72)).
+- Remove GitHub issue tracker link from Help/About dialog ([`76715b83`](../../commit/76715b83)).
+
+### Changed
+
+- Replace build-macos-dmgs CI workflow with generic build-boostnote-app workflow ([`0612c9ff`](../../commit/0612c9ff)).
+- Remove `FUNDING.yml`, `.snapcraft/`, and `.vscode/` directories from repository ([`3893a1eb`](../../commit/3893a1eb)).
+- Add comprehensive codebase analysis document ([`b4c17ef6`](../../commit/b4c17ef6)).
+- Update badge URLs to point to ebal/BoostNote-Legacy fork ([`2ae17196`](../../commit/2ae17196)).
+
 ## [0.17.18] - 2026-05-18
 
 ### Added
@@ -275,6 +289,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
+[0.17.19]: ../../compare/v0.17.18...v0.17.19
 [0.17.18]: ../../compare/v0.17.17...v0.17.18
 [0.17.16]: ../../compare/v0.17.15...v0.17.16
 [0.17.15]: ../../compare/v0.17.14...v0.17.15
