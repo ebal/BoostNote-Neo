@@ -400,7 +400,6 @@ Host Node.js incompatibility issues (node_modules for Linux Docker only).
 ### **Contributing Guidelines**
 ✅ **Strong**:
 - Issue template (`ISSUE_TEMPLATE.md`)
-- Pull request template (`PULL_REQUEST_TEMPLATE.md`)
 - **Docker-only mandate** clearly stated in `contributing.md`
 - Test/lint requirements before merge
 - Copyright disclaimer

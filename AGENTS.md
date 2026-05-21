@@ -14,8 +14,8 @@
 | AVA only | `docker run --rm boostnote-legacy npm run ava` |
 | Jest only | `docker run --rm boostnote-legacy npm run jest` |
 | Compile (webpack) | `docker run --rm boostnote-legacy npm run compile` |
-| Export .app (Intel) | `docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/` |
-| Export .app (arm64) | `docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/` |
+| Export all (Intel) | `docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64.zip ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-linux-x64.tar.gz ./dist/` |
+| Export all (arm64) | `docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/ && docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/` |
 | Dev | `docker run --rm boostnote-legacy npm run dev` (WDS :8080 + Electron HMR) |
 
 Without `GIT_COMMIT` build-arg → About dialog shows "unknown".

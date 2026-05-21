@@ -51,7 +51,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 - Remove `docs/` directory — build/debug guides in 8 languages (2-4% old), no code references.
 - Remove 20 non-English locale files — only `en` is registered in `Languages.js`; files were dead.
 - Remove stale `.vscode` entry from `.gitignore` — no `.vscode/` directory exists.
-- Remove stale `docs/code_style.md` references from `contributing.md` and `PULL_REQUEST_TEMPLATE.md`.
+- Remove stale `docs/code_style.md` references from `contributing.md`.
 
 ## [0.17.13] - 2026-05-14
 

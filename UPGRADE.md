@@ -7,7 +7,7 @@
 - Delete `./dist/` before every build.
 - **Export after every build** — copy the packaged `.app` to the host `./dist/` immediately (see AGENTS.md for exact commands).
 - Keep git commits small and reversible.
-- The Docker container provides Node 8.17 (Debian Stretch). Host Node.js is incompatible.
+- The Docker container provides Node 22 (Debian Bookworm). Host Node.js is incompatible.
 
 ## Known versions
 
@@ -19,7 +19,9 @@
 | 0.16.4 | 5.0.13 | 73.0.3683.121 | 12.0.0 | 7.3.492.27-electron.0 | stable |
 | 0.16.5 | 5.0.13 | 73.0.3683.121 | 12.0.0 | 7.3.492.27-electron.0 | stable |
 | 0.16.6 | 5.0.13 | 73.0.3683.121 | 12.0.0 | 7.3.492.27-electron.0 | stable (intel branch) |
-| 0.16.7 | 11.5.0 | 87.0.4280.141 | 12.18.3 | 8.7 (arm64 branch) | current |
+| 0.16.7 | 11.5.0 | 87.0.4280.141 | 12.18.3 | 8.7 (arm64) | archived |
+| 0.17.9 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current (node:22) |
+| 0.17.19 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current |
 
 ## Iterations
 
@@ -197,6 +199,39 @@ Status: successful
 | `modal.js` | `ReactDOM.render()` return value replaced with `React.createRef()`; `close()` uses `this.setState()` |
 | Lifecycle methods | `componentWillReceiveProps`/`componentWillUpdate` → `UNSAFE_*` in 4 files; `eslint-disable-next-line camelcase` for Docker ESLint compat |
 | `formatHTML.js` | `/* global _ */` — lodash is a runtime global, not a bundle import |
+
+### 0.17.9 to 0.17.19 — Docker node:22, CI rebuild, repo cleanup, passive touch fix
+
+Status: successful
+
+- **source version**: 0.17.9 (Electron 11.5.0, Docker node:20-bookworm)
+- **target version**: 0.17.19 (Electron 11.5.0 — no Electron change)
+- **key changes**:
+  - Docker base image upgraded from `node:20-bookworm` to `node:22-bookworm`
+  - macOS distribution format changed from `.dmg` to `.zip` of `.app` bundle
+  - Linux distribution format: `tar.gz` of Electron app directory
+  - Dead files removed: `snap/`, `FAQ.md`, `TASKS.md`, `docs/` (18 files), 20 non-English locale files, `appdmg.json`, `dmg.icns`
+  - Git history rewritten via `git-filter-repo` — removed 27 dead paths, `.git` 23 MB → 18 MB
+  - CI workflow: single `build-apps` job on `ubuntu-24.04`, exports all 5 artifacts
+  - `MarkdownPreview.js`: scroll/resize listeners marked `{ passive: true }`
+  - CodeMirror + react-sortable-hoc patched via Dockerfile `sed` for passive touch events
+  - `help.md` version string corrected; CHANGELOG SHA references remapped after filter-repo
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
+- **test command**: `docker run --rm boostnote-legacy npm test`
+- **verification result**: AVA 14/14 clean; Jest pre-existing failures only; lint 7 pre-existing errors only
+- **known issues**: same pre-existing Jest failures as 0.17.9
+- **rollback commit**: `git checkout v0.17.9`
+
+| Area | Change |
+|---|---|
+| Docker | `node:20-bookworm` → `node:22-bookworm`, unified multi-arch Dockerfile |
+| macOS build | `.dmg` → `.zip` of `.app` (no macOS host dependency) |
+| Linux build | Flat `.tar.gz` (no `.deb`/`.rpm`) |
+| CI | Single `build-apps` job on `ubuntu-24.04`, Node 24 action versions |
+| Git | `git-filter-repo` stripped dead paths; CHANGELOG SHAs remapped |
+| Locales | 20 non-English files deleted; `Languages.js` only registers `['en']` |
+| Scroll | `MarkdownPreview.js` iframe scroll/resize → `{ passive: true }` |
+| Touch events | Dockerfile `sed` patches CodeMirror `on()` + react-sortable-hoc `componentDidMount` for passive touch |
 
 ---
 
