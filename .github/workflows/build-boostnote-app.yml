@@ -1,0 +1,156 @@
+name: Build Boostnote App Packages
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  compute-version:
+    name: Compute version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Compute version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  build-darwin-x64:
+    name: Build Intel macOS app
+    runs-on: ubuntu-24.04
+    needs: compute-version
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build Intel macOS app in Docker
+        run: |
+          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-legacy .
+          docker create --name boostnote-x64 boostnote-legacy
+          mkdir -p dist
+
+      - name: Export Intel macOS artifacts
+        run: |
+          docker cp boostnote-x64:/app/dist/Boostnote-darwin-x64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.zip
+          docker cp boostnote-x64:/app/dist/Boostnote-darwin-x64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.tar.gz
+          docker rm boostnote-x64
+
+      - name: Upload Intel macOS artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: boostnote-darwin-x64
+          path: |
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.zip
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.tar.gz
+
+  build-darwin-arm64:
+    name: Build Apple Silicon macOS app
+    runs-on: ubuntu-24.04
+    needs: compute-version
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU for arm64 builds
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: linux/arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build Apple Silicon macOS app in Docker
+        run: |
+          docker build --platform linux/arm64 --build-arg GIT_COMMIT=${{ github.sha }} --build-arg BUILDARCH=arm64 -t boostnote-legacy-arm64 .
+          docker create --name boostnote-arm64 boostnote-legacy-arm64
+          mkdir -p dist
+
+      - name: Export Apple Silicon macOS artifacts
+        run: |
+          docker cp boostnote-arm64:/app/dist/Boostnote-darwin-arm64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.zip
+          docker cp boostnote-arm64:/app/dist/Boostnote-darwin-arm64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.tar.gz
+          docker rm boostnote-arm64
+
+      - name: Upload Apple Silicon macOS artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: boostnote-darwin-arm64
+          path: |
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.zip
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.tar.gz
+
+  build-linux-x64:
+    name: Build Linux x64 app
+    runs-on: ubuntu-24.04
+    needs: compute-version
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build Linux x64 app in Docker
+        run: |
+          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-legacy-linux .
+          docker create --name boostnote-linux boostnote-legacy-linux
+          mkdir -p dist
+
+      - name: Export Linux x64 artifacts
+        run: |
+          docker cp boostnote-linux:/app/dist/Boostnote-linux-x64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.tar.gz
+          docker cp boostnote-linux:/app/dist/Boostnote-linux-x64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.zip
+          docker rm boostnote-linux
+
+      - name: Upload Linux x64 artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: boostnote-linux-x64
+          path: |
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.tar.gz
+            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.zip
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-24.04
+    needs: [compute-version, build-darwin-x64, build-darwin-arm64, build-linux-x64]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: dist-artifacts
+
+      - name: Flatten artifacts directory
+        run: |
+          mkdir -p release-artifacts
+          find dist-artifacts -type f -name "*.zip" -o -name "*.tar.gz" | xargs -I {} cp {} release-artifacts/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.compute-version.outputs.version }}
+          name: Boostnote v${{ needs.compute-version.outputs.version }}
+          generate_release_notes: true
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
