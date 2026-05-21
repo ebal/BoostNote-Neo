@@ -38,14 +38,6 @@ class InfoTab extends React.Component {
         </div>
 
         <ul styleName='list'>
-          <li>
-            <a
-              href='https://github.com/BoostIO/Boostnote/issues'
-              onClick={e => this.handleLinkClick(e)}
-            >
-              {i18n.__('GitHub')}
-            </a>
-          </li>
           <li styleName='cc'>{i18n.__('Copyright (C) 2017 - 2020 BoostIO')}</li>
           <li styleName='cc'>{i18n.__('License: GPL v3')}</li>
         </ul>
