@@ -75,11 +75,15 @@ RUN npm run compile && \
   PACK_OUT_DIR=/build/out-linux grunt pack:linux && \
   mkdir -p /app/dist && \
   tar -czf /app/dist/Boostnote-linux-x64.tar.gz -C /build/out-linux/Boostnote-linux-x64 . && \
+  (cd /build/out-linux/Boostnote-linux-x64 && zip -r -y -q /app/dist/Boostnote-linux-x64.zip .) && \
   cd /build/out/Boostnote-darwin-$ARCH_SUFFIX && \
-  zip -r -y -q /app/dist/Boostnote-darwin-$ARCH_SUFFIX.zip Boostnote.app
+  zip -r -y -q /app/dist/Boostnote-darwin-$ARCH_SUFFIX.zip Boostnote.app && \
+  tar -czf /app/dist/Boostnote-darwin-$ARCH_SUFFIX.tar.gz Boostnote.app
 
 # Output:
 #   /app/dist/Boostnote-darwin-{x64,arm64}/Boostnote.app
 #   /app/dist/Boostnote-darwin-{x64,arm64}.zip
+#   /app/dist/Boostnote-darwin-{x64,arm64}.tar.gz
 #   /app/dist/Boostnote-linux-x64.tar.gz
+#   /app/dist/Boostnote-linux-x64.zip
 CMD ["sh", "-c", "ls -la dist/"]
