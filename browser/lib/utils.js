@@ -152,9 +152,14 @@ export function humanFileSize(bytes) {
   return bytes.toFixed(1) + ' ' + units[u]
 }
 
+export function escapeMarkdownPipe(str) {
+  return str.replace(/\|/g, '\\|')
+}
+
 export default {
   lastFindInArray,
   escapeHtmlCharacters,
+  escapeMarkdownPipe,
   isObjectEqual,
   isMarkdownTitleURL,
   humanFileSize

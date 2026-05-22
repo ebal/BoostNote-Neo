@@ -11,7 +11,7 @@ import TextEditorInterface from 'browser/lib/TextEditorInterface'
 import eventEmitter from 'browser/main/lib/eventEmitter'
 import iconv from 'iconv-lite'
 
-import { isMarkdownTitleURL } from 'browser/lib/utils'
+import { isMarkdownTitleURL, escapeMarkdownPipe } from 'browser/lib/utils'
 import styles from '../components/CodeEditor.styl'
 const { ipcRenderer, remote, clipboard } = require('electron')
 import normalizeEditorFontFamily from 'browser/lib/normalizeEditorFontFamily'
@@ -1238,10 +1238,7 @@ export default class CodeEditor extends React.Component {
             body,
             'text/html'
           )
-          const escapePipe = str => {
-            return str.replace('|', '\\|')
-          }
-          const linkWithTitle = `[${escapePipe(
+          const linkWithTitle = `[${escapeMarkdownPipe(
             parsedBody.title
           )}](${pastedTxt})`
           resolve(linkWithTitle)
