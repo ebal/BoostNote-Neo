@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.21] - 2026-05-22
+
+### Fixed
+
+- Use passive event listeners for mousewheel and touch events; strip sourcemaps from production build; remove dead files ([`a663bb7f`](../../commit/a663bb7f)).
+
+### Changed
+
+- Bump `fsevents` from 1.2.4 to 1.2.13 ([`935079e9`](../../commit/935079e9)).
+- Bump `uuid` from 3.4.0 to 14.0.0 ([`e3e6da9a`](../../commit/e3e6da9a)).
+- Bump `http-proxy` from 1.17.0 to 1.18.1 ([`b4b8348d`](../../commit/b4b8348d)).
+
 ## [0.17.20] - 2026-05-21
 
 ### Fixed
@@ -308,6 +320,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.21]: ../../compare/v0.17.20...v0.17.21
 [0.17.20]: ../../compare/v0.17.19...v0.17.20
 [0.17.9]: ../../compare/v0.17.8...v0.17.9
 [0.17.8]: ../../compare/v0.17.7...v0.17.8

@@ -1,7 +1,7 @@
 {
   "name": "boost",
   "productName": "Boostnote",
-  "version": "0.17.20",
+  "version": "0.17.21",
   "main": "index.js",
   "description": "Boostnote",
   "license": "GPL-3.0",
@@ -123,7 +123,7 @@
     "turndown-plugin-gfm": "^1.0.2",
     "typo-js": "^1.0.3",
     "unique-slug": "2.0.0",
-    "uuid": "^14.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "ava": "^0.25.0",

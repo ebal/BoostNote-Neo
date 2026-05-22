@@ -34,6 +34,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.21 | Bump deps (uuid, fsevents, http-proxy); fix passive event listeners; strip sourcemaps |
 | 0.17.20 | Fix extension convention for dist artifacts (`.tar.gz` macOS, `.zip` Linux); remove ISSUE_TEMPLATE; update docs |
 | 0.17.19 | Patch CodeMirror and react-sortable-hoc touch listeners as passive; cleanup repo and workflow |
 | 0.17.18 | New app icon and logo, fix mouse wheel scroll in markdown editor-only mode |
