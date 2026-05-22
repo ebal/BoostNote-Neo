@@ -153,7 +153,7 @@ export function humanFileSize(bytes) {
 }
 
 export function escapeMarkdownPipe(str) {
-  return str.replace(/\|/g, '\\|')
+  return str.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
 }
 
 export default {
