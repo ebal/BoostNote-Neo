@@ -30,6 +30,10 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 ---
 
+![BoostNote Markdown](./Screenshots/BoostNote_Markdown.png)
+
+[More screenshots](./screenshots.md)
+
 ## Recent updates (v0.17.x)
 
 | Version | What changed |
