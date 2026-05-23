@@ -37,7 +37,7 @@ module.exports = function sanitizePlugin(md, options) {
   })
 }
 
-const tagRegex = /<([A-Z][A-Z0-9]*)\s*((?:\s*[A-Z][A-Z0-9]*(?:=("|')(?:[^\3]+?)\3)?)*)\s*\/?>|<\/([A-Z][A-Z0-9]*)\s*>/i
+const tagRegex = /<([A-Z][A-Z0-9]*)\b([^>]*)\/?>|<\/([A-Z][A-Z0-9]*)\s*>/i
 const attributesRegex = /([A-Z][A-Z0-9]*)(?:=("|')([^\2]+?)\2)?/gi
 
 function sanitizeInline(html, options) {
