@@ -113,7 +113,7 @@ function naughtyHRef(href, options) {
     // No href
     return false
   }
-  href = href.replace(/<\!\-\-.*?\-\-\>/g, '')
+  href = href.replace(/<\!\-\-[\s\S]*?\-\-\>/g, '')
 
   const matches = href.match(/^([a-zA-Z]+)\:/)
   if (!matches) {
