@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.22] - 2026-05-23
+
+### Fixed
+
+- Fix multiple inefficient regular expressions flagged by CodeQL ([`93fe76ff`](../../commit/93fe76ff), [`bf831ee8`](../../commit/bf831ee8), [`e8fd5085`](../../commit/e8fd5085)).
+- Add missing workflow permissions to satisfy CodeQL security analysis ([`651967fb`](../../commit/651967fb)).
+- Fix incomplete string escaping in regex preventing ReDoS vulnerability ([`b8f67e84`](../../commit/b8f67e84)).
+- Escape pipe characters in fetched URL titles to fix incomplete sanitization vulnerability ([`286c6e8e`](../../commit/286c6e8e)).
+
+### Changed
+
+- Force transitive dependency versions via yarn resolutions: lodash ^4.17.21, json-schema ^0.4.0, qs ^6.5.3, minimist ^1.2.8, y18n ^3.2.2, word-wrap ^1.2.4, json5 ^1.0.2 ([`cbafd647`](../../commit/cbafd647), [`74385f9c`](../../commit/74385f9c), [`0268afd8`](../../commit/0268afd8), [`e1c85cdb`](../../commit/e1c85cdb), [`e5800111`](../../commit/e5800111), [`898377c9`](../../commit/898377c9), [`eb5ab69e`](../../commit/eb5ab69e)).
+- Bump `ini` from 1.3.5 to 1.3.8 ([`52b2d4bf`](../../commit/52b2d4bf)).
+- Update escapeMarkdownPipe test expectations for backslash-aware escapes ([`b10ba783`](../../commit/b10ba783)).
+
 ## [0.17.21] - 2026-05-22
 
 ### Fixed
@@ -320,6 +335,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.22]: ../../compare/v0.17.21...v0.17.22
 [0.17.21]: ../../compare/v0.17.20...v0.17.21
 [0.17.20]: ../../compare/v0.17.19...v0.17.20
 [0.17.9]: ../../compare/v0.17.8...v0.17.9
