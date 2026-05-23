@@ -70,7 +70,29 @@ Webpack aliases: `lib` → `./lib`, `browser` → `./browser`. These are used th
 
 - **Dialog API:** Electron 9+ removed sync/callback forms. Use `showMessageBoxSync` and Promise-based `showOpenDialog`/`showSaveDialog`.
 - **webPreferences:** `enableRemoteModule: true`, `nodeIntegration: true`, `contextIsolation: false` are required.
-- Node 14 (Debian bullseye) inside Docker; Electron 11.5.0 (Chrome 87, Node 12) at runtime.
+- Node 22 (Debian bookworm) inside Docker for the build toolchain; Electron 11.5.0 (Chrome 87, Node 12) at runtime. Anything that runs in the renderer must stay compatible with Node 12 / Chrome 87, even though Docker has a newer Node.
+
+## Dependency policy
+
+- **`resolutions` block in `package.json`** is the canonical place to force-upgrade vulnerable transitive deps. Adding a new entry there + running `yarn install` regenerates `yarn.lock` with a single hoisted version. Use it whenever the parent package cannot be bumped (most of the Webpack 1 / Babel 6 stack).
+- Current entries (CVE-driven): `json5 ^1.0.2`, `word-wrap ^1.2.4`, `y18n ^3.2.2`, `minimist ^1.2.8`, `qs ^6.5.3`, `json-schema ^0.4.0`, `lodash ^4.17.21`.
+- **`uuid` is pinned to `^9.0.1`.** Do NOT bump past `12.x`: uuid `13.0.0+` is pure ESM with no `main` field, and Webpack 1 cannot resolve it. The only production consumer is `browser/lib/keygen.js`, which uses `const { v4: uuidv4 } = require('uuid')`. Dependabot PRs that raise uuid to 13+ must be closed or downgraded.
+- **Webpack 1 dep ceilings** (general rule): if a dep ships pure ESM (`"type": "module"` and no `main`), it will fail to resolve. Always check the candidate's `package.json` before accepting a major bump.
+
+## Quick verify loop for dependency changes
+
+Full `docker build .` takes ~5 min (compile + electron-packager + grunt pack). For iterative dependency work, build the deps stage once and reuse it:
+
+```bash
+# One-time: build deps-only image
+docker build --target deps -t bn-deps .
+
+# Per iteration: edit package.json resolutions, then:
+docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
+  sh -c 'yarn install --ignore-engines && npm run compile'
+```
+
+The `-v /app/node_modules` anonymous volume preserves the container's `node_modules` while bind-mounting the host source over `/app`. `npm run compile` reuses the cached deps and finishes in ~5s; it is the fastest reliable signal that a dep change has not broken the webpack bundle. Run the full `docker build .` once at the end to validate electron-packager.
 
 ## Test quirks (pre-existing failures — do not fix)
 
@@ -86,3 +108,18 @@ Webpack aliases: `lib` → `./lib`, `browser` → `./browser`. These are used th
 - Unused vars/undef are warnings, not errors.
 - **Do NOT fix** the 6 pre-existing `prettier/prettier` errors in `MarkdownPreview.js`, `markdown.js`, `store.js` — host prettier (1.18) and Docker prettier (1.19) disagree; fixing one breaks the other.
 - Pre-commit hook runs `npm run lint` (husky).
+
+## CodeQL / security history
+
+- GitHub Advanced Security CodeQL scans land on `main` as commits titled `Potential fix for code scanning alert no. N` (Copilot Autofix). These are usually safe ReDoS / regex tightenings, but each one mutates a parser/sanitizer regex — review before assuming the diff is harmless, and run the full docker build afterwards. Recent sweep: alerts 14, 15, 16, 20, 24 (May 2026).
+- `js/incomplete-sanitization` was hit in `browser/components/CodeEditor.js` (`escapePipe`). The fix lives in `browser/lib/utils.js` as `escapeMarkdownPipe(str)` — it escapes backslashes before pipes so the encoding is reversible. Unit-tested in `tests/lib/escapeMarkdownPipe.test.js`. Reuse that helper rather than inlining new escape logic.
+
+## Outstanding security work (next priorities)
+
+Ordered by runtime impact (renderer-bundled first, build-only last):
+
+1. **`sanitize-html` 1.27.5 → 2.x** — renderer-bundled, multiple CVEs in 1.x. Major API differences; needs a code-level audit of every `sanitize-html` call site before bumping.
+2. **`markdown-it` 5.1.0 and 8.4.2** still pinned by transitive consumers (`@enyaxu/markdown-it-anchor@5`, etc.); resolve to the already-locked 12.3.2 via the `resolutions` block once the parser-plugin chain is verified.
+3. **`moment` 2.22.2 → 2.30.1** — 2.30.1 is already in the lock from a different chain; collapse via `resolutions: { moment: "^2.30.1" }`.
+4. **Build-only (dev-time risk only)**: `tough-cookie ^4.1.3`, `ws ^8.17.1`, `got ^11.8.5`, `node-fetch ^2.6.7`, `underscore ^1.12.1`. None ship in the production bundle, but they execute during `npm install` / build.
+5. **`webpack-dev-server@1.16.5`** is EOL. Only used by `npm run watch`. Out of scope for incremental bumps — would require a webpack 1 → 5 migration.
