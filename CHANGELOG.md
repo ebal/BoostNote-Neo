@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.23] - 2026-05-24
+
+### Fixed
+
+- Fix multiple inefficient regular expressions flagged by CodeQL (alerts 14, 15, 16, 24, 28, 32, 36, 39, 41, 43) ([`86a50f09`](../../commit/86a50f09), [`1e41221f`](../../commit/1e41221f), [`084ab2f6`](../../commit/084ab2f6), [`77654c43`](../../commit/77654c43), [`9d40325d`](../../commit/9d40325d), [`277002c0`](../../commit/277002c0), [`14fe3cfa`](../../commit/14fe3cfa), [`434ef376`](../../commit/434ef376), [`9dc6766f`](../../commit/9dc6766f), [`66158735`](../../commit/66158735)).
+- Fix bad HTML filtering regexp flagged by CodeQL (alert 20) ([`d6d405ac`](../../commit/d6d405ac)).
+- Fix incomplete multi-character sanitization flagged by CodeQL (alert 31) ([`cfa98036`](../../commit/cfa98036)).
+
+### Changed
+
+- Add screenshots and screenshots.md with descriptions ([`5fc6cf16`](../../commit/5fc6cf16)).
+- Refresh CLAUDE.md with dependency policy, verify loop, and security backlog ([`0b87495a`](../../commit/0b87495a)).
+
 ## [0.17.22] - 2026-05-23
 
 ### Fixed
@@ -335,6 +348,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.23]: ../../compare/v0.17.22...v0.17.23
 [0.17.22]: ../../compare/v0.17.21...v0.17.22
 [0.17.21]: ../../compare/v0.17.20...v0.17.21
 [0.17.20]: ../../compare/v0.17.19...v0.17.20
