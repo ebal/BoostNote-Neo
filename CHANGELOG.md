@@ -6,6 +6,10 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 ## [0.17.26] - 2026-05-24
 
+### Fixed
+
+- Force `set-getter` to ^0.1.1 via yarn resolutions (CVE-2024-21528 — prototype pollution; reaches the renderer through `markdown-toc` → `lazy-cache` via Electron's `nodeIntegration` runtime require) ([`14b058fc`](../../commit/14b058fc)).
+
 ### Changed
 
 - Drop `devtron` (deprecated Electron debug panel, never imported) ([`3fc09773`](../../commit/3fc09773)).
@@ -15,6 +19,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 - Drop `react-input-autosize` (never imported) ([`0d05c0af`](../../commit/0d05c0af)).
 - Drop `.deb`/`.rpm` installer scaffolding ([`e03c3d3e`](../../commit/e03c3d3e)).
 - Force `brace-expansion` to ^1.1.13 via yarn resolutions (CVE-2025-5889) ([`03c027a6`](../../commit/03c027a6)).
+- Log the 0.17.19 → 0.17.26 dependency-hardening sweep in `UPGRADE.md` ([`940476ed`](../../commit/940476ed)).
 
 ## [0.17.25] - 2026-05-24
 
@@ -28,6 +33,31 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 - Add screenshots and screenshots.md with descriptions ([`5fc6cf16`](../../commit/5fc6cf16)).
 - Refresh CLAUDE.md with dependency policy, verify loop, and security backlog ([`0b87495a`](../../commit/0b87495a)).
+
+## [0.17.24] - 2026-05-24
+
+### Fixed
+
+- Force `sockjs` to ^0.3.20 via yarn resolutions (CVE-2020-7693 — DoS on the HMR dev server via malformed `Upgrade: websocket` header) ([`15f5ccbc`](../../commit/15f5ccbc)).
+- Force `serve-static` to ^1.16.0 via yarn resolutions (CVE-2024-43800 — template injection / XSS in the redirect HTML body, dev-server only) ([`b15c4047`](../../commit/b15c4047)).
+- Force `tmp` to ^0.2.4 via yarn resolutions (GHSA-52f5-9888-hmc6 — arbitrary temp file/directory write via symlink `dir` parameter; affects the `asar` build helpers and inquirer's `external-editor`) ([`01ae1a67`](../../commit/01ae1a67)).
+- Force `node-fetch` to ^2.6.7 via yarn resolutions (CVE-2022-0235 redirect info disclosure + CVE-2020-15168 unbounded body DoS; dev/build-only via `isomorphic-fetch`) ([`ba35d819`](../../commit/ba35d819)).
+- Force `tough-cookie` to ^4.1.3 via yarn resolutions (CVE-2023-26136 prototype pollution; build-only path via `jsdom` 9 / `request`) ([`ca7a8342`](../../commit/ca7a8342)).
+
+### Changed
+
+- Bump `mermaid` to `~9.1.7` (tier-A target — last 9.x release before the v9.2 monorepo / lazy-load `import()` rewrite that Webpack 1 cannot resolve; 8.x is EOL with several DOMPurify-related XSS advisories) ([`1c34485f`](../../commit/1c34485f)).
+- Force `moment` to ^2.30.1 via yarn resolutions (collapses the legacy `^2.10.2` pin pulled in by `chart.js@2.9.4`; patches CVE-2017-18214 ReDoS + CVE-2022-24785 path traversal) ([`40c9efc7`](../../commit/40c9efc7)).
+
+## [0.17.23] - 2026-05-23
+
+### Fixed
+
+- Force `cookie` to ^0.7.0 via yarn resolutions (CVE-2024-47764 — cookie name injection / prototype pollution; dev-only HMR path via `webpack-dev-server` → `express`) ([`f2998c52`](../../commit/f2998c52)).
+
+### Changed
+
+- Bump `highlight.js` to ^10.4.1 (9.x reached end-of-life and is no longer receiving security updates; v10 keeps the `highlightAuto(code, subset)` signature and `res.language` field unchanged. Verified every entry in `browser/lib/CMLanguageList.js` resolves via `hljs.getLanguage(name)` in v10.7.3.) ([`5bc774c0`](../../commit/5bc774c0)).
 
 ## [0.17.22] - 2026-05-23
 
