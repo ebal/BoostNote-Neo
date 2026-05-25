@@ -76,7 +76,7 @@ Webpack aliases: `lib` → `./lib`, `browser` → `./browser`. These are used th
 
 - **`resolutions` block in `package.json`** is the canonical place to force-upgrade vulnerable transitive deps. Adding a new entry there + running `yarn install` regenerates `yarn.lock` with a single hoisted version. Use it whenever the parent package cannot be bumped (most of the Webpack 1 / Babel 6 stack).
 - Current entries (CVE-driven). Group by reason so the next maintainer doesn't have to rediscover the why:
-  - **Renderer / runtime-touching**: `lodash ^4.17.21`, `moment ^2.30.1`, `highlight.js ^10.4.1`. All loaded via `<script>` externals or bundled into `compiled/main.js`.
+  - **Renderer / runtime-touching**: `lodash ^4.17.21`, `moment ^2.30.1`, `highlight.js ^10.4.1`, `set-getter ^0.1.1` (resolved at renderer runtime via `markdown-toc` → `lazy-cache`; the package is in `webpack-skeleton.js#externals` but Electron's `nodeIntegration: true` loads it through Node's `require`). All loaded via `<script>` externals or bundled into `compiled/main.js`.
   - **Build-time only (loader / packager chain)**: `json5 ^1.0.2`, `word-wrap ^1.2.4`, `y18n ^3.2.2`, `minimist ^1.2.8`, `qs ^6.5.3`, `json-schema ^0.4.0`, `tmp ^0.2.4`, `brace-expansion ^1.1.13`, `node-fetch ^2.6.7`, `tough-cookie ^4.1.3`.
   - **Dev-server (HMR) only**: `cookie ^0.7.0`, `serve-static ^1.16.0`, `sockjs ^0.3.20`. Loaded only by `npm run watch` / `dev-scripts/dev.js` through `webpack-dev-server@1.16.5`.
 - **Pinned direct deps with a documented ceiling**:
