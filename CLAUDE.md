@@ -75,9 +75,20 @@ Webpack aliases: `lib` → `./lib`, `browser` → `./browser`. These are used th
 ## Dependency policy
 
 - **`resolutions` block in `package.json`** is the canonical place to force-upgrade vulnerable transitive deps. Adding a new entry there + running `yarn install` regenerates `yarn.lock` with a single hoisted version. Use it whenever the parent package cannot be bumped (most of the Webpack 1 / Babel 6 stack).
-- Current entries (CVE-driven): `json5 ^1.0.2`, `word-wrap ^1.2.4`, `y18n ^3.2.2`, `minimist ^1.2.8`, `qs ^6.5.3`, `json-schema ^0.4.0`, `lodash ^4.17.21`.
-- **`uuid` is pinned to `^9.0.1`.** Do NOT bump past `12.x`: uuid `13.0.0+` is pure ESM with no `main` field, and Webpack 1 cannot resolve it. The only production consumer is `browser/lib/keygen.js`, which uses `const { v4: uuidv4 } = require('uuid')`. Dependabot PRs that raise uuid to 13+ must be closed or downgraded.
-- **Webpack 1 dep ceilings** (general rule): if a dep ships pure ESM (`"type": "module"` and no `main`), it will fail to resolve. Always check the candidate's `package.json` before accepting a major bump.
+- Current entries (CVE-driven). Group by reason so the next maintainer doesn't have to rediscover the why:
+  - **Renderer / runtime-touching**: `lodash ^4.17.21`, `moment ^2.30.1`, `highlight.js ^10.4.1`. All loaded via `<script>` externals or bundled into `compiled/main.js`.
+  - **Build-time only (loader / packager chain)**: `json5 ^1.0.2`, `word-wrap ^1.2.4`, `y18n ^3.2.2`, `minimist ^1.2.8`, `qs ^6.5.3`, `json-schema ^0.4.0`, `tmp ^0.2.4`, `brace-expansion ^1.1.13`, `node-fetch ^2.6.7`, `tough-cookie ^4.1.3`.
+  - **Dev-server (HMR) only**: `cookie ^0.7.0`, `serve-static ^1.16.0`, `sockjs ^0.3.20`. Loaded only by `npm run watch` / `dev-scripts/dev.js` through `webpack-dev-server@1.16.5`.
+- **Pinned direct deps with a documented ceiling**:
+  - **`uuid` is pinned to `^9.0.1`.** Do NOT bump past `12.x`: uuid `13.0.0+` is pure ESM with no `main` field, and Webpack 1 cannot resolve it. Verified upgrade target for the future is `^11.1.1` (still has CJS `main`); bumping past that needs the webpack 5 migration. Production consumer: `browser/lib/keygen.js` — `const { v4: uuidv4 } = require('uuid')`.
+  - **`mermaid` is pinned to `~9.1.7`** (tier-A target chosen during the 8 → 9 investigation — last 9.x release before the v9.2 monorepo + lazy-load `import()` rewrite that Webpack 1 cannot resolve). Tiers B (`~9.3.0`) and C (`^9.4.3`) are still upgrade candidates if a tier-A → tier-B smoke pass is performed; v10 is blocked by the same ESM-only / pure-`exports` cliff that blocks `uuid 13+`.
+  - **`highlight.js` is pinned to `^10.4.1`** (9.x is EOL). 11.x is ESM-only and blocked by the Webpack 1 cliff.
+- **Skipped CVE bumps (documented "do nothing")**:
+  - **`underscore`** — global `^1.12.1` resolution would force `nomnom` (runtime via `jsonlint-mod`) and old `argparse` (runtime via `markdown-toc` → `remarkable`) to underscore 1.10+, which removed `_.pluck` / `_.indexBy`. CVE-2021-23358 needs attacker-controlled `_.template` input; Boostnote never feeds user input into `_.template`. Skipped.
+  - **`loader-utils`** — no patched 0.2.x release exists. Bumping to ^1.4.1 requires `babel-loader 7+`, `css-loader 1+`, `style-loader 1+`, `stylus-loader 3+`, i.e. the webpack 1 → 2 migration. CVE-2022-37601 / -37603 not exploitable on Boostnote's build path (no user-controlled query strings). Skipped.
+  - **`minimatch ^3.0.2`** — `^3.x` consumers already resolve to 3.1.5 via hoist; the only sub-target version is `0.3.0` under `stylus@0.52.4 > glob@3.2.x`, which would break stylus's build if forced. ReDoS not exploitable on stylus's hard-coded internal patterns. Skipped.
+- **Webpack 1 dep ceilings** (general rule): if a dep ships pure ESM (`"type": "module"` and no `main`), it will fail to resolve. Always check the candidate's `package.json` before accepting a major bump. Known blocked majors: `uuid 12+`, `mermaid 10+`, `json5 2+`, `sanitize-html 2.x` (renderer-bundled).
+- **`optionalDependencies` is intentionally absent.** The previously-listed `grunt-electron-installer-debian` and `grunt-electron-installer-redhat` (plus their `electron-installer-*` task blocks in `gruntfile.js`) were removed once it was confirmed that the GH Actions release workflow only ships `.zip` / `.tar.gz` of the packaged app — no `.deb` or `.rpm` was ever built in CI. Restore the two devDeps, the task config blocks, and the entries in the `build:linux` task chain if you ever want to resume packaging Linux installers.
 
 ## Quick verify loop for dependency changes
 
@@ -93,6 +104,10 @@ docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
 ```
 
 The `-v /app/node_modules` anonymous volume preserves the container's `node_modules` while bind-mounting the host source over `/app`. `npm run compile` reuses the cached deps and finishes in ~5s; it is the fastest reliable signal that a dep change has not broken the webpack bundle. Run the full `docker build .` once at the end to validate electron-packager.
+
+**Stale-deps trap**: the anonymous volume holds whatever `node_modules` was baked into the `bn-deps` image at *build time*. If you have edited `package.json` resolutions since then, plain `yarn install --ignore-engines` may decide the lockfile is satisfied and not actually rewrite `node_modules`. Use `yarn install --ignore-engines --force` to force a relink, or rebuild the image with `docker build --target deps -t bn-deps .` when the resolution churn is non-trivial.
+
+**Pre-commit hook**: husky's `pre-commit` runs `npm run lint`. Because the docker-only policy keeps `npm` / `yarn` off the host, the hook prints `Can't find yarn in PATH` and reports `Skipping pre-commit hook`. The commit proceeds. This is expected — lint runs inside the image when you want it (`docker run --rm boostnote-legacy npm run lint`), not on the host.
 
 ## Test quirks (pre-existing failures — do not fix)
 
@@ -116,10 +131,11 @@ The `-v /app/node_modules` anonymous volume preserves the container's `node_modu
 
 ## Outstanding security work (next priorities)
 
-Ordered by runtime impact (renderer-bundled first, build-only last):
+Ordered by runtime impact (renderer-bundled first, build-only / blocked last). Items already applied or explicitly skipped live in the **Dependency policy** section above.
 
-1. **`sanitize-html` 1.27.5 → 2.x** — renderer-bundled, multiple CVEs in 1.x. Major API differences; needs a code-level audit of every `sanitize-html` call site before bumping.
-2. **`markdown-it` 5.1.0 and 8.4.2** still pinned by transitive consumers (`@enyaxu/markdown-it-anchor@5`, etc.); resolve to the already-locked 12.3.2 via the `resolutions` block once the parser-plugin chain is verified.
-3. **`moment` 2.22.2 → 2.30.1** — 2.30.1 is already in the lock from a different chain; collapse via `resolutions: { moment: "^2.30.1" }`.
-4. **Build-only (dev-time risk only)**: `tough-cookie ^4.1.3`, `ws ^8.17.1`, `got ^11.8.5`, `node-fetch ^2.6.7`, `underscore ^1.12.1`. None ship in the production bundle, but they execute during `npm install` / build.
-5. **`webpack-dev-server@1.16.5`** is EOL. Only used by `npm run watch`. Out of scope for incremental bumps — would require a webpack 1 → 5 migration.
+1. **`sanitize-html` 1.27.5 → 2.x** — renderer-bundled, multiple CVEs in 1.x. Major API differences; needs a code-level audit of every `sanitize-html` call site before bumping. Highest-impact remaining bump.
+2. **`markdown-it` 5.1.0 and 8.4.2** still pinned by transitive consumers (`@enyaxu/markdown-it-anchor@5`, etc.); resolve to the already-locked 12.3.2 via the `resolutions` block once the parser-plugin chain (footnote, kbd, anchor) is verified.
+3. **Build-only candidates that are still worth applying** (same `resolutions` recipe): `ws ^8.17.1`, `got ^11.8.5`. Dev/build only — not bundled into the renderer. Same recipe as `cookie` / `serve-static` / `sockjs`.
+4. **Webpack 1 ceiling — deferred until webpack 1 → 5 migration**: `webpack-dev-server@1.16.5`, `loader-utils@0.2.17`. Both EOL and CVE-flagged, but no patched version exists within their pinned line. Bumping requires the full toolchain migration (webpack 1 → 2 → 5, babel 6 → 7, css-loader / style-loader / stylus-loader majors). Out of scope for incremental work — see the prior investigation summary in the git log around the `webpack-dev-server` / `loader-utils` "do nothing" decisions.
+5. **Mermaid tier B / C** (`~9.3.0` then `^9.4.3`) — escalate only after manually rendering one of each diagram type from a packaged build and confirming no `ChunkLoadError` from the v9.2+ lazy-load chunks.
+6. **`uuid` 9.0.1 → 11.1.1** — verified compatible (CJS `main: ./dist/cjs/index.js`, `??` and `?.` syntax supported by Electron 11 Chrome 87, no babel transpile of node_modules needed because webpack-production doesn't minify). Pending — apply when convenient. Do NOT bump past 12.x.
