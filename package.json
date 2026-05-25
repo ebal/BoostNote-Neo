@@ -225,6 +225,7 @@
     "lodash": "^4.17.21",
     "highlight.js": "^10.4.1",
     "cookie": "^0.7.0",
-    "moment": "^2.30.1"
+    "moment": "^2.30.1",
+    "tough-cookie": "^4.1.3"
   }
 }
