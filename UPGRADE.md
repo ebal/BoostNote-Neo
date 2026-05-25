@@ -21,9 +21,54 @@
 | 0.16.6 | 5.0.13 | 73.0.3683.121 | 12.0.0 | 7.3.492.27-electron.0 | stable (intel branch) |
 | 0.16.7 | 11.5.0 | 87.0.4280.141 | 12.18.3 | 8.7 (arm64) | archived |
 | 0.17.9 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current (node:22) |
-| 0.17.19 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current |
+| 0.17.19 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | superseded |
+| 0.17.26 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current (dep-hardening sweep) |
 
 ## Iterations
+
+### 0.17.19 to 0.17.26 — dependency hardening sweep + dead-code cleanup
+
+Status: successful
+
+- **source version**: 0.17.19 (Electron 11.5.0, baseline resolutions only)
+- **target version**: 0.17.26 (Electron 11.5.0 — no Electron change)
+- **scope**: incremental CVE-driven dep upgrades via yarn `resolutions`, two real major bumps (mermaid, highlight.js), a CodeQL `js/incomplete-sanitization` fix, and removal of unused dev tooling. Each step landed in its own commit so any one can be reverted in isolation.
+- **changed files** (high-level — see git log for the per-commit list):
+  - `package.json` — 16 new `resolutions` entries; `highlight.js` direct dep bumped 9.18.5 → ^10.4.1; `mermaid` direct dep bumped 8.14.0 → ~9.1.7; `optionalDependencies` block removed; `devtron`, `redux-devtools*`, `standard`, `concurrently`, `react-input-autosize` removed from `devDependencies`; `eslint-plugin-promise@^3.4.2` promoted to explicit devDep (was previously hoisted from `standard`)
+  - `yarn.lock` — regenerated; total entries shrunk ~1,000 lines across the cleanup commits
+  - `browser/components/CodeEditor.js` — replaced inline `escapePipe` closure with shared `escapeMarkdownPipe(str)` helper (CodeQL alert 23)
+  - `browser/lib/utils.js` — added `escapeMarkdownPipe(str)` named export; subsequent Copilot autofix made it backslash-aware (`/\\/g` before `/\|/g`) so the encoding stays reversible
+  - `browser/main/DevTools/index.js` — collapsed env-switch dispatcher into a single no-op stub; `index.dev.js` and `index.prod.js` deleted
+  - `webpack-skeleton.js` — dropped stale `'devtron'` entry from `externals` array
+  - `gruntfile.js` — removed `electron-installer-debian` / `-redhat` task configs, `grunt.loadNpmTasks` calls, the `WIN` platform constant, and the two installer entries from the `build:linux` task chain
+  - `tests/lib/escapeMarkdownPipe.test.js` — new Jest suite (9 cases) for the new helper
+  - `CLAUDE.md` — refreshed dep policy, ceilings, skipped CVEs, and the dev-deps removed list
+  - `CHANGELOG.md` — version bumps to 0.17.20–0.17.26
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
+- **verify-per-iteration command** (faster, ~5s vs ~5 min for full pack):
+  ```bash
+  docker build --target deps -t bn-deps .
+  docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
+    sh -c 'yarn install --ignore-engines --force && npm run compile'
+  ```
+- **verification result**: full `docker build .` clean at the end of each major group; webpack production compile clean throughout; `npm run lint` baseline preserved at 7 pre-existing prettier errors (the documented host-vs-Docker prettier disagreement); AVA `escapeMarkdownPipe.test.js` 9/9 pass
+- **known issues**: same pre-existing Jest failures inherited from 0.17.19 (`dist/Boostnote-darwin-*` test files + `createNote`/`createNoteFromUrl` target-folder issue)
+- **rollback commit**: each step is one commit; `git revert <sha>` for any of the per-bump commits in isolation
+
+| Area | Change |
+|---|---|
+| `resolutions` (CVE-driven, runtime path) | `lodash ^4.17.21` (CVE-2021-23337), `moment ^2.30.1` (multi-CVE), `highlight.js ^10.4.1` (9.x EOL), `set-getter ^0.1.1` (CVE-2024-21528) |
+| `resolutions` (build-only loader chain) | `json5 ^1.0.2`, `word-wrap ^1.2.4`, `y18n ^3.2.2`, `minimist ^1.2.8`, `qs ^6.5.3`, `json-schema ^0.4.0`, `tmp ^0.2.4` (GHSA-52f5-9888-hmc6), `brace-expansion ^1.1.13` (CVE-2025-5889), `node-fetch ^2.6.7`, `tough-cookie ^4.1.3` |
+| `resolutions` (dev-server only) | `cookie ^0.7.0` (CVE-2024-47764), `serve-static ^1.16.0` (CVE-2024-43800), `sockjs ^0.3.20` (CVE-2020-7693) |
+| Direct dep bumps | `mermaid 8.14.0 → ~9.1.7` (tier A — last 9.x release before v9.2's lazy-load `import()` rewrite that Webpack 1 cannot resolve); `highlight.js 9.18.5 → ^10.4.1` (9.x EOL; v10 keeps `highlightAuto(code, subset)` and `res.language` unchanged) |
+| Documented ceilings | `uuid` capped at `12.x` (13+ is pure ESM, no `main`); future-ready target `^11.1.1` verified compatible; `mermaid 10+`, `json5 2+`, `sanitize-html 2.x` (renderer-bundled) all blocked by the same Webpack 1 `exports`-field cliff |
+| Skipped CVE bumps (documented "do nothing") | `underscore` (forcing breaks `nomnom`/`argparse` in runtime path; CVE not exploitable on `_.template` here); `loader-utils` (no patched 0.2.x exists; bumping requires the full webpack 1→2 migration); `minimatch ^3.0.2` (already at 3.1.5 for `^3.x` consumers; the 0.3.0 outlier under stylus's old glob can't be forced without breaking the CSS build) |
+| CodeQL `js/incomplete-sanitization` (alert 23) | Extracted `escapeMarkdownPipe(str)` to `browser/lib/utils.js` (regex with `/g` flag; backslash-aware). Replaces the inline `escapePipe` closure in `CodeEditor.js#mapNormalResponse` which used `str.replace('|', '\\|')` and only escaped the first pipe |
+| `optionalDependencies` block | Removed entirely. `grunt-electron-installer-debian` / `-redhat` and their gruntfile scaffolding gone — the GH Actions release workflow only ships `.zip` / `.tar.gz`, never `.deb` / `.rpm`. Restore recipe documented in the commit message |
+| Dev-only dead code removed | `devtron` (~32 MB; deprecated Electron extension, never imported); `redux-devtools` + `redux-devtools-dock-monitor` + `redux-devtools-log-monitor` (~6 MB; only loaded when `NODE_ENV === 'development'`, CI always builds production); `standard` CLI (~33 MB transitive closure; ESLint config extends `eslint-config-standard` directly, never invoked the CLI; `eslint-plugin-promise@^3.4.2` promoted to explicit devDep to satisfy the config-standard peer that `standard` previously hoisted); `concurrently` (~13 MB, never invoked); `react-input-autosize` (never imported) |
+| Net footprint change | `node_modules` (dev install) 632 MB → 562 MB (-70 MB); `yarn.lock` ~11,500 → ~10,750 lines (-750 lines); `compiled/main.js` size flat at ~8.8 MB (renderer bundle unaffected) |
+
+---
 
 ### 0.16.6 to 0.16.7 — Electron 11, native arm64 darwin build
 
