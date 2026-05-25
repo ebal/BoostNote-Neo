@@ -43,7 +43,6 @@ var config = {
     'markdown-it-plantuml',
     'markdown-it-admonition',
     'markdown-toc',
-    'devtron',
     '@rokt33r/season',
     {
       react: 'var React',
