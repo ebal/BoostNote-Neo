@@ -221,6 +221,7 @@
     "tmp": "^0.2.4",
     "serve-static": "^1.16.0",
     "sockjs": "^0.3.20",
-    "brace-expansion": "^1.1.13"
+    "brace-expansion": "^1.1.13",
+    "set-getter": "^0.1.1"
   }
 }
