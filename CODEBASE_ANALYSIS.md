@@ -14,9 +14,10 @@ BoostNote-Legacy is an **open-source, markdown-first note-taking application for
 - **Maintenance mode**: This is the legacy branch; a successor app exists at [BoostIO/BoostNote-App](https://github.com/BoostIO/BoostNote-App)
 
 ### **Current Version & Status**
-- **Version**: 0.17.18 (released 2026-05-18)
+- **Version**: 0.17.26 (released 2026-05-24)
 - **Status**: **MAINTENANCE** (not active development)
 - **Key milestones**:
+  - v0.17.20–v0.17.26: Dependency-hardening sweep — 19 yarn `resolutions` covering CVE-driven runtime, build-only, and dev-server-only paths; mermaid 8.14 → ~9.1.7 (tier A pre-lazy-load); highlight.js 9.18 → ^10.4.1 (9.x EOL); set-getter / min-document / on-headers / express / brace-expansion / cookie / serve-static / sockjs / tmp / tough-cookie / node-fetch / moment / lodash / json5 / word-wrap / y18n / minimist / qs / json-schema all forced to patched versions. Dead dev tooling stripped (`devtron`, `redux-devtools-*`, `standard`, `concurrently`, `react-input-autosize`) + `.deb` / `.rpm` installer scaffolding dropped. ~70 MB freed from dev `node_modules`. See `UPGRADE.md` for the iteration log.
   - v0.17.18: Icon/logo update, mouse wheel fix
   - v0.17.x: Node 22 Docker upgrade, Linux ARM64 support, stripped dead code
   - v0.16.5: Removed all AWS telemetry/analytics
@@ -80,8 +81,11 @@ Located in `webpack-skeleton.js`:
 - `react`, `react-dom`, `react-redux`
 - `redux`, `codemirror`, `lodash`, `moment`
 - `raphael`, `flowchart`, `sequence-diagram`
+- `markdown-it`, `markdown-it-emoji`, `markdown-it-kbd`, `markdown-it-plantuml`, `markdown-it-admonition`
+- `@rokt33r/markdown-it-math`, `@rokt33r/season`
+- `markdown-toc`, `fs-jetpack`
 
-This reduces bundle size but requires manual HTML script injection (`lib/main.production.html`).
+This reduces bundle size but requires manual HTML script injection (`lib/main.production.html`). Note: a previous `devtron` entry was removed in 0.17.26 — the package itself was never imported and was dropped from `devDependencies` along with its 32 MB transitive closure.
 
 ### **Electron Configuration**
 | Setting | Value | Rationale |
@@ -186,37 +190,51 @@ BoostNote-Legacy/
 ### **Dependency Summary**
 | Type | Count | Status |
 |------|-------|--------|
-| **Dependencies** | 50+ | Generally stable; no major updates possible |
-| **DevDependencies** | 40+ | Test, build, lint toolchain |
-| **Total packages** | ~90 | Managed via yarn.lock |
+| **Dependencies** | 50+ | Generally stable; no major updates possible without webpack 1 → 5 migration |
+| **DevDependencies** | ~50 | Test, build, lint toolchain. Trimmed of ~5 unused entries in 0.17.26 (`devtron`, `redux-devtools-*`, `standard`, `concurrently`, `react-input-autosize`) |
+| **`optionalDependencies`** | empty | Previously held `grunt-electron-installer-{debian,redhat}`; removed in 0.17.26 — release workflow only ships `.zip` / `.tar.gz` |
+| **`resolutions`** | 19 | Each entry CVE-driven; see `CLAUDE.md#Dependency-policy` for the grouping by runtime impact |
+| **node_modules (dev install)** | ~560 MB | Down from ~632 MB pre-sweep |
+| **node_modules (production)** | ~200 MB | Unchanged by the sweep (devDeps don't ship) |
 
 ### **Critical Pinned Dependencies** (Do NOT upgrade)
 ```json
 "fs-extra": "^5.0.0",              // Webpack 1 process.versions {} compat issue
-"electron-packager": "^12" → "^15", // v15 required for arm64 darwin
-"webpack": "^1.12.2",              // Webpack 1 (NOT 2+)
-"babel": "6.*",                    // Babel 6 (NOT 7+)
-"electron": "11.5.0",              // Latest Electron 11 patch
+"electron-packager": "^15.4.0",    // v15.2.0+ required for arm64 darwin
+"webpack": "^1.12.2",              // Webpack 1 (NOT 2+) — see CLAUDE.md cliff list
+"webpack-dev-server": "^1.12.0",   // Paired with Webpack 1
+"babel": "6.*",                    // Babel 6 (NOT 7+) — paired with Webpack 1
+"electron": "11.5.0",              // remote module deletion in 13+ blocks bump
+"uuid": "^9.0.1",                  // 12+ pure-ESM = Webpack 1 hard fail
+"mermaid": "~9.1.7",               // 9.2+ lazy-load import() chunks unresolvable
+"highlight.js": "^10.4.1",         // 11.x ESM-only
 ```
+
+Verified upgrade targets (compatible but not yet applied): `uuid ^11.1.1`. Documented ceilings in `CLAUDE.md#Dependency-policy`.
 
 ### **Outdated/At-Risk Dependencies**
 
 | Package | Current | Issue | Impact |
 |---------|---------|-------|--------|
 | **React** | 16.14.0 | EOL; no Hooks support | No Suspense, Concurrent features |
-| **Webpack** | 1.x | Ancient; no tree-shaking | Large bundles; HMR manual |
-| **Babel** | 6 | EOL; no preset-env granularity | Must use both es2015 + env presets |
+| **Webpack** | 1.x | Ancient; no tree-shaking; pure-ESM deps unresolvable | Large bundles; HMR manual; pins uuid/mermaid/highlight.js/json5/sanitize-html ceilings |
+| **Babel** | 6 | EOL; tied to Webpack 1 | Cannot adopt babel-loader 7+ without webpack 2+ |
 | **CodeMirror** | 5.x | Legacy; v6 is modern | No native React integration |
 | **ESLint** | 4.18.2 | Very old | Missing modern rules |
-| **electron** | 11.5.0 | 2 major versions behind | 11→13/14/15+ available; considered outdated |
+| **Electron** | 11.5.0 | 2 major versions behind LTS | Bluetooth-CVE (GHSA-3p22-ghq8-v749) not exploitable here; 13+ deletes `remote` module → ~20-file rewrite. Documented "deferred" in CLAUDE.md |
 | **Immutable.js** | 3.8.1 | Legacy syntax | Map/List immutable structures only |
+| **sanitize-html** | 1.27.5 | 1.x has multiple CVEs; renderer-bundled | 2.x is a major API change; needs call-site audit before bumping |
+| **markdown-it (transitive)** | 5.1.0, 8.4.2 | Old XSS / ReDoS advisories | Already-locked 12.3.2 in one chain; collapse via resolutions once plugin chain verified |
+| **loader-utils** | 0.2.17 | CVE-2022-37601 / -37603 proto pollution | No patched 0.2.x; bump requires webpack 1 → 2 migration. Not exploitable on Boostnote's hard-coded query strings — documented "deferred" |
 
 ### **Security Concerns**
 - ✅ **Removed**: AWS SDK, analytics telemetry (v0.16.5+)
 - ✅ **Removed**: Auto-update infrastructure (v0.16.4+)
-- ⚠️ **nodeIntegration=true**: Renderer has direct Node.js access (security risk)
+- ✅ **Patched** (0.17.20–0.17.26): 19 transitive CVE bumps via `resolutions` — see `CLAUDE.md#Dependency-policy` for the grouped list with each CVE reference
+- ⚠️ **nodeIntegration=true**: Renderer has direct Node.js access (security risk; required because Boostnote uses `require('electron').remote` and bundled Node APIs throughout the renderer)
 - ⚠️ **contextIsolation=false**: No process boundary; preload scripts not used
-- ⚠️ **enableRemoteModule=true**: `remote.require()` available (potential RCE)
+- ⚠️ **enableRemoteModule=true**: `remote.require()` available (potential RCE) — flipping this default requires the Electron 11 → 13 migration with `@electron/remote` (~20-file rewrite; documented deferred)
+- ⚠️ **Deferred** (not exploitable in this codebase but tracked): Electron 11 Bluetooth-access CVE (no `navigator.bluetooth` in source), webpack-dev-server 1.x (dev-only), loader-utils 0.2.17 (no user input flows in). Full rationale in `CLAUDE.md#Skipped-CVE-bumps`.
 
 These are **known trade-offs** for a local-first note-taking app, but reduce security isolation.
 
@@ -224,6 +242,8 @@ These are **known trade-offs** for a local-first note-taking app, but reduce sec
 - **yarn.lock**: Committed; ensures reproducible builds
 - **Docker-only npm install**: Prevents host node_modules pollution
 - **Ignore-engines flag**: `yarn install --ignore-engines` allows Node 22 in Docker (v0.17.9+)
+- **`resolutions` block in `package.json`**: 19 entries forcing transitive dep versions for CVE patches. Grouped by runtime impact (renderer-touching / build-only / dev-server-only) in `CLAUDE.md#Dependency-policy`. Adding an entry there + `yarn install --force` regenerates the lock with the single hoisted version.
+- **Quick verify loop** for dep iteration: `docker build --target deps -t bn-deps .` then `docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps sh -c 'yarn install --ignore-engines --force && npm run compile'`. Full electron-packager build is only needed at the end of a sweep. See `CLAUDE.md#Quick-verify-loop-for-dependency-changes`.
 
 ---
 
