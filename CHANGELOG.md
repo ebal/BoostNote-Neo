@@ -4,14 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.17.24] - 2026-05-24
+## [0.17.25] - 2026-05-24
 
 ### Changed
 
-- Force `cookie` to ^0.7.0 via yarn resolutions ([`f2998c52`](../../commit/f2998c52)).
-- Bump `highlight.js` from ^9.12.0 to ^10.4.1 (resolves 9.x EOL) ([`5bc774c0`](../../commit/5bc774c0)).
+- Force `sockjs` to ^0.3.20 via yarn resolutions (CVE-2020-7693) ([`15f5ccbc`](../../commit/15f5ccbc)).
+- Force `serve-static` to ^1.16.0 via yarn resolutions (CVE-2024-43800) ([`b15c4047`](../../commit/b15c4047)).
+- Force `tmp` to ^0.2.4 via yarn resolutions (GHSA-52f5-9888-hmc6) ([`01ae1a67`](../../commit/01ae1a67)).
+- Force `node-fetch` to ^2.6.7 via yarn resolutions ([`ba35d819`](../../commit/ba35d819)).
+- Force `tough-cookie` to ^4.1.3 via yarn resolutions ([`ca7a8342`](../../commit/ca7a8342)).
+- Force `moment` to ^2.30.1 via yarn resolutions ([`40c9efc7`](../../commit/40c9efc7)).
+- Bump `mermaid` from ~8.14.0 to ~9.1.7 (pre-lazy-load tier A) ([`1c34485f`](../../commit/1c34485f)).
 
-## [0.17.23] - 2026-05-24
+## [0.17.24] - 2026-05-24
 
 ### Fixed
 
@@ -355,6 +360,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.25]: ../../compare/v0.17.24...v0.17.25
 [0.17.24]: ../../compare/v0.17.23...v0.17.24
 [0.17.23]: ../../compare/v0.17.22...v0.17.23
 [0.17.22]: ../../compare/v0.17.21...v0.17.22

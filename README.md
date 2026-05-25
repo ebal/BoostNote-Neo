@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.25 | Force dep versions (sockjs, serve-static, tmp, node-fetch, tough-cookie, moment); bump mermaid 8.14→9.1.7 |
 | 0.17.24 | Force cookie dep; bump highlight.js to ^10.4.1 (resolves 9.x EOL) |
 | 0.17.23 | Fix CodeQL alerts (inefficient regex, bad HTML filter, sanitization); add screenshots |
 | 0.17.22 | Fix CodeQL alerts (ReDoS, sanitization, permissions); force dependency versions via yarn resolutions |
