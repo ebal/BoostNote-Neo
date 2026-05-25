@@ -171,7 +171,6 @@
     "mock-require": "^3.0.1",
     "nib": "^1.1.0",
     "react-css-modules": "^4.7.9",
-    "react-input-autosize": "^1.1.0",
     "react-test-renderer": "^16.14.0",
     "signale": "^1.2.1",
     "style-loader": "^0.12.4",

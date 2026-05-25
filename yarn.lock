@@ -2316,7 +2316,7 @@ create-error-class@^3.0.0:
   dependencies:
     capture-stack-trace "^1.0.0"
 
-create-react-class@^15.5.1, create-react-class@^15.5.2:
+create-react-class@^15.5.1:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
@@ -8445,13 +8445,6 @@ react-emoji-render@^1.1.0:
 react-image-carousel@^2.0.18:
   version "2.0.18"
   resolved "https://registry.yarnpkg.com/react-image-carousel/-/react-image-carousel-2.0.18.tgz#5868ea09bd9cca09c4467d3d02695cd4e7792f28"
-
-react-input-autosize@^1.1.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-1.2.0.tgz#87241071159f742123897691da6796ec33b57d05"
-  dependencies:
-    create-react-class "^15.5.2"
-    prop-types "^15.5.8"
 
 react-is@^16.13.1:
   version "16.13.1"
