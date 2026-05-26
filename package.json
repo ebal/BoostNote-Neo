@@ -242,6 +242,7 @@
     "ansi-regex": "^3.0.1",
     "remarkable": "^1.7.2",
     "ajv": "^6.12.3",
-    "acorn": "^5.7.4"
+    "acorn": "^5.7.4",
+    "decompress-zip": "^0.3.2"
   }
 }
