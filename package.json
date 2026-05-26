@@ -244,6 +244,7 @@
     "ajv": "^6.12.3",
     "acorn": "^5.7.4",
     "decompress-zip": "^0.3.2",
-    "eventsource": "^1.1.1"
+    "eventsource": "^1.1.1",
+    "form-data": "^2.5.4"
   }
 }
