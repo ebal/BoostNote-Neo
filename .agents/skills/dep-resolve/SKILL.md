@@ -84,9 +84,23 @@ docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
 - `--ignore-engines` — silences peer-dep noise from the Webpack 1 / Babel 6 stack.
 - `npm run compile` — fastest reliable signal (~5s) that the dep change has not broken the webpack bundle.
 
-Confirm afterwards: `grep -nE "^<dep-name>@" yarn.lock` should show the patched version.
+Confirm afterwards: `grep -nE "^<dep-name>@" yarn.lock` should show the patched version. For deps that resolve under a nested `node_modules/<parent>/node_modules/` path (selective resolutions like `"sanitize-html/postcss"`), also spot-check the file on disk:
 
-If the `bn-deps` image is missing, rebuild once: `docker build --target deps -t bn-deps .`.
+```bash
+docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
+  sh -c 'cat node_modules/<parent>/node_modules/<dep>/package.json' \
+  | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('name'), d.get('version'))"
+```
+
+If the printed version disagrees with `yarn.lock`, the **bn-deps image is stale**. The image bakes `node_modules` in at build time, and the anonymous volume preserves that baked tree across runs. `yarn install --force` rewrites the lockfile but does not always re-link nested directories under a selective resolution — the nested path can keep whatever version the image was first built with.
+
+When this happens (or any time a selective `"parent/child"` resolution is newly introduced), rebuild the image:
+
+```bash
+docker build --target deps -t bn-deps .
+```
+
+then rerun the quick-verify command above. Same applies if the `bn-deps` image does not yet exist on the host.
 
 ### 7. Full docker build (only for build-time deps that touch packager)
 
@@ -131,5 +145,6 @@ Do NOT push.
 - For build-time deps that exercise electron-packager, also run the full `docker build .`.
 - Update CLAUDE.md in the same commit.
 - Use `bn-deps` for quick-verify, not the full `boostnote-legacy` image (5 min build vs 5 s compile).
+- Rebuild `bn-deps` (`docker build --target deps -t bn-deps .`) after introducing a selective `"parent/child"` resolution, or any time a spot-check shows the nested package version disagrees with `yarn.lock`. The image's baked `node_modules` snapshot does not re-link nested directories under `--force` alone — this was the stale-image trap that surfaced after `sanitize-html/postcss ^7.0.39` was introduced.
 - Never run host `npm` / `yarn`. Docker-only policy is hard.
 - Do NOT push the commit.
