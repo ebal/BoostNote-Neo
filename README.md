@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.28 | Add dep-resolve skill; force deps (decode-uri-component, ws, got, glob-parent, js-yaml, set-value, ansi-regex) |
 | 0.17.27 | Bump sanitize-html to ^2.7.1; force dep versions (url-parse, dot-prop, async, ua-parser-js, sha.js, underscore, express, on-headers, min-document); drop unused immutable |
 | 0.17.26 | Drop dead deps (devtron, redux-devtools, standard, concurrently, react-input-autosize, deb/rpm scaffold); force brace-expansion |
 | 0.17.25 | Force dep versions (sockjs, serve-static, tmp, node-fetch, tough-cookie, moment); bump mermaid 8.14→9.1.7 |
