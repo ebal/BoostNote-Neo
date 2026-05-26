@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.29 | Bump katex to ^0.16.47; bulk upgrade 14 deps; force deps (dompurify, handlebars, follow-redirects, codemirror, kind-of, form-data, eventsource, decompress-zip, ajv, remarkable, lodash.merge, acorn); fix regressions |
 | 0.17.28 | Add dep-resolve skill; force deps (decode-uri-component, ws, got, glob-parent, js-yaml, set-value, ansi-regex) |
 | 0.17.27 | Bump sanitize-html to ^2.7.1; force dep versions (url-parse, dot-prop, async, ua-parser-js, sha.js, underscore, express, on-headers, min-document); drop unused immutable |
 | 0.17.26 | Drop dead deps (devtron, redux-devtools, standard, concurrently, react-input-autosize, deb/rpm scaffold); force brace-expansion |

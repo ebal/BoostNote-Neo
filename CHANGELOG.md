@@ -4,26 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.17.28] - 2026-05-26
-
-### Added
-
-- Add `dep-resolve` agent skill for automated CVE resolution workflow ([`68e5d94a`](../../commit/68e5d94a)).
+## [0.17.29] - 2026-05-26
 
 ### Fixed
 
-- Repair `dep-resolve` skill workflow steps ([`c1620a4e`](../../commit/c1620a4e)).
+- Pin `flowchart.js` to exact 1.12.0 (regression from bulk bump) ([`b7f31b52`](../../commit/b7f31b52)).
+- Pin `codemirror-mode-elixir` to exact 1.1.1 (regression from bulk bump) ([`660fc675`](../../commit/660fc675)).
 
 ### Changed
 
-- Force `decode-uri-component` to ^0.2.1 via yarn resolutions (CVE-2022-38900 DoS) ([`2d0c1f5a`](../../commit/2d0c1f5a)).
-- Force `ws` to ^8.17.1 and `got` to ^11.8.5 via yarn resolutions ([`f704ca79`](../../commit/f704ca79)).
-- Force `glob-parent` to ^5.1.2 via yarn resolutions (CVE-2020-28469 ReDoS) ([`209f1fbf`](../../commit/209f1fbf)).
-- Force `js-yaml` to ^3.14.2 via yarn resolutions (code injection) ([`39a01948`](../../commit/39a01948)).
-- Force `set-value` to ^2.0.1 via yarn resolutions (CVE-2019-10747) ([`dcf798ef`](../../commit/dcf798ef)).
-- Force `ansi-regex` to ^3.0.1 via yarn resolutions (CVE-2021-3807 ReDoS) ([`a0aa4894`](../../commit/a0aa4894)).
+- Bulk in-range upgrade of 14 routine dependencies (no CVEs) ([`9ba65a67`](../../commit/9ba65a67)).
+- Bump `katex` direct dep to ^0.16.47 (fixes CVE-2024-28398, CVE-2025-23205) ([`ef6ddb86`](../../commit/ef6ddb86)).
+- Force `dompurify` to ^2.5.4 via yarn resolutions (GHSA-mmhx-hmjr-r674) ([`5197f50e`](../../commit/5197f50e)).
+- Force `handlebars` to ^4.7.7 via yarn resolutions (GHSA-q2c6-c6pm-g3gh) ([`9bf71155`](../../commit/9bf71155)).
+- Force `follow-redirects` to ^1.14.7 via yarn resolutions (GHSA-74fj-2j2h-c42q) ([`aaf0c76e`](../../commit/aaf0c76e)).
+- Force `lodash.merge` to ^4.6.2 via yarn resolutions (CVE-2018-16469) ([`96ec15f3`](../../commit/96ec15f3)).
+- Force `codemirror` to ^5.58.2 via yarn resolutions (GHSA-3p3p-7p4f-r28x) ([`23dbc469`](../../commit/23dbc469)).
+- Force `kind-of` to ^6.0.3 via yarn resolutions (CVE-2019-20149) ([`f6d7eef7`](../../commit/f6d7eef7)).
+- Force `form-data` to ^2.5.4 via yarn resolutions (GHSA-fjxv-7rqg-78g4) ([`9cdbbf4e`](../../commit/9cdbbf4e)).
+- Force `eventsource` to ^1.1.1 via yarn resolutions (GHSA-6h5x-7c5m-7cr5) ([`a8bd178b`](../../commit/a8bd178b)).
+- Force `decompress-zip` to ^0.3.2 via yarn resolutions (GHSA-3wq5-r5w8-5xhf) ([`94f2a991`](../../commit/94f2a991)).
+- Force `acorn` to ^5.7.4 via yarn resolutions (GHSA-6chw-6frg-f759) ([`8bfc0f76`](../../commit/8bfc0f76)).
+- Force `ajv` to ^6.12.3 via yarn resolutions (CVE-2020-15366 + $data ReDoS) ([`ad3c2be3`](../../commit/ad3c2be3)).
+- Force `remarkable` to ^1.7.2 via yarn resolutions (ReDoS + XSS) ([`d886d5f0`](../../commit/d886d5f0)).
 
-## [0.17.27] - 2026-05-24
+## [0.17.28] - 2026-05-26
 
 ### Fixed
 
@@ -392,6 +397,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.29]: ../../compare/v0.17.28...v0.17.29
 [0.17.28]: ../../compare/v0.17.27...v0.17.28
 [0.17.27]: ../../compare/v0.17.26...v0.17.27
 [0.17.26]: ../../compare/v0.17.25...v0.17.26
