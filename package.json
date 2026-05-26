@@ -116,7 +116,7 @@
     "react-transition-group": "^2.9.0",
     "redux": "^4.2.1",
     "sander": "^0.5.1",
-    "sanitize-html": "^1.27.5",
+    "sanitize-html": "^2.7.1",
     "striptags": "^2.2.1",
     "turndown": "^4.0.2",
     "turndown-plugin-gfm": "^1.0.2",
@@ -230,6 +230,8 @@
     "ua-parser-js": "^0.7.22",
     "async": "^2.6.4",
     "dot-prop": "^4.2.1",
-    "url-parse": "^1.5.8"
+    "url-parse": "^1.5.8",
+    "escape-string-regexp": "^1.0.5",
+    "sanitize-html/postcss": "^7.0.39"
   }
 }
