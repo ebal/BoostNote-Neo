@@ -245,6 +245,7 @@
     "acorn": "^5.7.4",
     "decompress-zip": "^0.3.2",
     "eventsource": "^1.1.1",
-    "form-data": "^2.5.4"
+    "form-data": "^2.5.4",
+    "kind-of": "^6.0.3"
   }
 }
