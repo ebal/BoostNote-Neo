@@ -239,6 +239,7 @@
     "glob-parent": "^5.1.2",
     "js-yaml": "^3.14.2",
     "set-value": "^2.0.1",
-    "ansi-regex": "^3.0.1"
+    "ansi-regex": "^3.0.1",
+    "remarkable": "^1.7.2"
   }
 }
