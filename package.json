@@ -249,6 +249,7 @@
     "kind-of": "^6.0.3",
     "codemirror": "^5.58.2",
     "lodash.merge": "^4.6.2",
-    "follow-redirects": "^1.14.7"
+    "follow-redirects": "^1.14.7",
+    "handlebars": "^4.7.7"
   }
 }
