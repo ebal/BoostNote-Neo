@@ -233,6 +233,8 @@
     "dot-prop": "^4.2.1",
     "url-parse": "^1.5.8",
     "escape-string-regexp": "^1.0.5",
-    "sanitize-html/postcss": "^7.0.39"
+    "sanitize-html/postcss": "^7.0.39",
+    "ws": "^8.17.1",
+    "got": "^11.8.5"
   }
 }
