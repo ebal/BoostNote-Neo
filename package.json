@@ -246,6 +246,7 @@
     "decompress-zip": "^0.3.2",
     "eventsource": "^1.1.1",
     "form-data": "^2.5.4",
-    "kind-of": "^6.0.3"
+    "kind-of": "^6.0.3",
+    "codemirror": "^5.58.2"
   }
 }

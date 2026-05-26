@@ -2007,11 +2007,7 @@ codemirror-mode-elixir@^1.1.1:
   dependencies:
     codemirror "^5.20.2"
 
-codemirror@^5.18.2, codemirror@^5.20.2:
-  version "5.38.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.38.0.tgz#26a9551446e51dbdde36aabe60f72469724fd332"
-
-codemirror@^5.65.0:
+codemirror@^5.18.2, codemirror@^5.20.2, codemirror@^5.58.2, codemirror@^5.65.0:
   version "5.65.21"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.21.tgz#cacf320606c5450ad3b3da34bb9c666afec21068"
   integrity sha512-6teYk0bA0nR3QP0ihGMoxuKzpl5W80FpnHpBJpgy66NK3cZv5b/d/HY8PnRvfSsCG1MTfr92u2WUl+wT0E40mQ==
