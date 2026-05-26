@@ -58,7 +58,7 @@
     "@susisu/mte-kernel": "^2.1.1",
     "chart.js": "^2.9.4",
     "codemirror": "^5.65.0",
-    "codemirror-mode-elixir": "^1.1.2",
+    "codemirror-mode-elixir": "1.1.1",
     "command-exists": "^1.2.9",
     "connected-react-router": "^6.9.3",
     "electron-config": "^1.0.0",

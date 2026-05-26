@@ -2002,12 +2002,14 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codemirror-mode-elixir@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/codemirror-mode-elixir/-/codemirror-mode-elixir-1.1.2.tgz#61227208d2684d928500af6934e4b9c995fb0960"
-  integrity sha512-1oIuRVHyUhLv0Za9sEIsI7urAj06EohwO/yVj10bg7aHnimHQ964Wk3uuoPH0Yn8L38EkOd+SwULYpDiCQtoTA==
+codemirror-mode-elixir@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/codemirror-mode-elixir/-/codemirror-mode-elixir-1.1.1.tgz#cc5b79bf5f93b6da426e32364a673a681391416c"
+  integrity sha512-0Qop3QPaJSgVa+vgv7p9SAjqpI+qi3HFGanjIplcQ5buzYiArf3QEVhe/dzc2fEdHNi2YJHRjLQiIzNIeoZDKw==
+  dependencies:
+    codemirror "^5.20.2"
 
-codemirror@^5.18.2, codemirror@^5.58.2, codemirror@^5.65.0:
+codemirror@^5.18.2, codemirror@^5.20.2, codemirror@^5.58.2, codemirror@^5.65.0:
   version "5.65.21"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.21.tgz#cacf320606c5450ad3b3da34bb9c666afec21068"
   integrity sha512-6teYk0bA0nR3QP0ihGMoxuKzpl5W80FpnHpBJpgy66NK3cZv5b/d/HY8PnRvfSsCG1MTfr92u2WUl+wT0E40mQ==
