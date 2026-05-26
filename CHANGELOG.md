@@ -4,24 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.17.26] - 2026-05-24
-
-### Fixed
-
-- Force `set-getter` to ^0.1.1 via yarn resolutions (CVE-2024-21528 — prototype pollution; reaches the renderer through `markdown-toc` → `lazy-cache` via Electron's `nodeIntegration` runtime require) ([`14b058fc`](../../commit/14b058fc)).
+## [0.17.27] - 2026-05-24
 
 ### Changed
 
-- Drop `devtron` (deprecated Electron debug panel, never imported) ([`3fc09773`](../../commit/3fc09773)).
-- Drop `redux-devtools` dev panel (never invoked, dead code) ([`42beb236`](../../commit/42beb236)).
-- Drop `standard` linter (keep hoisted `eslint-plugin-promise`) ([`ea8f537d`](../../commit/ea8f537d)).
-- Drop `concurrently` (never invoked) ([`769fcf13`](../../commit/769fcf13)).
-- Drop `react-input-autosize` (never imported) ([`0d05c0af`](../../commit/0d05c0af)).
-- Drop `.deb`/`.rpm` installer scaffolding ([`e03c3d3e`](../../commit/e03c3d3e)).
-- Force `brace-expansion` to ^1.1.13 via yarn resolutions (CVE-2025-5889) ([`03c027a6`](../../commit/03c027a6)).
-- Log the 0.17.19 → 0.17.26 dependency-hardening sweep in `UPGRADE.md` ([`940476ed`](../../commit/940476ed)).
+- Bump `sanitize-html` from 1.27.5 to ^2.7.1 (multiple ReDoS / XSS CVEs) ([`a1fff71e`](../../commit/a1fff71e)).
+- Force `url-parse` to ^1.5.8 via yarn resolutions (CVE-2022-0686 auth bypass) ([`edfec56e`](../../commit/edfec56e)).
+- Force `dot-prop` to ^4.2.1 via yarn resolutions (CVE-2020-8116 proto pollution) ([`87ef8c94`](../../commit/87ef8c94)).
+- Force `async` to ^2.6.4 via yarn resolutions (CVE-2021-43138 mapValues proto pollution) ([`146235df`](../../commit/146235df)).
+- Force `ua-parser-js` to ^0.7.22 via yarn resolutions (ReDoS) ([`3e267cfb`](../../commit/3e267cfb)).
+- Drop direct `immutable` dep — never imported (prototype pollution surface) ([`b600c319`](../../commit/b600c319)).
+- Force `sha.js` to ^2.4.12 via yarn resolutions (hash-rewind on crafted input) ([`9acb7811`](../../commit/9acb7811)).
+- Force `underscore` to ^1.12.1 via yarn resolutions (CVE-2021-23358) ([`47cb0832`](../../commit/47cb0832)).
+- Force `express` to ^4.20.0 via yarn resolutions (CVE-2024-29041) ([`b9b3b7b1`](../../commit/b9b3b7b1)).
+- Force `on-headers` to ^1.1.0 via yarn resolutions (response header manipulation) ([`184bfd24`](../../commit/184bfd24)).
+- Force `min-document` to ^2.19.1 via yarn resolutions (proto pollution) ([`3945ba87`](../../commit/3945ba87)).
 
-## [0.17.25] - 2026-05-24
+## [0.17.26] - 2026-05-24
 
 ### Fixed
 
@@ -390,6 +389,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.27]: ../../compare/v0.17.26...v0.17.27
 [0.17.26]: ../../compare/v0.17.25...v0.17.26
 [0.17.25]: ../../compare/v0.17.24...v0.17.25
 [0.17.24]: ../../compare/v0.17.23...v0.17.24

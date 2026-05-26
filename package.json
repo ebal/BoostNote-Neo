@@ -1,7 +1,7 @@
 {
   "name": "boost",
   "productName": "Boostnote",
-  "version": "0.17.26",
+  "version": "0.17.27",
   "main": "index.js",
   "description": "Boostnote",
   "license": "GPL-3.0",
