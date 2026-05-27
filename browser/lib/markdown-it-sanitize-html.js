@@ -153,7 +153,7 @@ function naughtyIFrame(src, options) {
   try {
     const parsed = url.parse(src, false, true)
 
-    return options.allowedIframeHostnames.index(parsed.hostname) === -1
+    return options.allowedIframeHostnames.indexOf(parsed.hostname) === -1
   } catch (e) {
     return true
   }
