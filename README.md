@@ -2,7 +2,7 @@
 
 <h4 align="center">Note-taking app for programmers.</h4>
 <h5 align="center">Apps available for Mac (Intel & Apple Silicon), Windows and Linux.</h5>
-<h5 align="center">Built with Electron 11, React + Redux, Webpack 1, and CSSModules.</h5>
+<h5 align="center">Built with Electron 14, React + Redux, Webpack 1, and CSSModules.</h5>
 
 <p align="center">
   <a href="https://github.com/ebal/BoostNote-Legacy">
@@ -34,10 +34,11 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 [More screenshots](./screenshots.md)
 
-## Recent updates (v0.17.x)
+## Recent updates
 
 | Version | What changed |
 |---------|-------------|
+| 0.18.0 | **Electron 11.5.0 → 14.2.9** (Chromium 87 → 93, Node 12 → 14.17); migrate `electron.remote` → `@electron/remote@^2.1.3` across 23 renderer files; bump 13 in-major dep patches/minors (Tier 1–4); force `minimatch ^3.1.4` (CVE-2022-3517) |
 | 0.17.31 | Add GitHub-style alert blockquotes; fix <details> collapse, naughtyIFrame, alert CSS; drop sanitize-html |
 | 0.17.30 | Add PlantUML SVG render, ```flow alias; fix plantuml HTML entities, mermaid NaN guard, sanitizeInline regex, raphael pin, Dockerfile patch |
 | 0.17.29 | Bump katex to ^0.16.47; bulk upgrade 14 deps; force deps (dompurify, handlebars, follow-redirects, codemirror, kind-of, form-data, eventsource, decompress-zip, ajv, remarkable, lodash.merge, acorn); fix regressions |
@@ -161,7 +162,7 @@ browser/main/index.js (webpack entry → compiled/main.js)
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Electron 11.5.0 (Chrome 87, Node 12) |
+| Runtime | Electron 14.2.9 (Chrome 93, Node 14.17, V8 9.3) |
 | UI | React 16 + React Router 5 |
 | State | Redux 4 + Immutable.js (via Mutable.js wrappers) |
 | Editor | CodeMirror 5 (GFM mode + custom BFM mode) |

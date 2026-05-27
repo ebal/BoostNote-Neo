@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2026-05-27
+
+### Changed
+
+- **Upgrade Electron 11.5.0 → 14.2.9** (Chromium 87 → 93, Node 12 → 14.17, V8 9.3) ([`f147135f`](../../commit/f147135f)). Clears GHSA-3p22-ghq8-v749 (Bluetooth permission CVE, not exploitable in this codebase) and lifts the runtime ceiling that was blocking other dep work (Excalidraw 0.18.x, Mermaid tier B/C, etc.). Shipped as a single coordinated commit — the original two-commit split (swap to `@electron/remote` while still on Electron 11, then bump runtime) is no longer viable because `@electron/remote@1.x` looks up the post-Electron-12 `electron_common_v8_util` binding which doesn't exist on Electron 11, and `@electron/remote@1.x` is then itself rejected by Electron ≥14 at main-process `initialize()`. See `.claude/plans/UpgradePlan_Electron11_to_Electron14.md` for the full investigation.
+- Migrate built-in `electron.remote` to `@electron/remote@^2.1.3` across 23 renderer source files + 2 HTML inline scripts ([`f147135f`](../../commit/f147135f)). Drop the `{ remote }` destructure — @electron/remote 2.x exposes `app`, `dialog`, `Menu`, `MenuItem`, `BrowserWindow`, etc. directly on the module export.
+- Add `'@electron/remote'` to `webpack-skeleton.js#externals` to bypass webpack 1's `process` shim (module 12, the browser-style `process/browser` polyfill that masks Node's real `process.contextId` / `process._linkedBinding` and breaks the renderer-side context-id lookup) ([`f147135f`](../../commit/f147135f)).
+- `lib/main-window.js`: drop `enableRemoteModule: true`, add `require('@electron/remote/main').initialize()` at module load and `.enable(mainWindow.webContents)` per `BrowserWindow` after creation (the latter is mandatory in @electron/remote 2.x, which removed the auto-enable-all-windows behavior of 1.x) ([`f147135f`](../../commit/f147135f)).
+- Bump 13 in-major dependency patches/minors across 4 risk tiers ([`b65b3004`](../../commit/b65b3004), [`6d808a4d`](../../commit/6d808a4d)). Runtime: `katex ^0.16.47 → ^0.17.0`, `@rokt33r/season ^5.3.0 → ^5.3.1`, `@rokt33r/markdown-it-math ^4.0.1 → ^4.0.2`, `query-string ^6.13.8 → ^6.14.1`, `nib ^1.1.0 → ^1.2.0`, `react-css-modules ^4.7.9 → ^4.7.11`. Main-process: `node-ipc ^8.1.0 → ^8.10.3`. Dev-only: `electron-debug ^3.2.0 → ^4.1.0`, `electron-devtools-installer ^3.2.0 → ^4.0.0`, `jest-localstorage-mock ^2.2.0 → ^2.4.26`, `mock-require ^3.0.1 → ^3.0.3`, `browser-env ^3.2.5 → ^3.3.0`, `merge-stream ^1.0.0 → ^1.0.1`, `signale ^1.2.1 → ^1.4.0`, `color ^3.0.0 → ^3.2.1`.
+- Delete shadow `const { remote } = electron` re-import at `browser/main/NoteList/index.js:1029` and swap `const { shell } = electron` at `:1054` to direct `require('electron')`; drop the now-unused `/* global electron */` eslint comment ([`f147135f`](../../commit/f147135f)).
+- Pull `Menu` from `@electron/remote` in `browser/lib/contextMenuBuilder.js` — `Menu`/`MenuItem` are main-process-only modules and not exposed via the renderer's `require('electron')` even with `nodeIntegration: true` ([`f147135f`](../../commit/f147135f)).
+
+### Fixed
+
+- Force `minimatch` to `^3.1.4` via yarn resolutions (CVE-2022-3517 — ReDoS in `braceExpand` via attacker-controlled brace patterns) ([`719b8fe4`](../../commit/719b8fe4)). Empirical test confirmed `glob@3.2.11` uses only `minimatch.Minimatch` + `.set` + `GLOBSTAR` (stable across 0.3 → 3.x), so stylus's build pipeline still compiles cleanly. Collapses three previously-coexisting entries (`minimatch@0.3.0` under stylus's glob chain, `minimatch@3.1.5` under `electron-packager > @electron/asar`, `minimatch@10.2.5` under `@types/minimatch`) to a single hoisted `minimatch@3.1.5`.
+
+### Documentation
+
+- Move plan docs under `.claude/plans/`. Add `Excalidraw.md` (Excalidraw integration plan) and `UpgradePlan_Electron11_to_Electron14.md` (heavily re-investigated during this upgrade — captures the 1.x-on-Electron-11 incompatibility, the `enableRemoteModule` gate on 1.x, the @electron/remote 2.x export shape, the webpack 1 process-shim trap, and the `Menu`/`MenuItem` renderer-vs-main-process distinction) ([`f147135f`](../../commit/f147135f)).
+- Update `CLAUDE.md`: remove the deferred Electron 11 → 14 entry from "Skipped CVE bumps"; mark the `minimatch` skip note as applied with the empirical re-test result ([`f147135f`](../../commit/f147135f), [`719b8fe4`](../../commit/719b8fe4)).
+
+### Known follow-ups (deferred)
+
+- `printToPDF({}, cb)` callback form was removed in Electron 12 — PDF export must migrate to the Promise form in `browser/main/lib/dataApi/formatPDF.js:18`.
+- `menu.popup(remote.getCurrentWindow())` positional form is deprecated — migrate to object form `menu.popup({ window: remote.getCurrentWindow() })` at three sites: `browser/lib/context.js:9`, `browser/components/CodeEditor.js:110`, `browser/components/MarkdownPreview.js:136`.
+- `nativeWindowOpen` default flips `false → true` in Electron 15 — set explicitly in `webPreferences` to suppress the deprecation warning before Electron 15.
+- `vm` module deprecation warning in the renderer (transitive consumer, not yet identified).
+- `contextIsolation: true` (Phase 3 of the upgrade plan) — separate ~1–2 day refactor.
+
 ## [0.17.31] - 2026-05-27
 
 ### Added
