@@ -99,7 +99,7 @@ function sanitizeInline(html, options) {
     }
   } else {
     // closing tag
-    if (allowedTags.indexOf(match[4].toLowerCase()) !== -1) {
+    if (allowedTags.indexOf(match[3].toLowerCase()) !== -1) {
       return html
     } else {
       return ''
