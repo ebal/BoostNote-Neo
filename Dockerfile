@@ -47,10 +47,21 @@ COPY . .
 COPY --from=deps /app/yarn.lock ./yarn.lock
 RUN echo "$GIT_COMMIT" > /app/commit-hash.txt
 
-# Patch CodeMirror's on() function to mark touchstart/touchmove/mousewheel
-# listeners as passive. This eliminates Chrome violations that block smooth
-# scrolling.
-RUN sed -i 's/emitter.addEventListener(type, f, false);/emitter.addEventListener(type, f, type === "touchstart" || type === "touchmove" || type === "mousewheel" || type === "DOMMouseScroll" ? { passive: true } : false);/' node_modules/codemirror/lib/codemirror.js
+# Patch CodeMirror's on() function to mark touchstart/touchmove listeners as
+# passive. This eliminates Chrome's "non-passive event listener blocks smooth
+# scrolling" violation on touch input — CodeMirror does not preventDefault
+# on touch in any scroll path, so passive is safe.
+#
+# IMPORTANT: do NOT mark mousewheel / DOMMouseScroll as passive. CodeMirror's
+# onScrollWheel (codemirror.js:4586) conditionally calls e_preventDefault on
+# wheel events to suppress vertical-scroll jitter on OSX trackpads when
+# horizontal delta dominates (CodeMirror issue #3579). Forcing the wheel
+# listener to passive defeats that — preventDefault becomes a silent no-op
+# and Chrome emits the converse violation: "Unable to preventDefault inside
+# passive event listener invocation" (codemirror.js:619). The non-passive
+# wheel path is the lesser of two warnings and the only one that preserves
+# correct trackpad behaviour.
+RUN sed -i 's/emitter.addEventListener(type, f, false);/emitter.addEventListener(type, f, type === "touchstart" || type === "touchmove" ? { passive: true } : false);/' node_modules/codemirror/lib/codemirror.js
 
 # Patch react-sortable-hoc's componentDidMount to register touch events as
 # passive (handleStart/handleMove never call preventDefault).
