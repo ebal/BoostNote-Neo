@@ -173,9 +173,10 @@
     raphael "~2.1.x"
     underscore "~1.4.x"
 
-"@rokt33r/markdown-it-math@^4.0.1":
+"@rokt33r/markdown-it-math@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@rokt33r/markdown-it-math/-/markdown-it-math-4.0.2.tgz#87c7172f459833b05e406cfc846e0c0b7ebc24ef"
+  integrity sha512-5Z2/wiLv97gckpPt5NE2MmTomo/oSKtJgn6Uh0BEn7Smo9kAEw0h4a8LKW16+U1x6mYsBPOKMkYky2AzoEfMHw==
 
 "@rokt33r/season@^5.3.1":
   version "5.3.1"
@@ -2060,9 +2061,10 @@ color-convert@^1.3.0, color-convert@^1.9.0:
   dependencies:
     color-name "^1.1.1"
 
-color-convert@^1.9.1:
+color-convert@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
+  integrity sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
   dependencies:
     color-name "1.1.3"
 
@@ -2088,9 +2090,10 @@ color-string@^0.3.0:
   dependencies:
     color-name "^1.0.0"
 
-color-string@^1.5.2:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.3.tgz#c9bbc5f01b58b5492f3d6857459cb6590ce204cc"
+color-string@^1.6.0:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.9.1.tgz#4467f9146f036f855b764dfb5bf8582bf342c7a4"
+  integrity sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==
   dependencies:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
@@ -2103,12 +2106,13 @@ color@^0.11.0:
     color-convert "^1.3.0"
     color-string "^0.3.0"
 
-color@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/color/-/color-3.0.0.tgz#d920b4328d534a3ac8295d68f7bd4ba6c427be9a"
+color@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
+  integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
   dependencies:
-    color-convert "^1.9.1"
-    color-string "^1.5.2"
+    color-convert "^1.9.3"
+    color-string "^1.6.0"
 
 colormin@^1.0.5:
   version "1.1.2"
@@ -7219,9 +7223,10 @@ node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
 
-node-ipc@^8.1.0:
+node-ipc@^8.10.3:
   version "8.10.3"
   resolved "https://registry.yarnpkg.com/node-ipc/-/node-ipc-8.10.3.tgz#223bd431ad7fb2e40c5434f8a5e4558be2568fbd"
+  integrity sha512-ulcmXi5W9Z6i5gAH6slAnfEZ4kf4rSXJ1DvfRQfCWT6YsvC5st//goTJmcGkLarkuQZbebUQtaQaC9IVTubqsA==
   dependencies:
     colors "*"
     event-pubsub "4.2.3"
