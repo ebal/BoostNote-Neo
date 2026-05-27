@@ -33,6 +33,7 @@ var config = {
     'prettier',
     'node-ipc',
     'electron',
+    '@electron/remote',
     'lodash',
     'markdown-it',
     'moment',

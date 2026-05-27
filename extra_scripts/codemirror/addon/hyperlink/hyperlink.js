@@ -13,7 +13,7 @@
   'use strict'
 
   const shell = require('electron').shell
-  const remote = require('electron').remote
+  const remote = require('@electron/remote')
   const eventEmitter = {
     emit: function() {
       remote.getCurrentWindow().webContents.send.apply(null, arguments)

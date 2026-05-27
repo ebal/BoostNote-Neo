@@ -19,8 +19,7 @@ import { chooseTheme, applyTheme } from 'browser/main/lib/ThemeManager'
 import { push } from 'connected-react-router'
 
 const path = require('path')
-const electron = require('electron')
-const { remote } = electron
+const remote = require('@electron/remote')
 
 class Main extends React.Component {
   constructor(props) {

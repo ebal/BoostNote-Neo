@@ -204,7 +204,7 @@ BoostNote-Legacy/
 "webpack": "^1.12.2",              // Webpack 1 (NOT 2+) — see CLAUDE.md cliff list
 "webpack-dev-server": "^1.12.0",   // Paired with Webpack 1
 "babel": "6.*",                    // Babel 6 (NOT 7+) — paired with Webpack 1
-"electron": "11.5.0",              // remote module deletion in 13+ blocks bump
+"electron": "11.5.0",              // remote module deletion in 13+ blocks bump; migration plan in UpgradePlan_Electron11_to_Electron14.md (Electron 14.2.9 target)
 "uuid": "^9.0.1",                  // 12+ pure-ESM = Webpack 1 hard fail
 "mermaid": "~9.1.7",               // 9.2+ lazy-load import() chunks unresolvable
 "highlight.js": "^10.4.1",         // 11.x ESM-only
@@ -221,7 +221,7 @@ Verified upgrade targets (compatible but not yet applied): `uuid ^11.1.1`. Docum
 | **Babel** | 6 | EOL; tied to Webpack 1 | Cannot adopt babel-loader 7+ without webpack 2+ |
 | **CodeMirror** | 5.x | Legacy; v6 is modern | No native React integration |
 | **ESLint** | 4.18.2 | Very old | Missing modern rules |
-| **Electron** | 11.5.0 | 2 major versions behind LTS | Bluetooth-CVE (GHSA-3p22-ghq8-v749) not exploitable here; 13+ deletes `remote` module → ~20-file rewrite. Documented "deferred" in CLAUDE.md |
+| **Electron** | 11.5.0 | many majors behind LTS | Bluetooth-CVE (GHSA-3p22-ghq8-v749) not exploitable here; 13+ deletes `remote` module → 24-file rewrite + 2 HTML edits + 1 shadow-import delete. **Migration plan tracked: `UpgradePlan_Electron11_to_Electron14.md`** (two-commit phased: `@electron/remote` swap on 11, then 11 → 14.2.9 bump). Phase 3 `contextIsolation` deferred. |
 | **Immutable.js** | 3.8.1 | Legacy syntax | Map/List immutable structures only |
 | **sanitize-html** | 1.27.5 | 1.x has multiple CVEs; renderer-bundled | 2.x is a major API change; needs call-site audit before bumping |
 | **markdown-it (transitive)** | 5.1.0, 8.4.2 | Old XSS / ReDoS advisories | Already-locked 12.3.2 in one chain; collapse via resolutions once plugin chain verified |
@@ -233,7 +233,7 @@ Verified upgrade targets (compatible but not yet applied): `uuid ^11.1.1`. Docum
 - ✅ **Patched** (0.17.20–0.17.26): 19 transitive CVE bumps via `resolutions` — see `CLAUDE.md#Dependency-policy` for the grouped list with each CVE reference
 - ⚠️ **nodeIntegration=true**: Renderer has direct Node.js access (security risk; required because Boostnote uses `require('electron').remote` and bundled Node APIs throughout the renderer)
 - ⚠️ **contextIsolation=false**: No process boundary; preload scripts not used
-- ⚠️ **enableRemoteModule=true**: `remote.require()` available (potential RCE) — flipping this default requires the Electron 11 → 13 migration with `@electron/remote` (~20-file rewrite; documented deferred)
+- ⚠️ **enableRemoteModule=true**: `remote.require()` available (potential RCE) — flipping this default is **Phase 1 of `UpgradePlan_Electron11_to_Electron14.md`** (24-file `@electron/remote` swap, fully reversible, zero runtime change on Electron 11)
 - ⚠️ **Deferred** (not exploitable in this codebase but tracked): Electron 11 Bluetooth-access CVE (no `navigator.bluetooth` in source), webpack-dev-server 1.x (dev-only), loader-utils 0.2.17 (no user input flows in). Full rationale in `CLAUDE.md#Skipped-CVE-bumps`.
 
 These are **known trade-offs** for a local-first note-taking app, but reduce security isolation.

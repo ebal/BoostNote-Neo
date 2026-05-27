@@ -31,8 +31,7 @@ import markdownToc from 'browser/lib/markdown-toc-generator'
 import queryString from 'query-string'
 import { replace } from 'connected-react-router'
 
-const electron = require('electron')
-const { remote } = electron
+const remote = require('@electron/remote')
 const { dialog } = remote
 
 class SnippetNoteDetail extends React.Component {

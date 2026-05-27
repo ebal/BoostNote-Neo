@@ -1,10 +1,9 @@
 import i18n from 'browser/lib/i18n'
 import fs from 'fs'
 
-const { remote } = require('electron')
-const { Menu } = remote.require('electron')
-const { clipboard } = remote.require('electron')
-const { shell } = remote.require('electron')
+const { clipboard, shell } = require('electron')
+const remote = require('@electron/remote')
+const { Menu } = remote
 const spellcheck = require('./spellcheck')
 const uri2path = require('file-uri-to-path')
 

@@ -22,9 +22,23 @@
 | 0.16.7 | 11.5.0 | 87.0.4280.141 | 12.18.3 | 8.7 (arm64) | archived |
 | 0.17.9 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current (node:22) |
 | 0.17.19 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | superseded |
-| 0.17.26 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current (dep-hardening sweep) |
+| 0.17.26 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | superseded |
+| 0.17.31 | 11.5.0 | 87.0.4280.141 | 22 (bookworm) | 10.x | current |
+| (planned) | 14.2.9 | 93.0.4577.82 | 14.17.0 | 9.3 | planned — see `UpgradePlan_Electron11_to_Electron14.md` |
 
 ## Iterations
+
+### (planned) — Electron 11.5.0 → 14.2.9
+
+Status: planned, not started.
+
+- **source version**: 0.17.31 (Electron 11.5.0)
+- **target version**: TBD (Electron 14.2.9)
+- **scope**: two-commit split — Commit A introduces `@electron/remote@^1.2.2` on Electron 11 (zero-runtime-change, fully reversible), Commit B bumps Electron 11.5.0 → 14.2.9 with `menu.popup` object-form + `printToPDF` Promise-form migrations. Phase 3 (`contextIsolation: true`) is deferred — separate workstream.
+- **driver**: clears GHSA-3p22-ghq8-v749 (Bluetooth-CVE, not exploitable in this codebase) and lays groundwork for future LTS bumps. Re-investigated 2026-05-27.
+- **plan document**: `UpgradePlan_Electron11_to_Electron14.md` (repo root via `.claude/plans/`). Contains 14-step Phase 1 table, 9-step Phase 2 table, smoke checklists, reversibility table, Docker-only iterate loop.
+- **expected file changes** (Commit A): `package.json` + `yarn.lock` (add `@electron/remote@^1.2.2`), `lib/main-window.js` (drop `enableRemoteModule`, add `.initialize()` + `.enable()`), 24 renderer source files (1-line import swaps), 2 HTML inline-script edits in `lib/main.{production,development}.html`, delete shadow re-import at `browser/main/NoteList/index.js:1029`.
+- **expected file changes** (Commit B): `package.json` (`electron: 14.2.9`, `config.electron-version: 14.2.9`), `yarn.lock`, 3 sites for `menu.popup({window: ...})`, `formatPDF.js:18` Promise-form, optional `@electron/remote@^1.2.2` → `^2.1.3` lift.
 
 ### 0.17.19 to 0.17.26 — dependency hardening sweep + dead-code cleanup
 

@@ -97,7 +97,7 @@ gruntfile.js           — Packaging tasks
 | Markdown | markdown-it | 12.3.2 | Active |
 | Build | Webpack | 1.12.2 | Ancient |
 | Transpile | Babel | 6.x | EOL |
-| Runtime | Electron | 11.5.0 | 2 majors behind |
+| Runtime | Electron | 11.5.0 | many majors behind LTS; migration plan tracked (`UpgradePlan_Electron11_to_Electron14.md`) |
 | Runtime | Node | 22 (Docker) | Latest |
 
 ---
@@ -148,7 +148,7 @@ When returning to this analysis, verify:
 
 - [ ] Has `package.json` version changed? (track for release artifacts)
 - [ ] Any new test failures introduced? (check against pre-existing failures list)
-- [ ] Has Electron version been updated? (check Dockerfile)
+- [ ] Has Electron version been updated? (check `package.json#devDependencies.electron` + `config.electron-version` — Dockerfile does NOT pin Electron; `electron-packager` fetches the precompiled binary at build time)
 - [ ] New npm packages added? (check yarn.lock for security)
 - [ ] Any changes to webpack/babel/typescript configs?
 - [ ] GitHub Actions workflow status? (new `build-boostnote-app.yml` live?)
@@ -208,7 +208,8 @@ docker run --rm boostnote-legacy npm run fix      # Auto-fix (except 6 pre-exist
 - `CLAUDE.md` — Duplicate of AGENTS.md for Claude Code
 - `README.md` — User-facing overview, build instructions
 - `contributing.md` — Contribution guidelines
-- `UPGRADE.md` — Detailed changelog of major version jumps (Electron 4→11, Node 8→22)
+- `UPGRADE.md` — Detailed changelog of major version jumps (Electron 4→11, Node 8→22); planned 11→14 entry now listed
+- `UpgradePlan_Electron11_to_Electron14.md` — Phased execution plan (Commit A: `@electron/remote` swap; Commit B: Electron 14.2.9 bump). `.claude/plans/` location.
 - `CHANGELOG.md` — Recent release notes
 - `SKILLS.md` — Custom Copilot skills for this repo
 

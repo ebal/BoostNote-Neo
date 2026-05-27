@@ -3,8 +3,8 @@ import CSSModules from 'browser/lib/CSSModules'
 import styles from './InfoTab.styl'
 import i18n from 'browser/lib/i18n'
 
-const electron = require('electron')
-const { shell, remote } = electron
+const { shell } = require('electron')
+const remote = require('@electron/remote')
 const appVersion = remote.app.getVersion()
 
 class InfoTab extends React.Component {

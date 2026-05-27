@@ -7,9 +7,8 @@ import { store } from 'browser/main/store'
 import _ from 'lodash'
 import i18n from 'browser/lib/i18n'
 import { sync as commandExists } from 'command-exists'
-const electron = require('electron')
-const ipc = electron.ipcRenderer
-const { remote } = electron
+const ipc = require('electron').ipcRenderer
+const remote = require('@electron/remote')
 const { dialog } = remote
 class PluginsTab extends React.Component {
   constructor(props) {

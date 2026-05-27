@@ -1,4 +1,3 @@
-/* global electron */
 import PropTypes from 'prop-types'
 import React from 'react'
 import CSSModules from 'browser/lib/CSSModules'
@@ -23,7 +22,7 @@ import context from 'browser/lib/context'
 import filenamify from 'filenamify'
 import queryString from 'query-string'
 
-const { remote } = require('electron')
+const remote = require('@electron/remote')
 const { dialog } = remote
 const WP_POST_PATH = '/wp/v2/posts'
 
@@ -1026,7 +1025,6 @@ class NoteList extends React.Component {
   }
 
   confirmPublishError() {
-    const { remote } = electron
     const { dialog } = remote
     const alertError = {
       type: 'warning',
@@ -1051,7 +1049,7 @@ class NoteList extends React.Component {
   }
 
   openBlog(note) {
-    const { shell } = electron
+    const { shell } = require('electron')
     shell.openExternal(note.blog.blogLink)
   }
 
