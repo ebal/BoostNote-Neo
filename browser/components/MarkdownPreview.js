@@ -733,7 +733,11 @@ class MarkdownPreview extends React.Component {
     _.forEach(
       this.refs.root.contentWindow.document.querySelectorAll('svg[ratio]'),
       el => {
-        el.setAttribute('height', el.clientWidth / el.getAttribute('ratio'))
+        const ratio = parseFloat(el.getAttribute('ratio'))
+        if (!isFinite(ratio) || ratio <= 0) return
+        const height = el.clientWidth / ratio
+        if (!isFinite(height) || height <= 0) return
+        el.setAttribute('height', height)
       }
     )
   }

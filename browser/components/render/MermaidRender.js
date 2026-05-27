@@ -49,18 +49,29 @@ function render(element, content, theme, enableHTMLLabel) {
 
       if (!isPredefined) {
         const el = element.firstChild
-        const viewBox = el.getAttribute('viewBox').split(' ')
+        const viewBoxAttr = el.getAttribute('viewBox')
+        if (!viewBoxAttr) return
 
-        let ratio = viewBox[2] / viewBox[3]
+        const viewBox = viewBoxAttr.split(' ')
+        const vbW = parseFloat(viewBox[2])
+        const vbH = parseFloat(viewBox[3])
+        if (!isFinite(vbW) || !isFinite(vbH) || vbW <= 0 || vbH <= 0) return
+
+        let ratio = vbW / vbH
 
         if (el.style.maxWidth) {
           const maxWidth = parseFloat(el.style.maxWidth)
-
-          ratio *= el.parentNode.clientWidth / maxWidth
+          if (isFinite(maxWidth) && maxWidth > 0) {
+            ratio *= el.parentNode.clientWidth / maxWidth
+          }
         }
 
+        if (!isFinite(ratio) || ratio <= 0) return
+        const height = el.parentNode.clientWidth / ratio
+        if (!isFinite(height) || height <= 0) return
+
         el.setAttribute('ratio', ratio)
-        el.setAttribute('height', el.parentNode.clientWidth / ratio)
+        el.setAttribute('height', height)
       }
     })
   } catch (e) {
