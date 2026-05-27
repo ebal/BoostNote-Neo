@@ -1,6 +1,5 @@
 'use strict'
 
-import sanitizeHtml from 'sanitize-html'
 import { escapeHtmlCharacters } from './utils'
 import url from 'url'
 
@@ -10,7 +9,7 @@ module.exports = function sanitizePlugin(md, options) {
   md.core.ruler.after('linkify', 'sanitize_inline', state => {
     for (let tokenIdx = 0; tokenIdx < state.tokens.length; tokenIdx++) {
       if (state.tokens[tokenIdx].type === 'html_block') {
-        state.tokens[tokenIdx].content = sanitizeHtml(
+        state.tokens[tokenIdx].content = sanitizeBlock(
           state.tokens[tokenIdx].content,
           options
         )
@@ -39,6 +38,22 @@ module.exports = function sanitizePlugin(md, options) {
 
 const tagRegex = /<([A-Z][A-Z0-9]*)\b([^>]*)\/?>|<\/([A-Z][A-Z0-9]*)\s*>/i
 const attributesRegex = /([A-Z][A-Z0-9]*)(?:=("|')([^\2]+?)\2)?/gi
+
+function sanitizeBlock(html, options) {
+  const tagPattern = /<[^>]*>/g
+  let lastIndex = 0
+  let result = ''
+  let match
+
+  while ((match = tagPattern.exec(html)) !== null) {
+    result += html.slice(lastIndex, match.index)
+    result += sanitizeInline(match[0], options)
+    lastIndex = match.index + match[0].length
+  }
+  result += html.slice(lastIndex)
+
+  return result
+}
 
 function sanitizeInline(html, options) {
   let match = tagRegex.exec(html)
