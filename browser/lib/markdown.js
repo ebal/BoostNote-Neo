@@ -342,7 +342,21 @@ class Markdown {
         plantuml: token => {
           updatedOptions.onFence('plantuml')
 
-          let content = token.content.trim()
+          // markdown-it-sanitize-html escapes the content of every
+          // *_fence token (utils.escapeHtmlCharacters) before this
+          // renderer runs, turning " into &quot;, & into &amp;, etc.
+          // The PlantUML server treats those entities as literal text
+          // and returns 400 ("Syntax Error") on any quoted identifier.
+          // Reverse the entity encoding here before feeding the source
+          // to parsePlantUml.
+          let content = token.content
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&#x27;/gi, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&')
+            .trim()
           content = content
             .replace(/^@start[a-z]+\s*\n/i, '')
             .replace(/\n@end[a-z]+\s*$/i, '')
