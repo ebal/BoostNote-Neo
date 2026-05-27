@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Markdown.render() should keep <details> body inside the element 1`] = `
+"<details>
+<summary>Click to expand</summary>
+<p data-line=\\"4\\">This body must remain inside the details element.</p>
+<p data-line=\\"6\\">A second paragraph also inside details.</p>
+</details>
+<p data-line=\\"10\\">Trailing paragraph outside details.</p>
+"
+`;
+
 exports[`Markdown.render() should render PlantUML Ditaa correctly 1`] = `
 "<img src=\\"http://www.plantuml.com/plantuml/png/SoWkIImgISaiIKpaqjQ50cq51GLj93Q2mrMZ00NQO3cmHX3RJW4cKmDI4v9QKQ805a8nfyObCp6zA34NgCObFxiqDpMl1AIcHj4tCJqpLH5i18evG52TKbk3B8og1kmC0cvMKB1Im0NYkA2ckMRcANWabgQbvYau5YMbPfP0p4UOWmcqkHnIyrB0GG00\\" alt=\\"uml diagram\\" />
 "

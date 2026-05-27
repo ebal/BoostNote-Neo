@@ -116,3 +116,24 @@ test('Markdown.render() should render PlantUML Ditaa correctly', () => {
   const rendered = md.render(markdownFixtures.plantUmlDitaa)
   expect(rendered).toMatchSnapshot()
 })
+
+test('Markdown.render() should keep <details> body inside the element', () => {
+  const rendered = md.render(markdownFixtures.details)
+  expect(rendered).toMatchSnapshot()
+
+  const detailsOpenIdx = rendered.indexOf('<details>')
+  const detailsCloseIdx = rendered.indexOf('</details>')
+  const bodyIdx = rendered.indexOf('This body must remain inside')
+  const secondBodyIdx = rendered.indexOf('A second paragraph')
+  const trailingIdx = rendered.indexOf('Trailing paragraph outside')
+
+  expect(detailsOpenIdx).toBeGreaterThanOrEqual(0)
+  expect(detailsCloseIdx).toBeGreaterThan(detailsOpenIdx)
+  expect(bodyIdx).toBeGreaterThan(detailsOpenIdx)
+  expect(bodyIdx).toBeLessThan(detailsCloseIdx)
+  expect(secondBodyIdx).toBeGreaterThan(detailsOpenIdx)
+  expect(secondBodyIdx).toBeLessThan(detailsCloseIdx)
+  expect(trailingIdx).toBeGreaterThan(detailsCloseIdx)
+
+  expect(rendered.match(/<\/details>/g).length).toBe(1)
+})

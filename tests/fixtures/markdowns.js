@@ -173,6 +173,19 @@ rectangle checkout {
 @enduml
 `
 
+const details = `
+<details>
+<summary>Click to expand</summary>
+
+This body must remain inside the details element.
+
+A second paragraph also inside details.
+
+</details>
+
+Trailing paragraph outside details.
+`
+
 const plantUmlDitaa = `
 @startditaa
 +--------+   +-------+    +-------+
@@ -205,5 +218,6 @@ export default {
   plantUmlGantt,
   plantUmlWbs,
   plantUmlDitaa,
-  plantUmlUml
+  plantUmlUml,
+  details
 }
