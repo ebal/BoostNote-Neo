@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.1] - 2026-05-28
+
+### Changed
+
+- Bump 4 more in-major patches/minors. All safe within-same-major bumps; bundle compiles unchanged at 8.31 MB / 1148 modules ([uncommitted batch]).
+  - Runtime: `markdown-it-emoji ^1.1.1 → ^1.4.0` (renderer-bundled emoji plugin in `browser/lib/markdown.js`), `unique-slug 2.0.0 → 2.0.2` (attachment naming in `browser/main/lib/dataApi/attachmentManagement.js`).
+  - Dev/test: `dom-storage ^2.0.2 → ^2.1.0` (localStorage mock used by `tests/dataApi/*.js`).
+  - Build-only resolution: `tmp ^0.2.6 → ^0.2.7` — lifts the locked 0.2.6 floor to the latest 0.2.x patch under the `electron-packager > @electron/asar` chain. Other yarn-resolution entries (`ws`, `follow-redirects`, `express`, `serve-static`, `node-fetch`, `handlebars`, `ua-parser-js`, `url-parse`, `form-data`, etc.) were re-verified — yarn already auto-resolves each `^X.Y.Z` floor to the latest within its major, so no further lifts are needed at this time.
+
+### Documentation
+
+- Add `[0.18.1]` section to the changelog; bump version in `package.json`.
+
 ## [0.18.0] - 2026-05-27
 
 ### Changed
