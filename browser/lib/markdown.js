@@ -338,6 +338,20 @@ class Markdown {
             token.content
           }</div>
           </pre>`
+        },
+        plantuml: token => {
+          updatedOptions.onFence('plantuml')
+
+          let content = token.content.trim()
+          content = content
+            .replace(/^@start[a-z]+\s*\n/i, '')
+            .replace(/\n@end[a-z]+\s*$/i, '')
+          const url = parsePlantUml(content, '@startuml', '@enduml', 'svg')
+
+          return `<pre class="fence" data-line="${token.map[0]}">
+            <span class="filename">${token.fileName}</span>
+            <img class="plantuml" src="${url}" alt="plantuml diagram" />
+          </pre>`
         }
       },
       token => {
