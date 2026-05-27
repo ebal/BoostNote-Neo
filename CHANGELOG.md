@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.31] - 2026-05-27
+
+### Added
+
+- Render GitHub-style `> [!NOTE]` / `> [!WARNING]` / `> [!TIP]` / `> [!CAUTION]` alert blockquotes ([`05fb53e9`](../../commit/05fb53e9)).
+
+### Fixed
+
+- Prevent `<details>` from being auto-closed by `sanitize-html` across `html_block` tokens (content rendered outside element, breaking collapse) ([`abf79e43`](../../commit/abf79e43)).
+- Correct `naughtyIFrame` hostname lookup (`.index` → `.indexOf`) ([`6fdfb997`](../../commit/6fdfb997)).
+- Expand alert CSS inline so light theme colors actually emit ([`29cc5fc0`](../../commit/29cc5fc0)).
+
+### Changed
+
+- Drop `sanitize-html` from dependencies (no longer used) ([`39218129`](../../commit/39218129)).
+- Add regression test for `<details>` collapse behavior ([`39218129`](../../commit/39218129)).
+
 ## [0.17.30] - 2026-05-26
 
 ### Added
@@ -388,6 +405,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.17.31]: ../../compare/v0.17.30...v0.17.31
 [0.17.30]: ../../compare/v0.17.29...v0.17.30
 [0.17.29]: ../../compare/v0.17.28...v0.17.29
 [0.17.28]: ../../compare/v0.17.27...v0.17.28

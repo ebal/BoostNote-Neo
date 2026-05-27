@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.17.31 | Add GitHub-style alert blockquotes; fix <details> collapse, naughtyIFrame, alert CSS; drop sanitize-html |
 | 0.17.30 | Add PlantUML SVG render, ```flow alias; fix plantuml HTML entities, mermaid NaN guard, sanitizeInline regex, raphael pin, Dockerfile patch |
 | 0.17.29 | Bump katex to ^0.16.47; bulk upgrade 14 deps; force deps (dompurify, handlebars, follow-redirects, codemirror, kind-of, form-data, eventsource, decompress-zip, ajv, remarkable, lodash.merge, acorn); fix regressions |
 | 0.17.28 | Add dep-resolve skill; force deps (decode-uri-component, ws, got, glob-parent, js-yaml, set-value, ansi-regex) |
