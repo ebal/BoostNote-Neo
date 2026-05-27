@@ -383,14 +383,6 @@ for name, val in admonition_types
         color: val[color]
         content: val[icon]
 
-github_alert_types = {
-    note:      {bg: #dbeafe, brd: #93c5fd, icon: "info_outline"},
-    tip:       {bg: #dcfce7, brd: #86efac, icon: "lightbulb_outline"},
-    important: {bg: #f3e8ff, brd: #d8b4fe, icon: "priority_high"},
-    warning:   {bg: #fef9c3, brd: #fde047, icon: "warning"},
-    caution:   {bg: #fee2e2, brd: #fca5a5, icon: "error_outline"},
-}
-
 .markdown-alert
     margin 16px 0
     padding 8px 16px
@@ -423,12 +415,35 @@ github_alert_types = {
     -moz-osx-font-smoothing grayscale
     font-feature-settings 'liga'
 
-for name, val in github_alert_types
-    .markdown-alert.markdown-alert-{name}
-        background-color val[bg]
-        border-color val[brd]
-        &>.markdown-alert-title:before
-            content val[icon]
+.markdown-alert.markdown-alert-note
+    background-color #dbeafe
+    border-color #93c5fd
+.markdown-alert.markdown-alert-note>.markdown-alert-title:before
+    content "info_outline"
+
+.markdown-alert.markdown-alert-tip
+    background-color #dcfce7
+    border-color #86efac
+.markdown-alert.markdown-alert-tip>.markdown-alert-title:before
+    content "lightbulb_outline"
+
+.markdown-alert.markdown-alert-important
+    background-color #f3e8ff
+    border-color #d8b4fe
+.markdown-alert.markdown-alert-important>.markdown-alert-title:before
+    content "priority_high"
+
+.markdown-alert.markdown-alert-warning
+    background-color #fef9c3
+    border-color #fde047
+.markdown-alert.markdown-alert-warning>.markdown-alert-title:before
+    content "warning"
+
+.markdown-alert.markdown-alert-caution
+    background-color #fee2e2
+    border-color #fca5a5
+.markdown-alert.markdown-alert-caution>.markdown-alert-title:before
+    content "error_outline"
 
 dl
   margin 2rem 0
@@ -588,30 +603,30 @@ body[data-theme="dark"]
     background-color #b8860b
     color inherit
   .markdown-alert.markdown-alert-note
-      background-color rgba(47,129,247,0.15)
-      border-color #2f81f7
-      &>.markdown-alert-title
-          color #2f81f7
+    background-color rgba(47,129,247,0.15)
+    border-color #2f81f7
+  .markdown-alert.markdown-alert-note>.markdown-alert-title
+    color #2f81f7
   .markdown-alert.markdown-alert-tip
-      background-color rgba(63,185,80,0.15)
-      border-color #3fb950
-      &>.markdown-alert-title
-          color #3fb950
+    background-color rgba(63,185,80,0.15)
+    border-color #3fb950
+  .markdown-alert.markdown-alert-tip>.markdown-alert-title
+    color #3fb950
   .markdown-alert.markdown-alert-important
-      background-color rgba(163,113,247,0.15)
-      border-color #a371f7
-      &>.markdown-alert-title
-          color #a371f7
+    background-color rgba(163,113,247,0.15)
+    border-color #a371f7
+  .markdown-alert.markdown-alert-important>.markdown-alert-title
+    color #a371f7
   .markdown-alert.markdown-alert-warning
-      background-color rgba(210,153,34,0.15)
-      border-color #d29922
-      &>.markdown-alert-title
-          color #d29922
+    background-color rgba(210,153,34,0.15)
+    border-color #d29922
+  .markdown-alert.markdown-alert-warning>.markdown-alert-title
+    color #d29922
   .markdown-alert.markdown-alert-caution
-      background-color rgba(248,81,73,0.15)
-      border-color #f85149
-      &>.markdown-alert-title
-          color #f85149
+    background-color rgba(248,81,73,0.15)
+    border-color #f85149
+  .markdown-alert.markdown-alert-caution>.markdown-alert-title
+    color #f85149
   dl
     border-color themeDarkBorder
     background-color themeDarkTableHead
