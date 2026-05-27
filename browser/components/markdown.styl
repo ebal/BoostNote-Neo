@@ -384,16 +384,17 @@ for name, val in admonition_types
         content: val[icon]
 
 github_alert_types = {
-    note:      {color: #0969da, icon: "info_outline"},
-    tip:       {color: #1a7f37, icon: "lightbulb_outline"},
-    important: {color: #8250df, icon: "campaign"},
-    warning:   {color: #9a6700, icon: "warning_amber"},
-    caution:   {color: #cf222e, icon: "report"},
+    note:      {bg: #dbeafe, brd: #93c5fd, icon: "info_outline"},
+    tip:       {bg: #dcfce7, brd: #86efac, icon: "lightbulb_outline"},
+    important: {bg: #f3e8ff, brd: #d8b4fe, icon: "priority_high"},
+    warning:   {bg: #fef9c3, brd: #fde047, icon: "warning"},
+    caution:   {bg: #fee2e2, brd: #fca5a5, icon: "error_outline"},
 }
 
 .markdown-alert
     margin 16px 0
     padding 8px 16px
+    border 1px solid
     border-left .25em solid
     border-radius .2rem
 
@@ -424,13 +425,10 @@ github_alert_types = {
 
 for name, val in github_alert_types
     .markdown-alert.markdown-alert-{name}
-        border-left-color val[color]
-
-    .markdown-alert.markdown-alert-{name} > .markdown-alert-title
-        color val[color]
-
-    .markdown-alert.markdown-alert-{name} > .markdown-alert-title:before
-        content val[icon]
+        background-color val[bg]
+        border-color val[brd]
+        &>.markdown-alert-title:before
+            content val[icon]
 
 dl
   margin 2rem 0
@@ -589,18 +587,31 @@ body[data-theme="dark"]
   mark
     background-color #b8860b
     color inherit
-  github_alert_dark = {
-      note:      #2f81f7,
-      tip:       #3fb950,
-      important: #a371f7,
-      warning:   #d29922,
-      caution:   #f85149,
-  }
-  for name, color in github_alert_dark
-      .markdown-alert.markdown-alert-{name}
-          border-left-color color
-      .markdown-alert.markdown-alert-{name} > .markdown-alert-title
-          color color
+  .markdown-alert.markdown-alert-note
+      background-color rgba(47,129,247,0.15)
+      border-color #2f81f7
+      &>.markdown-alert-title
+          color #2f81f7
+  .markdown-alert.markdown-alert-tip
+      background-color rgba(63,185,80,0.15)
+      border-color #3fb950
+      &>.markdown-alert-title
+          color #3fb950
+  .markdown-alert.markdown-alert-important
+      background-color rgba(163,113,247,0.15)
+      border-color #a371f7
+      &>.markdown-alert-title
+          color #a371f7
+  .markdown-alert.markdown-alert-warning
+      background-color rgba(210,153,34,0.15)
+      border-color #d29922
+      &>.markdown-alert-title
+          color #d29922
+  .markdown-alert.markdown-alert-caution
+      background-color rgba(248,81,73,0.15)
+      border-color #f85149
+      &>.markdown-alert-title
+          color #f85149
   dl
     border-color themeDarkBorder
     background-color themeDarkTableHead
