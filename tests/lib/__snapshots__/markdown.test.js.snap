@@ -10,6 +10,37 @@ exports[`Markdown.render() should keep <details> body inside the element 1`] = `
 "
 `;
 
+exports[`Markdown.render() should render GitHub-style alert blockquotes 1`] = `
+"<div class=\\"markdown-alert markdown-alert-note\\" data-line=\\"1\\">
+<p class=\\"markdown-alert-title\\">Note</p>
+<p data-line=\\"1\\">A note callout.</p>
+</div>
+<div class=\\"markdown-alert markdown-alert-tip\\" data-line=\\"4\\">
+<p class=\\"markdown-alert-title\\">Tip</p>
+<p data-line=\\"4\\">A tip callout with <strong>bold</strong> and <code class=\\"inline\\">code</code>.</p>
+</div>
+<div class=\\"markdown-alert markdown-alert-important\\" data-line=\\"7\\">
+<p class=\\"markdown-alert-title\\">Important</p>
+<p data-line=\\"7\\">Important content.</p>
+</div>
+<div class=\\"markdown-alert markdown-alert-warning\\" data-line=\\"10\\">
+<p class=\\"markdown-alert-title\\">Warning</p>
+<p data-line=\\"10\\">Warning content.</p>
+</div>
+<div class=\\"markdown-alert markdown-alert-caution\\" data-line=\\"13\\">
+<p class=\\"markdown-alert-title\\">Caution</p>
+<p data-line=\\"13\\">Caution content.</p>
+</div>
+<blockquote data-line=\\"16\\">
+<p data-line=\\"16\\">regular blockquote stays unchanged</p>
+</blockquote>
+<blockquote data-line=\\"18\\">
+<p data-line=\\"18\\">[!UNKNOWN]<br />
+not an alert, stays blockquote</p>
+</blockquote>
+"
+`;
+
 exports[`Markdown.render() should render PlantUML Ditaa correctly 1`] = `
 "<img src=\\"http://www.plantuml.com/plantuml/png/SoWkIImgISaiIKpaqjQ50cq51GLj93Q2mrMZ00NQO3cmHX3RJW4cKmDI4v9QKQ805a8nfyObCp6zA34NgCObFxiqDpMl1AIcHj4tCJqpLH5i18evG52TKbk3B8og1kmC0cvMKB1Im0NYkA2ckMRcANWabgQbvYau5YMbPfP0p4UOWmcqkHnIyrB0GG00\\" alt=\\"uml diagram\\" />
 "

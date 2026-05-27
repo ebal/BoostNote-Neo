@@ -117,6 +117,42 @@ test('Markdown.render() should render PlantUML Ditaa correctly', () => {
   expect(rendered).toMatchSnapshot()
 })
 
+test('Markdown.render() should render GitHub-style alert blockquotes', () => {
+  const rendered = md.render(markdownFixtures.githubAlerts)
+  expect(rendered).toMatchSnapshot()
+
+  expect(rendered).toMatch(
+    /<div class="markdown-alert markdown-alert-note"[^>]*>/
+  )
+  expect(rendered).toMatch(
+    /<div class="markdown-alert markdown-alert-tip"[^>]*>/
+  )
+  expect(rendered).toMatch(
+    /<div class="markdown-alert markdown-alert-important"[^>]*>/
+  )
+  expect(rendered).toMatch(
+    /<div class="markdown-alert markdown-alert-warning"[^>]*>/
+  )
+  expect(rendered).toMatch(
+    /<div class="markdown-alert markdown-alert-caution"[^>]*>/
+  )
+  expect(rendered).toMatch(/<p class="markdown-alert-title">Note<\/p>/)
+  expect(rendered).toMatch(/<p class="markdown-alert-title">Tip<\/p>/)
+  expect(rendered).toMatch(/<p class="markdown-alert-title">Important<\/p>/)
+  expect(rendered).toMatch(/<p class="markdown-alert-title">Warning<\/p>/)
+  expect(rendered).toMatch(/<p class="markdown-alert-title">Caution<\/p>/)
+
+  expect(rendered).toMatch(/<strong>bold<\/strong>/)
+  expect(rendered).toMatch(/<code[^>]*>code<\/code>/)
+
+  expect(rendered).toMatch(
+    /<blockquote[^>]*>[\s\S]*regular blockquote stays unchanged[\s\S]*<\/blockquote>/
+  )
+  expect(rendered).toMatch(
+    /<blockquote[^>]*>[\s\S]*\[!UNKNOWN\][\s\S]*<\/blockquote>/
+  )
+})
+
 test('Markdown.render() should keep <details> body inside the element', () => {
   const rendered = md.render(markdownFixtures.details)
   expect(rendered).toMatchSnapshot()

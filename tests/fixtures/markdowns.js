@@ -173,6 +173,28 @@ rectangle checkout {
 @enduml
 `
 
+const githubAlerts = `
+> [!NOTE]
+> A note callout.
+
+> [!TIP]
+> A tip callout with **bold** and \`code\`.
+
+> [!IMPORTANT]
+> Important content.
+
+> [!WARNING]
+> Warning content.
+
+> [!CAUTION]
+> Caution content.
+
+> regular blockquote stays unchanged
+
+> [!UNKNOWN]
+> not an alert, stays blockquote
+`
+
 const details = `
 <details>
 <summary>Click to expand</summary>
@@ -219,5 +241,6 @@ export default {
   plantUmlWbs,
   plantUmlDitaa,
   plantUmlUml,
-  details
+  details,
+  githubAlerts
 }

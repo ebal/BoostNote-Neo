@@ -383,6 +383,55 @@ for name, val in admonition_types
         color: val[color]
         content: val[icon]
 
+github_alert_types = {
+    note:      {color: #0969da, icon: "info_outline"},
+    tip:       {color: #1a7f37, icon: "lightbulb_outline"},
+    important: {color: #8250df, icon: "campaign"},
+    warning:   {color: #9a6700, icon: "warning_amber"},
+    caution:   {color: #cf222e, icon: "report"},
+}
+
+.markdown-alert
+    margin 16px 0
+    padding 8px 16px
+    border-left .25em solid
+    border-radius .2rem
+
+.markdown-alert > :first-child
+    margin-top 0
+
+.markdown-alert > :last-child
+    margin-bottom 0
+
+.markdown-alert-title
+    display flex
+    align-items center
+    font-weight 600
+    margin 0 0 4px 0
+    line-height 1
+
+.markdown-alert-title:before
+    font-family "Material Icons"
+    font-weight normal
+    font-style normal
+    font-size 1.2em
+    margin-right 6px
+    line-height 1
+    -webkit-font-smoothing antialiased
+    text-rendering optimizeLegibility
+    -moz-osx-font-smoothing grayscale
+    font-feature-settings 'liga'
+
+for name, val in github_alert_types
+    .markdown-alert.markdown-alert-{name}
+        border-left-color val[color]
+
+    .markdown-alert.markdown-alert-{name} > .markdown-alert-title
+        color val[color]
+
+    .markdown-alert.markdown-alert-{name} > .markdown-alert-title:before
+        content val[icon]
+
 dl
   margin 2rem 0
   padding 0
@@ -540,6 +589,18 @@ body[data-theme="dark"]
   mark
     background-color #b8860b
     color inherit
+  github_alert_dark = {
+      note:      #2f81f7,
+      tip:       #3fb950,
+      important: #a371f7,
+      warning:   #d29922,
+      caution:   #f85149,
+  }
+  for name, color in github_alert_dark
+      .markdown-alert.markdown-alert-{name}
+          border-left-color color
+      .markdown-alert.markdown-alert-{name} > .markdown-alert-title
+          color color
   dl
     border-color themeDarkBorder
     background-color themeDarkTableHead

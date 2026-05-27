@@ -241,6 +241,7 @@ class Markdown {
         'question'
       ]
     })
+    this.md.use(require('./markdown-it-github-alerts'))
     this.md.use(require('markdown-it-abbr'))
     this.md.use(require('markdown-it-sub'))
     this.md.use(require('markdown-it-sup'))
