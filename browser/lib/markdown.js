@@ -87,6 +87,7 @@ class Markdown {
         'rt',
         'rp',
         'li',
+        'mark',
         'tr',
         'td',
         'th',
