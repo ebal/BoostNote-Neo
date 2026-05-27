@@ -288,6 +288,16 @@ class Markdown {
           }</div>
           </pre>`
         },
+        flow: token => {
+          updatedOptions.onFence('flowchart')
+
+          return `<pre class="fence" data-line="${token.map[0]}">
+            <span class="filename">${token.fileName}</span>
+            <div class="flowchart" data-height="${token.parameters.height}">${
+            token.content
+          }</div>
+          </pre>`
+        },
         gallery: token => {
           const content = token.content
             .split('\n')
