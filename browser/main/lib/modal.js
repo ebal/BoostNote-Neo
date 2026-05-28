@@ -47,7 +47,7 @@ class ModalBase extends React.Component {
 const el = document.createElement('div')
 document.body.appendChild(el)
 const modalBaseRef = React.createRef()
-ReactDOM.render(<ModalBase ref={modalBaseRef} />, el)
+ReactDOM.createRoot(el).render(<ModalBase ref={modalBaseRef} />)
 
 export function openModal(component, props) {
   if (modalBaseRef.current == null) {

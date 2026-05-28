@@ -83,7 +83,8 @@ if (!config.get().ui.showScrollBar) {
 
 const el = document.getElementById('content')
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(el)
+root.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Fragment>
@@ -106,10 +107,7 @@ ReactDOM.render(
         <DevTools />
       </Fragment>
     </ConnectedRouter>
-  </Provider>,
-  el,
-  function() {
-    const loadingCover = document.getElementById('loadingCover')
-    loadingCover.parentNode.removeChild(loadingCover)
-  }
+  </Provider>
 )
+const loadingCover = document.getElementById('loadingCover')
+loadingCover.parentNode.removeChild(loadingCover)
