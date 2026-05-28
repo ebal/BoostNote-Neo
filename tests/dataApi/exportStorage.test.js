@@ -1,4 +1,3 @@
-const test = require('ava')
 const exportStorage = require('browser/main/lib/dataApi/exportStorage')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -19,21 +18,23 @@ const os = require('os')
 const fs = require('fs')
 const sander = require('sander')
 
-test.beforeEach(t => {
-  t.context.storageDir = path.join(os.tmpdir(), 'test/export-storage')
-  t.context.storage = TestDummy.dummyStorage(t.context.storageDir)
-  t.context.exportDir = path.join(os.tmpdir(), 'test/export-storage-output')
+const context = {}
+
+beforeEach(() => {
+  context.storageDir = path.join(os.tmpdir(), 'test/export-storage')
+  context.storage = TestDummy.dummyStorage(context.storageDir)
+  context.exportDir = path.join(os.tmpdir(), 'test/export-storage-output')
   try {
-    fs.mkdirSync(t.context.exportDir)
+    fs.mkdirSync(context.exportDir)
   } catch (e) {}
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Export a storage', t => {
-  const storageKey = t.context.storage.cache.key
-  const folders = t.context.storage.json.folders
-  const notes = t.context.storage.notes
-  const exportDir = t.context.exportDir
+test('Export a storage', () => {
+  const storageKey = context.storage.cache.key
+  const folders = context.storage.json.folders
+  const notes = context.storage.notes
+  const exportDir = context.exportDir
   const folderKeyToName = folders.reduce((acc, folder) => {
     acc[folder.key] = folder.name
     return acc
@@ -55,17 +56,17 @@ test.serial('Export a storage', t => {
         `${note.title}.md`
       )
       if (note.type === 'MARKDOWN_NOTE') {
-        t.true(fs.existsSync(noteDir))
-        t.is(fs.readFileSync(noteDir, 'utf8'), note.content)
+        expect(fs.existsSync(noteDir)).toBe(true)
+        expect(fs.readFileSync(noteDir, 'utf8')).toBe(note.content)
       } else if (note.type === 'SNIPPET_NOTE') {
-        t.false(fs.existsSync(noteDir))
+        expect(fs.existsSync(noteDir)).toBe(false)
       }
     })
   })
 })
 
-test.afterEach.always(t => {
+afterEach(() => {
   localStorage.clear()
-  sander.rimrafSync(t.context.storageDir)
-  sander.rimrafSync(t.context.exportDir)
+  sander.rimrafSync(context.storageDir)
+  sander.rimrafSync(context.exportDir)
 })

@@ -13,7 +13,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Build (Intel/amd64) | `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .` |
 | Build (Apple Silicon/arm64) | `docker build --platform linux/arm64 --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) --build-arg BUILDARCH=arm64 -t boostnote-legacy-arm64 .` |
 | Test all | `docker run --rm boostnote-legacy npm test` |
-| AVA tests only | `docker run --rm boostnote-legacy npm run ava` |
 | Jest tests only | `docker run --rm boostnote-legacy npm run jest` |
 | Lint | `docker run --rm boostnote-legacy npm run lint` |
 | Lint fix | `docker run --rm boostnote-legacy npm run fix` |
@@ -26,14 +25,9 @@ Omitting `GIT_COMMIT` build-arg → About dialog shows "unknown".
 
 ### Running a single test
 
-AVA picks `tests/**/*-test.js`; run one file:
+Jest picks `tests/**/*.test.js`:
 ```bash
-docker run --rm boostnote-legacy npx ava tests/dataApi/createNote-test.js
-```
-
-Jest picks everything else under `tests/`:
-```bash
-docker run --rm boostnote-legacy npx jest tests/components/MyComponent.test.js
+docker run --rm boostnote-legacy npx jest tests/dataApi/createNote.test.js
 ```
 
 ## Architecture
@@ -125,8 +119,7 @@ The `-v /app/node_modules` anonymous volume preserves the container's `node_modu
 
 ## Test quirks (pre-existing failures — do not fix)
 
-- `npm test` = `npm run ava && npm run jest` (sequential).
-- AVA runs serially (`--serial`).
+- `npm test` = `cross-env NODE_ENV=test jest` (jest-only since the AVA → Jest migration).
 - Jest picks up test files inside `dist/Boostnote-darwin-*/` → fail with environment mismatch. Ignore.
 - `createNote`/`createNoteFromUrl` Jest tests fail with "Target folder doesn't exist" (test-data issue). Ignore.
 

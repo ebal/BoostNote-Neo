@@ -1,4 +1,3 @@
-const test = require('ava')
 const moveNote = require('browser/main/lib/dataApi/moveNote')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -22,22 +21,24 @@ const CSON = require('@rokt33r/season')
 const storagePath = path.join(os.tmpdir(), 'test/move-note')
 const storagePath2 = path.join(os.tmpdir(), 'test/move-note2')
 
-test.beforeEach(t => {
-  t.context.storage1 = TestDummy.dummyStorage(storagePath)
-  t.context.storage2 = TestDummy.dummyStorage(storagePath2)
+const context = {}
+
+beforeEach(() => {
+  context.storage1 = TestDummy.dummyStorage(storagePath)
+  context.storage2 = TestDummy.dummyStorage(storagePath2)
   localStorage.setItem(
     'storages',
-    JSON.stringify([t.context.storage1.cache, t.context.storage2.cache])
+    JSON.stringify([context.storage1.cache, context.storage2.cache])
   )
 })
 
-test.serial('Move a note', t => {
-  const storageKey1 = t.context.storage1.cache.key
-  const folderKey1 = t.context.storage1.json.folders[0].key
-  const note1 = t.context.storage1.notes[0]
-  const note2 = t.context.storage1.notes[1]
-  const storageKey2 = t.context.storage2.cache.key
-  const folderKey2 = t.context.storage2.json.folders[0].key
+test('Move a note', () => {
+  const storageKey1 = context.storage1.cache.key
+  const folderKey1 = context.storage1.json.folders[0].key
+  const note1 = context.storage1.notes[0]
+  const note2 = context.storage1.notes[1]
+  const storageKey2 = context.storage2.cache.key
+  const folderKey2 = context.storage2.json.folders[0].key
 
   return Promise.resolve()
     .then(function doTest() {
@@ -54,24 +55,24 @@ test.serial('Move a note', t => {
         path.join(storagePath, 'notes', data1.key + '.cson')
       )
 
-      t.is(jsonData1.folder, folderKey1)
-      t.is(jsonData1.title, note1.title)
+      expect(jsonData1.folder).toBe(folderKey1)
+      expect(jsonData1.title).toBe(note1.title)
 
       const jsonData2 = CSON.readFileSync(
         path.join(storagePath2, 'notes', data2.key + '.cson')
       )
-      t.is(jsonData2.folder, folderKey2)
-      t.is(jsonData2.title, note2.title)
+      expect(jsonData2.folder).toBe(folderKey2)
+      expect(jsonData2.title).toBe(note2.title)
       try {
         CSON.readFileSync(path.join(storagePath, 'notes', note2.key + '.cson'))
-        t.fail('The old note should be deleted.')
+        throw new Error('The old note should be deleted.')
       } catch (err) {
-        t.is(err.code, 'ENOENT')
+        expect(err.code).toBe('ENOENT')
       }
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
   sander.rimrafSync(storagePath2)

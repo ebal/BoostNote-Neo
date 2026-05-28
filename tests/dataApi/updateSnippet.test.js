@@ -1,4 +1,3 @@
-const test = require('ava')
 const updateSnippet = require('browser/main/lib/dataApi/updateSnippet')
 const sander = require('sander')
 const os = require('os')
@@ -21,11 +20,11 @@ const newSnippet = {
   content: 'new content'
 }
 
-test.beforeEach(t => {
+beforeEach(() => {
   sander.writeFileSync(snippetFile, JSON.stringify([oldSnippet]))
 })
 
-test.serial('Update a snippet', t => {
+test('Update a snippet', () => {
   return Promise.resolve()
     .then(function doTest() {
       return Promise.all([updateSnippet(newSnippet, snippetFile)])
@@ -35,13 +34,13 @@ test.serial('Update a snippet', t => {
       const snippet = snippets.find(
         currentSnippet => currentSnippet.id === newSnippet.id
       )
-      t.not(snippet, undefined)
-      t.is(snippet.name, newSnippet.name)
-      t.deepEqual(snippet.prefix, newSnippet.prefix)
-      t.is(snippet.content, newSnippet.content)
+      expect(snippet).not.toBeUndefined()
+      expect(snippet.name).toBe(newSnippet.name)
+      expect(snippet.prefix).toEqual(newSnippet.prefix)
+      expect(snippet.content).toBe(newSnippet.content)
     })
 })
 
-test.after.always(() => {
+afterAll(() => {
   sander.rimrafSync(snippetFilePath)
 })

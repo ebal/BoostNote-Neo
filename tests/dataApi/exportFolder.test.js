@@ -1,4 +1,3 @@
-const test = require('ava')
 const exportFolder = require('browser/main/lib/dataApi/exportFolder')
 const createNote = require('browser/main/lib/dataApi/createNote')
 
@@ -23,14 +22,16 @@ const sander = require('sander')
 
 const storagePath = path.join(os.tmpdir(), 'test/export-note')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Export a folder', t => {
-  const storageKey = t.context.storage.cache.key
-  const folderKey = t.context.storage.json.folders[0].key
+test('Export a folder', () => {
+  const storageKey = context.storage.cache.key
+  const folderKey = context.storage.json.folders[0].key
 
   const input1 = {
     type: 'MARKDOWN_NOTE',
@@ -72,13 +73,13 @@ test.serial('Export a folder', t => {
     })
     .then(function assert() {
       let filePath = path.join(storagePath, 'input1.md')
-      t.true(fs.existsSync(filePath))
+      expect(fs.existsSync(filePath)).toBe(true)
       filePath = path.join(storagePath, 'input2.md')
-      t.false(fs.existsSync(filePath))
+      expect(fs.existsSync(filePath)).toBe(false)
     })
 })
 
-test.after.always(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

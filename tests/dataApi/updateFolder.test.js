@@ -1,4 +1,3 @@
-const test = require('ava')
 const updateFolder = require('browser/main/lib/dataApi/updateFolder')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -22,14 +21,16 @@ const CSON = require('@rokt33r/season')
 
 const storagePath = path.join(os.tmpdir(), 'test/update-folder')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Update a folder', t => {
-  const storageKey = t.context.storage.cache.key
-  const folderKey = t.context.storage.json.folders[0].key
+test('Update a folder', () => {
+  const storageKey = context.storage.cache.key
+  const folderKey = context.storage.json.folders[0].key
   const input = {
     name: 'changed',
     color: '#FF0000'
@@ -39,16 +40,15 @@ test.serial('Update a folder', t => {
       return updateFolder(storageKey, folderKey, input)
     })
     .then(function assert(data) {
-      t.true(_.find(data.storage.folders, input) != null)
+      expect(_.find(data.storage.folders, input)).not.toBeNull()
       const jsonData = CSON.readFileSync(
         path.join(data.storage.path, 'boostnote.json')
       )
-      console.log(path.join(data.storage.path, 'boostnote.json'))
-      t.true(_.find(jsonData.folders, input) != null)
+      expect(_.find(jsonData.folders, input)).not.toBeNull()
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

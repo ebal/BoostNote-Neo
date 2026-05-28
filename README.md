@@ -130,10 +130,7 @@ docker run --rm boostnote-legacy npm test
 # Lint
 docker run --rm boostnote-legacy npm run lint
 
-# AVA only
-docker run --rm boostnote-legacy npm run ava
-
-# Jest only
+# Jest only (alias)
 docker run --rm boostnote-legacy npm run jest
 ```
 
@@ -171,7 +168,7 @@ browser/main/index.js (webpack entry → compiled/main.js)
 | CSS | Stylus + CSS Modules |
 | Build | Webpack 1 + Babel 6 + Grunt |
 | Packaging | electron-packager 15 |
-| Tests | AVA + Jest |
+| Tests | Jest |
 
 ---
 

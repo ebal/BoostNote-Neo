@@ -1,4 +1,3 @@
-const test = require('ava')
 const toggleStorage = require('browser/main/lib/dataApi/toggleStorage')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -21,24 +20,26 @@ const os = require('os')
 
 const storagePath = path.join(os.tmpdir(), 'test/toggle-storage')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Toggle a storage location', t => {
-  const storageKey = t.context.storage.cache.key
+test('Toggle a storage location', () => {
+  const storageKey = context.storage.cache.key
   return Promise.resolve()
     .then(function doTest() {
       return toggleStorage(storageKey, true)
     })
-    .then(function assert(data) {
+    .then(function assert() {
       const cachedStorageList = JSON.parse(localStorage.getItem('storages'))
-      t.true(_.find(cachedStorageList, { key: storageKey }).isOpen === true)
+      expect(_.find(cachedStorageList, { key: storageKey }).isOpen).toBe(true)
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

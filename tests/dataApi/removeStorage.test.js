@@ -1,4 +1,3 @@
-const test = require('ava')
 const removeStorage = require('browser/main/lib/dataApi/removeStorage')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -20,23 +19,25 @@ const os = require('os')
 
 const storagePath = path.join(os.tmpdir(), 'test/remove-storage')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test('Remove a storage', t => {
-  const storageKey = t.context.storage.cache.key
+test('Remove a storage', () => {
+  const storageKey = context.storage.cache.key
   return Promise.resolve()
     .then(function doTest() {
       return removeStorage(storageKey)
     })
-    .then(function assert(data) {
-      t.is(JSON.parse(localStorage.getItem('storages')).length, 0)
+    .then(function assert() {
+      expect(JSON.parse(localStorage.getItem('storages')).length).toBe(0)
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

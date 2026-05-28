@@ -1,4 +1,3 @@
-const test = require('ava')
 const deleteSnippet = require('browser/main/lib/dataApi/deleteSnippet')
 const sander = require('sander')
 const os = require('os')
@@ -14,22 +13,21 @@ const newSnippet = {
   content: ''
 }
 
-test.beforeEach(t => {
+beforeEach(() => {
   sander.writeFileSync(snippetFile, JSON.stringify([newSnippet]))
 })
 
-test.serial('Delete a snippet', t => {
+test('Delete a snippet', () => {
   return Promise.resolve()
     .then(function doTest() {
       return Promise.all([deleteSnippet(newSnippet, snippetFile)])
     })
-    .then(function assert(data) {
-      data = data[0]
+    .then(function assert() {
       const snippets = JSON.parse(sander.readFileSync(snippetFile))
-      t.is(snippets.length, 0)
+      expect(snippets.length).toBe(0)
     })
 })
 
-test.after.always(() => {
+afterAll(() => {
   sander.rimrafSync(snippetFilePath)
 })

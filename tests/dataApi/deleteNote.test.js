@@ -1,4 +1,3 @@
-const test = require('ava')
 const createNote = require('browser/main/lib/dataApi/createNote')
 const deleteNote = require('browser/main/lib/dataApi/deleteNote')
 
@@ -25,14 +24,16 @@ const attachmentManagement = require('browser/main/lib/dataApi/attachmentManagem
 
 const storagePath = path.join(os.tmpdir(), 'test/delete-note')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Delete a note', t => {
-  const storageKey = t.context.storage.cache.key
-  const folderKey = t.context.storage.json.folders[0].key
+test('Delete a note', () => {
+  const storageKey = context.storage.cache.key
+  const folderKey = context.storage.json.folders[0].key
 
   const input1 = {
     type: 'SNIPPET_NOTE',
@@ -74,9 +75,9 @@ test.serial('Delete a note', t => {
         CSON.readFileSync(
           path.join(storagePath, 'notes', data.noteKey + '.cson')
         )
-        t.fail('note cson must be deleted.')
+        throw new Error('note cson must be deleted.')
       } catch (err) {
-        t.is(err.code, 'ENOENT')
+        expect(err.code).toBe('ENOENT')
         return data
       }
     })
@@ -86,11 +87,11 @@ test.serial('Delete a note', t => {
         attachmentManagement.DESTINATION_FOLDER,
         data.noteKey
       )
-      t.is(fs.existsSync(attachmentFolderPath), false)
+      expect(fs.existsSync(attachmentFolderPath)).toBe(false)
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

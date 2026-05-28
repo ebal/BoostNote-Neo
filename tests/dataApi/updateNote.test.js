@@ -1,4 +1,3 @@
-const test = require('ava')
 const createNote = require('browser/main/lib/dataApi/createNote')
 const updateNote = require('browser/main/lib/dataApi/updateNote')
 
@@ -23,14 +22,16 @@ const faker = require('faker')
 
 const storagePath = path.join(os.tmpdir(), 'test/update-note')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Update a note', t => {
-  const storageKey = t.context.storage.cache.key
-  const folderKey = t.context.storage.json.folders[0].key
+test('Update a note', () => {
+  const storageKey = context.storage.cache.key
+  const folderKey = context.storage.json.folders[0].key
 
   const randLinesHighlightedArray = new Array(10)
     .fill()
@@ -108,42 +109,40 @@ test.serial('Update a note', t => {
       const jsonData1 = CSON.readFileSync(
         path.join(storagePath, 'notes', data1.key + '.cson')
       )
-      t.is(input3.title, data1.title)
-      t.is(input3.title, jsonData1.title)
-      t.is(input3.description, data1.description)
-      t.is(input3.description, jsonData1.description)
-      t.is(input3.tags.length, data1.tags.length)
-      t.is(input3.tags.length, jsonData1.tags.length)
-      t.is(input3.snippets.length, data1.snippets.length)
-      t.is(input3.snippets.length, jsonData1.snippets.length)
-      t.is(input3.snippets[0].content, data1.snippets[0].content)
-      t.is(input3.snippets[0].content, jsonData1.snippets[0].content)
-      t.is(input3.snippets[0].name, data1.snippets[0].name)
-      t.is(input3.snippets[0].name, jsonData1.snippets[0].name)
-      t.deepEqual(
-        input3.snippets[0].linesHighlighted,
-        data1.snippets[0].linesHighlighted
+      expect(data1.title).toBe(input3.title)
+      expect(jsonData1.title).toBe(input3.title)
+      expect(data1.description).toBe(input3.description)
+      expect(jsonData1.description).toBe(input3.description)
+      expect(data1.tags.length).toBe(input3.tags.length)
+      expect(jsonData1.tags.length).toBe(input3.tags.length)
+      expect(data1.snippets.length).toBe(input3.snippets.length)
+      expect(jsonData1.snippets.length).toBe(input3.snippets.length)
+      expect(data1.snippets[0].content).toBe(input3.snippets[0].content)
+      expect(jsonData1.snippets[0].content).toBe(input3.snippets[0].content)
+      expect(data1.snippets[0].name).toBe(input3.snippets[0].name)
+      expect(jsonData1.snippets[0].name).toBe(input3.snippets[0].name)
+      expect(data1.snippets[0].linesHighlighted).toEqual(
+        input3.snippets[0].linesHighlighted
       )
-      t.deepEqual(
-        input3.snippets[0].linesHighlighted,
-        jsonData1.snippets[0].linesHighlighted
+      expect(jsonData1.snippets[0].linesHighlighted).toEqual(
+        input3.snippets[0].linesHighlighted
       )
 
       const jsonData2 = CSON.readFileSync(
         path.join(storagePath, 'notes', data2.key + '.cson')
       )
-      t.is(input4.title, data2.title)
-      t.is(input4.title, jsonData2.title)
-      t.is(input4.content, data2.content)
-      t.is(input4.content, jsonData2.content)
-      t.is(input4.tags.length, data2.tags.length)
-      t.is(input4.tags.length, jsonData2.tags.length)
-      t.deepEqual(input4.linesHighlighted, data2.linesHighlighted)
-      t.deepEqual(input4.linesHighlighted, jsonData2.linesHighlighted)
+      expect(data2.title).toBe(input4.title)
+      expect(jsonData2.title).toBe(input4.title)
+      expect(data2.content).toBe(input4.content)
+      expect(jsonData2.content).toBe(input4.content)
+      expect(data2.tags.length).toBe(input4.tags.length)
+      expect(jsonData2.tags.length).toBe(input4.tags.length)
+      expect(data2.linesHighlighted).toEqual(input4.linesHighlighted)
+      expect(jsonData2.linesHighlighted).toEqual(input4.linesHighlighted)
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

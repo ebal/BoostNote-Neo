@@ -1,4 +1,3 @@
-const test = require('ava')
 const reorderFolder = require('browser/main/lib/dataApi/reorderFolder')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -22,34 +21,36 @@ const CSON = require('@rokt33r/season')
 
 const storagePath = path.join(os.tmpdir(), 'test/reorder-folder')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Reorder a folder', t => {
-  const storageKey = t.context.storage.cache.key
-  const firstFolderKey = t.context.storage.json.folders[0].key
-  const secondFolderKey = t.context.storage.json.folders[1].key
+test('Reorder a folder', () => {
+  const firstFolderKey = context.storage.json.folders[0].key
+  const secondFolderKey = context.storage.json.folders[1].key
+  const storageKey = context.storage.cache.key
 
   return Promise.resolve()
     .then(function doTest() {
       return reorderFolder(storageKey, 0, 1)
     })
     .then(function assert(data) {
-      t.true(_.nth(data.storage.folders, 0).key === secondFolderKey)
-      t.true(_.nth(data.storage.folders, 1).key === firstFolderKey)
+      expect(_.nth(data.storage.folders, 0).key).toBe(secondFolderKey)
+      expect(_.nth(data.storage.folders, 1).key).toBe(firstFolderKey)
 
       const jsonData = CSON.readFileSync(
         path.join(data.storage.path, 'boostnote.json')
       )
 
-      t.true(_.nth(jsonData.folders, 0).key === secondFolderKey)
-      t.true(_.nth(jsonData.folders, 1).key === firstFolderKey)
+      expect(_.nth(jsonData.folders, 0).key).toBe(secondFolderKey)
+      expect(_.nth(jsonData.folders, 1).key).toBe(firstFolderKey)
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

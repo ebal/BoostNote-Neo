@@ -1,4 +1,3 @@
-const test = require('ava')
 const renameStorage = require('browser/main/lib/dataApi/renameStorage')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -21,24 +20,28 @@ const os = require('os')
 
 const storagePath = path.join(os.tmpdir(), 'test/rename-storage')
 
-test.beforeEach(t => {
-  t.context.storage = TestDummy.dummyStorage(storagePath)
-  localStorage.setItem('storages', JSON.stringify([t.context.storage.cache]))
+const context = {}
+
+beforeEach(() => {
+  context.storage = TestDummy.dummyStorage(storagePath)
+  localStorage.setItem('storages', JSON.stringify([context.storage.cache]))
 })
 
-test.serial('Rename a storage', t => {
-  const storageKey = t.context.storage.cache.key
+test('Rename a storage', () => {
+  const storageKey = context.storage.cache.key
   return Promise.resolve()
     .then(function doTest() {
       return renameStorage(storageKey, 'changed')
     })
-    .then(function assert(data) {
+    .then(function assert() {
       const cachedStorageList = JSON.parse(localStorage.getItem('storages'))
-      t.true(_.find(cachedStorageList, { key: storageKey }).name === 'changed')
+      expect(_.find(cachedStorageList, { key: storageKey }).name).toBe(
+        'changed'
+      )
     })
 })
 
-test.after(function after() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(storagePath)
 })

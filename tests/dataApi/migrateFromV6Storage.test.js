@@ -1,4 +1,3 @@
-const test = require('ava')
 const migrateFromV6Storage = require('browser/main/lib/dataApi/migrateFromV6Storage')
 
 global.document = require('jsdom').jsdom('<body></body>')
@@ -22,53 +21,55 @@ const os = require('os')
 
 const dummyStoragePath = path.join(os.tmpdir(), 'test/migrate-test-storage')
 
-test.beforeEach(t => {
-  const dummyData = (t.context.dummyData = TestDummy.dummyLegacyStorage(
+const context = {}
+
+beforeEach(() => {
+  const dummyData = (context.dummyData = TestDummy.dummyLegacyStorage(
     dummyStoragePath
   ))
   console.log('init count', dummyData.notes.length)
   localStorage.setItem('storages', JSON.stringify([dummyData.cache]))
 })
 
-test.serial('Migrate legacy storage into v1 storage', t => {
+test('Migrate legacy storage into v1 storage', () => {
   return Promise.resolve()
-    .then(function test() {
+    .then(function doTest() {
       return migrateFromV6Storage(dummyStoragePath)
     })
     .then(function assert(data) {
       // Check the result. It must be true if succeed.
-      t.true(data)
+      expect(data).toBe(true)
 
       // Check all notes migrated.
-      const dummyData = t.context.dummyData
+      const dummyData = context.dummyData
       const noteDirPath = path.join(dummyStoragePath, 'notes')
       const fileList = sander.readdirSync(noteDirPath)
-      t.is(dummyData.notes.length, fileList.length)
+      expect(dummyData.notes.length).toBe(fileList.length)
       const noteMap = fileList.map(filePath => {
         return CSON.readFileSync(path.join(noteDirPath, filePath))
       })
       dummyData.notes.forEach(function(targetNote) {
-        t.true(
+        expect(
           _.find(noteMap, {
             title: targetNote.title,
             folder: targetNote.folder
-          }) != null
-        )
+          })
+        ).not.toBeNull()
       })
 
       // Check legacy folder directory is removed
       dummyData.json.folders.forEach(function(folder) {
         try {
           sander.statSync(dummyStoragePath, folder.key)
-          t.fail('Folder still remains. ENOENT error must be occured.')
+          throw new Error('Folder still remains. ENOENT error must be occured.')
         } catch (err) {
-          t.is(err.code, 'ENOENT')
+          expect(err.code).toBe('ENOENT')
         }
       })
     })
 })
 
-test.after.always(function() {
+afterAll(() => {
   localStorage.clear()
   sander.rimrafSync(dummyStoragePath)
 })
