@@ -136,7 +136,7 @@
     "babel-register": "^6.11.6",
     "browser-env": "^3.3.0",
     "color": "^3.2.1",
-    "copy-to-clipboard": "^3.0.6",
+    "copy-to-clipboard": "^3.3.3",
     "cross-env": "^7.0.3",
     "css": "^2.2.4",
     "css-loader": "^0.19.0",
