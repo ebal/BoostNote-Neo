@@ -3022,9 +3022,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-electron-config@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/electron-config/-/electron-config-1.0.0.tgz#069d044cc794f04784ae72f12916725d3c8c39af"
+electron-config@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/electron-config/-/electron-config-2.0.0.tgz#b00a7d55556d9c1aa59f5eec3bdf446c773425ff"
+  integrity sha512-5mGwRK4lsAo6tiy4KNF/zUInYpUGr7JJzLA8FHOoqBWV3kkKJWSrDXo4Uk2Ffm5aeQ1o73XuorfkYhaWFV2O4g==
   dependencies:
     conf "^1.0.0"
 
