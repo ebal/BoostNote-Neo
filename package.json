@@ -85,7 +85,7 @@
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-imsize": "^2.0.1",
     "markdown-it-kbd": "^1.1.1",
-    "markdown-it-multimd-table": "^2.0.1",
+    "markdown-it-multimd-table": "^4.2.3",
     "markdown-it-plantuml": "^1.4.1",
     "markdown-it-smartarrows": "^1.0.1",
     "markdown-it-sub": "^1.0.0",
