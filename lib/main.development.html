@@ -174,6 +174,19 @@
   <script src="../node_modules/redux/dist/redux.min.js"></script>
   <script src="../node_modules/react-redux/dist/react-redux.min.js"></script>
   <script type='text/javascript'>
+    // Suppress Electron 14+ renderer-side `vm module deprecated` warning.
+    // Source: cson-parser/lib/parse.js:35 (via @rokt33r/season on every
+    // .cson note read/write). Documented in CLAUDE.md item #4.
+    (function() {
+      const origWarn = console.warn
+      console.warn = function() {
+        if (arguments.length && typeof arguments[0] === 'string' &&
+            arguments[0].indexOf('vm module of Node.js is deprecated') !== -1) {
+          return
+        }
+        return origWarn.apply(console, arguments)
+      }
+    })()
     const electron = require('electron')
     const remote = require('@electron/remote')
     electron.webFrame.setVisualZoomLevelLimits(1, 1)
