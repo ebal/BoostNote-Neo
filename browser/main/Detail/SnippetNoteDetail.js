@@ -76,10 +76,9 @@ class SnippetNoteDetail extends React.Component {
     ee.on('code:generate-toc', this.generateToc)
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.note.key !== this.props.note.key &&
+      prevProps.note.key !== this.props.note.key &&
       !this.state.isMovingNote
     ) {
       if (this.saveQueue != null) this.saveNow()
@@ -87,9 +86,9 @@ class SnippetNoteDetail extends React.Component {
         {
           description: ''
         },
-        nextProps.note,
+        this.props.note,
         {
-          snippets: nextProps.note.snippets.map(snippet =>
+          snippets: this.props.note.snippets.map(snippet =>
             Object.assign({ linesHighlighted: [] }, snippet)
           )
         }

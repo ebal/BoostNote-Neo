@@ -123,13 +123,6 @@ class NoteList extends React.Component {
     ee.on('list:navigate', this.navigate)
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.location.pathname !== this.props.location.pathname) {
-      this.resetScroll()
-    }
-  }
-
   resetScroll() {
     this.refs.list.scrollTop = 0
   }
@@ -147,6 +140,10 @@ class NoteList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.resetScroll()
+    }
+
     const { dispatch, location } = this.props
     const { selectedNoteKeys } = this.state
     const visibleNoteKeys = this.notes && this.notes.map(note => note.key)

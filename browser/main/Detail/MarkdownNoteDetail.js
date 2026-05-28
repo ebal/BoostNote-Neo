@@ -80,15 +80,15 @@ class MarkdownNoteDetail extends React.Component {
     ee.on('code:generate-toc', this.generateToc)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const isNewNote = nextProps.note.key !== this.props.note.key
+  componentDidUpdate(prevProps) {
+    const isNewNote = prevProps.note.key !== this.props.note.key
     const hasDeletedTags =
-      nextProps.note.tags.length < this.props.note.tags.length
+      this.props.note.tags.length < prevProps.note.tags.length
     if (!this.state.isMovingNote && (isNewNote || hasDeletedTags)) {
       if (this.saveQueue != null) this.saveNow()
       this.setState(
         {
-          note: Object.assign({ linesHighlighted: [] }, nextProps.note)
+          note: Object.assign({ linesHighlighted: [] }, this.props.note)
         },
         () => {
           this.refs.content.reload()
@@ -99,7 +99,7 @@ class MarkdownNoteDetail extends React.Component {
 
     // Focus content if using blur or double click
     // --> Moved here from componentDidMount so a re-render during search won't set focus to the editor
-    const { switchPreview } = nextProps.config.editor
+    const { switchPreview } = this.props.config.editor
 
     if (this.state.switchPreview !== switchPreview) {
       this.setState({

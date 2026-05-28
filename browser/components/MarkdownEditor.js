@@ -42,13 +42,10 @@ class MarkdownEditor extends React.Component {
     eventEmitter.on('editor:focus', this.focusEditor)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.value = this.refs.code.value
-  }
-
-  UNSAFE_componentWillReceiveProps(props) {
-    if (props.value !== this.props.value) {
-      this.queueRendering(props.value)
+    if (prevProps.value !== this.props.value) {
+      this.queueRendering(this.props.value)
     }
   }
 
