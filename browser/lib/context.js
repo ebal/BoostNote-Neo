@@ -6,7 +6,7 @@ function popup(templates) {
   templates.forEach(item => {
     menu.append(new MenuItem(item))
   })
-  menu.popup(remote.getCurrentWindow())
+  menu.popup({ window: remote.getCurrentWindow() })
 }
 
 const context = {

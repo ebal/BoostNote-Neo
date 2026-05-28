@@ -15,11 +15,10 @@ export default function formatPDF(props) {
 
     return new Promise((resolve, reject) => {
       printout.webContents.on('did-finish-load', () => {
-        printout.webContents.printToPDF({}, (err, data) => {
-          if (err) reject(err)
-          else resolve(data)
-          printout.destroy()
-        })
+        printout.webContents
+          .printToPDF({})
+          .then(resolve, reject)
+          .finally(() => printout.destroy())
       })
     })
   }

@@ -108,7 +108,7 @@ export default class CodeEditor extends React.Component {
       this.contextMenuHandler = function(editor, event) {
         const menu = buildEditorContextMenu(editor, event)
         if (menu != null) {
-          setTimeout(() => menu.popup(remote.getCurrentWindow()), 30)
+          setTimeout(() => menu.popup({ window: remote.getCurrentWindow() }), 30)
         }
       }
     }
