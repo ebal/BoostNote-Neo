@@ -99,14 +99,15 @@ module.exports = function(grunt) {
             InternalName: 'Boostnote'
           }
         })
-        packager(opts, function(err, appPath) {
-          if (err) {
+        packager(opts)
+          .then(function(appPaths) {
+            grunt.log.writeln('packaged: ' + appPaths.join(', '))
+            done()
+          })
+          .catch(function(err) {
             grunt.log.writeln(err)
             done(err)
-            return
-          }
-          done()
-        })
+          })
         break
       case 'osx':
         Object.assign(opts, {
@@ -114,14 +115,15 @@ module.exports = function(grunt) {
           icon: path.join(__dirname, 'resources/app.icns'),
           appCategoryType: 'public.app-category.developer-tools'
         })
-        packager(opts, function(err, appPath) {
-          if (err) {
+        packager(opts)
+          .then(function(appPaths) {
+            grunt.log.writeln('packaged: ' + appPaths.join(', '))
+            done()
+          })
+          .catch(function(err) {
             grunt.log.writeln(err)
             done(err)
-            return
-          }
-          done()
-        })
+          })
         break
       case 'osx-arm64':
         Object.assign(opts, {
@@ -130,28 +132,30 @@ module.exports = function(grunt) {
           icon: path.join(__dirname, 'resources/app.icns'),
           appCategoryType: 'public.app-category.developer-tools'
         })
-        packager(opts, function(err, appPath) {
-          if (err) {
+        packager(opts)
+          .then(function(appPaths) {
+            grunt.log.writeln('packaged: ' + appPaths.join(', '))
+            done()
+          })
+          .catch(function(err) {
             grunt.log.writeln(err)
             done(err)
-            return
-          }
-          done()
-        })
+          })
         break
       case 'linux':
         Object.assign(opts, {
           platform: 'linux',
           icon: path.join(__dirname, 'resources/app.png')
         })
-        packager(opts, function(err, appPath) {
-          if (err) {
+        packager(opts)
+          .then(function(appPaths) {
+            grunt.log.writeln('packaged: ' + appPaths.join(', '))
+            done()
+          })
+          .catch(function(err) {
             grunt.log.writeln(err)
             done(err)
-            return
-          }
-          done()
-        })
+          })
         break
     }
   })

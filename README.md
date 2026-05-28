@@ -38,7 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
-| 0.18.1 | Bump 4 more in-major patches: `markdown-it-emoji ^1.4.0`, `unique-slug 2.0.2`, `dom-storage ^2.1.0`; lift `tmp` resolution to `^0.2.7` |
+| 0.18.1 | **React 16.14.0 → 17.0.2**; `electron-packager` 15→17; bump 4 in-major patches; drop unused deps; 3 deferred Electron 14 follow-ups (menu.popup, printToPDF, nativeWindowOpen) |
 | 0.18.0 | **Electron 11.5.0 → 14.2.9** (Chromium 87 → 93, Node 12 → 14.17); migrate `electron.remote` → `@electron/remote@^2.1.3` across 23 renderer files; bump 13 in-major dep patches/minors (Tier 1–4); force `minimatch ^3.1.4` (CVE-2022-3517) |
 | 0.17.31 | Add GitHub-style alert blockquotes; fix <details> collapse, naughtyIFrame, alert CSS; drop sanitize-html |
 | 0.17.30 | Add PlantUML SVG render, ```flow alias; fix plantuml HTML entities, mermaid NaN guard, sanitizeInline regex, raphael pin, Dockerfile patch |

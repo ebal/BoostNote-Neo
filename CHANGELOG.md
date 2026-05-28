@@ -8,14 +8,11 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 ### Changed
 
-- Bump 4 more in-major patches/minors. All safe within-same-major bumps; bundle compiles unchanged at 8.31 MB / 1148 modules ([uncommitted batch]).
-  - Runtime: `markdown-it-emoji ^1.1.1 → ^1.4.0` (renderer-bundled emoji plugin in `browser/lib/markdown.js`), `unique-slug 2.0.0 → 2.0.2` (attachment naming in `browser/main/lib/dataApi/attachmentManagement.js`).
-  - Dev/test: `dom-storage ^2.0.2 → ^2.1.0` (localStorage mock used by `tests/dataApi/*.js`).
-  - Build-only resolution: `tmp ^0.2.6 → ^0.2.7` — lifts the locked 0.2.6 floor to the latest 0.2.x patch under the `electron-packager > @electron/asar` chain. Other yarn-resolution entries (`ws`, `follow-redirects`, `express`, `serve-static`, `node-fetch`, `handlebars`, `ua-parser-js`, `url-parse`, `form-data`, etc.) were re-verified — yarn already auto-resolves each `^X.Y.Z` floor to the latest within its major, so no further lifts are needed at this time.
-
-### Documentation
-
-- Add `[0.18.1]` section to the changelog; bump version in `package.json`.
+- **Upgrade React 16.14.0 → 17.0.2** ([`200a9fe1`](../../commit/200a9fe1)). Zero breaking changes; React 17 event delegation change (root-scope instead of `document`) has no effect here because BoostNote does not mix React with non-React UI.
+- Bump `electron-packager` `^15.4.0 → ^17.1.2` (drops Node 12 support, matches Electron 14 runtime) ([`db4360cb`](../../commit/db4360cb)).
+- Bump 4 more in-major patches/minors ([`ad5cb1e1`](../../commit/ad5cb1e1)). Runtime: `markdown-it-emoji ^1.1.1 → ^1.4.0`, `unique-slug 2.0.0 → 2.0.2`. Dev/test: `dom-storage ^2.0.2 → ^2.1.0`. Build-only resolution: `tmp ^0.2.6 → ^0.2.7`.
+- Drop unused `merge-stream` devDependency and `fs-jetpack` webpack external ([`8d636047`](../../commit/8d636047)).
+- Apply 3 deferred follow-ups from the Electron 14 upgrade: `menu.popup` object form at 3 call sites, `printToPDF` Promise form, `nativeWindowOpen: false` in `webPreferences` to suppress Electron 15 deprecation warning ([`8d15b699`](../../commit/8d15b699)).
 
 ## [0.18.0] - 2026-05-27
 
@@ -447,6 +444,8 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.18.1]: ../../compare/v0.18.0...v0.18.1
+[0.18.0]: ../../compare/v0.17.31...v0.18.0
 [0.17.31]: ../../compare/v0.17.30...v0.17.31
 [0.17.30]: ../../compare/v0.17.29...v0.17.30
 [0.17.29]: ../../compare/v0.17.28...v0.17.29
