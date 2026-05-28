@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.2] - 2026-05-28
+
+### Added
+
+- **Upgrade React 17.0.2 → 18.3.1** ([`685d292e`](../../commit/685d292e)). Renderer migrated to `createRoot` API (`browser/main/index.js:6`). Zero user-facing changes — React 18 concurrent features not adopted yet.
+- **Migrate 14 AVA tests to Jest** ([`dd91f210`](../../commit/dd91f210)). Drops AVA and all its transitive deps (node-ipc, etc.) from the dependency tree. All data-api tests now run under Jest with `@electron/remote` mock.
+- **Suppress `vm` deprecation warning** in renderer ([`11ddd782`](../../commit/11ddd782)). Identified source as `cson-parser`'s coffee-script dep at build time; suppressed at app init.
+
+### Changed
+
+- Replace 6 `UNSAFE_*` lifecycle methods with safe alternatives: `UNSAFE_componentWillMount` → constructor (`SnippetTab`), `UNSAFE_componentWillReceiveProps` → `componentDidUpdate` (`ColorPicker`, `CodeEditor`, `MarkdownEditor`), `UNSAFE_componentWillUpdate` → `componentDidUpdate` (`MarkdownNoteDetail`, `SnippetNoteDetail`, `NoteList`) ([`902cf650`](../../commit/902cf650), [`2ae32c4f`](../../commit/2ae32c4f)).
+- Upgrade `electron-packager` `^15.4.0 → ^17.1.2` (Dockerfile + devDeps; drops Node 12 support) ([`44eab186`](../../commit/44eab186)).
+- Upgrade `react-redux` `7.2.9 → 8.1.3` ([`c1ec1050`](../../commit/c1ec1050)).
+- Upgrade `react-autosuggest` `9.4.3 → 10.1.0` ([`78519c3f`](../../commit/78519c3f)).
+- Upgrade `react-emoji-render` `1.2.4 → 2.0.1` ([`d70030a0`](../../commit/d70030a0)).
+- Upgrade `react-transition-group` `2.9.0 → 4.4.5` (breaking API change — `CSSTransitionGroup` → `CSSTransition` + `TransitionGroup`, refactored `SnippetTab` and modal/animation calls) ([`526f5411`](../../commit/526f5411)).
+- Upgrade `react-debounce-render` `4.0.3 → 8.0.2` for React 18 compat ([`4514f1b9`](../../commit/4514f1b9); reverted to 4.0.3 in [`8957543c`](../../commit/8957543c) — ESM/webpack-1 export cliff, CJS entry dropped in v5+).
+- Upgrade `sander` `0.5.1 → 0.6.0` ([`3003d548`](../../commit/3003d548)).
+- Upgrade `markdown-it-footnote` `3.0.3 → 4.0.0` ([`aa1346a7`](../../commit/aa1346a7)).
+- Upgrade `mdurl` `1.0.1 → 2.0.0` ([`d9dac28a`](../../commit/d9dac28a)).
+- Upgrade `electron-config` `1.0.0 → 2.0.0` ([`7504cb01`](../../commit/7504cb01)).
+- Upgrade `markdown-it-multimd-table` `2.0.1 → 4.2.3` ([`7913ec21`](../../commit/7913ec21)).
+- Upgrade `copy-to-clipboard` `3.0.6 → 3.3.3` ([`1b9091d4`](../../commit/1b9091d4)).
+- Upgrade `striptags` `2.2.1 → 3.2.0` ([`65cd4bb7`](../../commit/65cd4bb7)).
+
+### Fixed
+
+- Fix `sander` namespace import: use `import * as sander` (`browser/lib/RcParser.js`) to bypass `__esModule` trap on mixed-export CJS module ([`2f84bb30`](../../commit/2f84bb30)).
+- Revert `react-debounce-render` to 4.0.3 — v5+ ships ESM-only entry, webpack 1 cannot resolve it ([`8957543c`](../../commit/8957543c)).
+
+### Removed
+
+- Drop AVA devDependency and 14 orphaned test files from `tests/` ([`dd91f210`](../../commit/dd91f210)).
+
+### Documentation
+
+- Document `markdownlint ^0.12` blocked by webpack 1 acorn ([`86f18d61`](../../commit/86f18d61)).
+- Document `mermaid ~9.3.0` blocked by acorn 5 ([`2baaa29b`](../../commit/2baaa29b)).
+
 ## [0.18.1] - 2026-05-28
 
 ### Changed
@@ -444,6 +483,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.18.2]: ../../compare/v0.18.1...v0.18.2
 [0.18.1]: ../../compare/v0.18.0...v0.18.1
 [0.18.0]: ../../compare/v0.17.31...v0.18.0
 [0.17.31]: ../../compare/v0.17.30...v0.17.31
