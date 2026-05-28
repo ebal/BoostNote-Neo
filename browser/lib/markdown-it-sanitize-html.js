@@ -37,7 +37,16 @@ module.exports = function sanitizePlugin(md, options) {
 }
 
 const tagRegex = /<([A-Z][A-Z0-9]*)\b([^>]*)\/?>|<\/([A-Z][A-Z0-9]*)\s*>/i
-const attributesRegex = /([A-Z][A-Z0-9]*)(?:=("|')([^\2]+?)\2)?/gi
+// Original was `/([A-Z][A-Z0-9]*)(?:=("|')([^\\2]+?)\\2)?/gi` — the
+// `[^\\2]` was meant as a backreference to group 2 (the quote char) but
+// JS regex treats `\\N` inside a character class as an OCTAL escape, so
+// the pattern silently matched any character except STX (0x02). V8 in
+// Chromium 108+ (Electron 22+) handles this edge case differently and
+// produces zero-length matches whose capture groups are undefined,
+// crashing `match[1].toLowerCase()` downstream. Rewrite to explicit
+// alternation for double-quoted, single-quoted, and unquoted attribute
+// values. Capture groups now: 1 = name, 2 = value (without quotes).
+const attributesRegex = /([A-Z][A-Z0-9]*)(?:=(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/gi
 
 function sanitizeBlock(html, options) {
   const tagPattern = /<[^>]*>/g
@@ -82,8 +91,16 @@ function sanitizeInline(html, options) {
     let value
 
     while ((match = attributesRegex.exec(attributes))) {
+      if (!match[1]) {
+        if (match.index === attributesRegex.lastIndex) attributesRegex.lastIndex++
+        continue
+      }
       name = match[1].toLowerCase()
-      value = match[3]
+      // Three possible capture sites for the value depending on quote
+      // style: match[2] = double-quoted, match[3] = single-quoted,
+      // match[4] = unquoted. Bare attributes have all three undefined.
+      const hasValue = match[2] != null || match[3] != null || match[4] != null
+      value = hasValue ? (match[2] || match[3] || match[4]) : undefined
 
       if (
         allowedAttributes['*'].indexOf(name) !== -1 ||
@@ -101,7 +118,7 @@ function sanitizeInline(html, options) {
         }
 
         attrs += ` ${name}`
-        if (match[2]) {
+        if (hasValue) {
           attrs += `="${value}"`
         }
       }
@@ -114,6 +131,9 @@ function sanitizeInline(html, options) {
     }
   } else {
     // closing tag
+    if (match[3] == null) {
+      return ''
+    }
     if (allowedTags.indexOf(match[3].toLowerCase()) !== -1) {
       return html
     } else {

@@ -16,7 +16,7 @@
     "watch": "webpack-dev-server --hot"
   },
   "config": {
-    "electron-version": "14.2.9"
+    "electron-version": "22.3.27"
   },
   "repository": {
     "type": "git",
@@ -140,7 +140,7 @@
     "css": "^2.2.4",
     "css-loader": "^0.19.0",
     "dom-storage": "^2.1.0",
-    "electron": "14.2.9",
+    "electron": "22.3.27",
     "electron-debug": "^4.1.0",
     "electron-devtools-installer": "^4.0.0",
     "electron-packager": "^17.1.2",
