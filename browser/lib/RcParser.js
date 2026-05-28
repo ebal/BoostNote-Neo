@@ -1,5 +1,5 @@
 import path from 'path'
-import sander from 'sander'
+import * as sander from 'sander'
 
 const BOOSTNOTERC = '.boostnoterc'
 const homePath = global.process.env.HOME || global.process.env.USERPROFILE
