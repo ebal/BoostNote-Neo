@@ -38,7 +38,6 @@ var config = {
     'markdown-it',
     'moment',
     'markdown-it-emoji',
-    'fs-jetpack',
     '@rokt33r/markdown-it-math',
     'markdown-it-kbd',
     'markdown-it-plantuml',
