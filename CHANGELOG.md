@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.3] - 2026-05-28
+
+### Added
+
+- **Upgrade `js-yaml` 3.14.1 → 4.1.1** ([`4f8ac294`](../../commit/4f8ac294)). Zero source edits — Boostnote already uses v4 API (`yaml.load`/`yaml.dump`). Collapses 6 coexisting js-yaml ranges to a single 4.1.1 hoisted install. Bundle shrinks 8.32 MB → 8.03 MB (-290 KB, -6 modules) by dropping legacy `esprima` dependency.
+- 4 CVE-forced transitive resolutions: `tmpl ^1.0.5` (ReDoS), `lodash.template ^4.18.0` (code injection), `react-router/path-to-regexp ^1.9.0` (ReDoS), `@babel/runtime ^7.26.10` (ReDoS) ([`32facf79`](../../commit/32facf79)).
+- 3 more CVE-forced transitive resolutions: `dompurify ^3.4.0` (clears 7 medium alerts), `merge ^2.1.1` (prototype pollution), `d3-color ^3.1.0` (ReDoS) ([`2aae0b4c`](../../commit/2aae0b4c)).
+
+### Changed
+
+- Upgrade `cross-env` 7.0.3 → 10.1.0 (dev-only CLI, ESM-only — Node 22 compatible, no code changes) ([`33a24555`](../../commit/33a24555)).
+- Upgrade `iconv-lite` 0.4.24 → 0.7.2 (runtime via `CodeEditor.js`, bare CJS shape preserved, Babel default-import works) ([`89f32ad8`](../../commit/89f32ad8)).
+- Upgrade `file-uri-to-path` 1.0.0 → 2.0.0 (runtime via `contextMenuBuilder.js`, direct function export, no __esModule flag) ([`29a9fae2`](../../commit/29a9fae2)).
+
 ## [0.18.2] - 2026-05-28
 
 ### Added
@@ -483,6 +497,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.18.3]: ../../compare/v0.18.2...v0.18.3
 [0.18.2]: ../../compare/v0.18.1...v0.18.2
 [0.18.1]: ../../compare/v0.18.0...v0.18.1
 [0.18.0]: ../../compare/v0.17.31...v0.18.0
