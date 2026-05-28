@@ -18,9 +18,10 @@ class ColorPicker extends React.Component {
     this.handleConfirm = this.handleConfirm.bind(this)
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.onColorChange(nextProps.color)
+  componentDidUpdate(prevProps) {
+    if (prevProps.color !== this.props.color) {
+      this.onColorChange(this.props.color)
+    }
   }
 
   onColorChange(color) {
