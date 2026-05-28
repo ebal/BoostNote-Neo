@@ -73,12 +73,7 @@ export function closeModal() {
   modalBaseRef.current.close()
 }
 
-export function isModalOpen() {
-  return !modalBaseRef.current.state.isHidden
-}
-
 export default {
   open: openModal,
-  close: closeModal,
-  isOpen: isModalOpen
+  close: closeModal
 }

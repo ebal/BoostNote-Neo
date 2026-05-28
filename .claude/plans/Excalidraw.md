@@ -10,8 +10,8 @@ Support Excalidraw-style diagrams (hand-drawn whiteboard drawings) in BoostNote 
 ## Constraints
 
 - Webpack 1 cannot bundle modern ESM — Excalidraw must be a **script external**
-- Electron 11 / Chromium 87 — modern enough, sandboxed iframe for preview. (Planned bump to Electron 14.2.9 / Chrome 93 — see `UpgradePlan_Electron11_to_Electron14.md` — would relax this constraint and unlock Excalidraw 0.18.x.)
-- React is already present (shared, not bundled) — Excalidraw can share it
+- Electron 14.2.9 / Chromium 93 / Node 14.17 — Excalidraw 0.18.x is now within runtime support. The earlier Excalidraw 0.15.x / 0.17.x fallback pin is no longer required.
+- React 18.3.1 is already present (shared, not bundled) — Excalidraw can share it (Excalidraw 0.18.x peer-supports React 17/18).
 - Docker-only build: all deps go via `package.json` + yarn resolutions
 - `@excalidraw/excalidraw` v0.18.1: **1.1 MB** minified (344 KB gzipped)
 - Only ships ESM — no official UMD build; need to serve from CDN (esm.run / unpkg / jsdelivr) or self-host the production bundle
