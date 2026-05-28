@@ -189,7 +189,15 @@
     })()
     const electron = require('electron')
     const remote = require('@electron/remote')
-    electron.webFrame.setVisualZoomLevelLimits(1, 1)
+    // Both `webFrame.setVisualZoomLevelLimits` and
+    // `setLayoutZoomLevelLimits` were removed in Electron 25 — neither
+    // has a direct replacement. Block user-driven viewport zoom
+    // (Ctrl+Wheel + pinch) at the DOM event layer instead. The
+    // app-level Cmd+/Cmd-/Cmd-0 path through ZoomManager.js calls
+    // webContents.setZoomLevel and is unaffected by this guard.
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault()
+    }, { passive: false })
     var scriptUrl = window._.find(remote.process.argv, (a) => a === '--hot')
       ? 'http://localhost:8080/assets/main.js'
       : '../compiled/main.js'

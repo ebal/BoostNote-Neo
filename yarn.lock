@@ -213,10 +213,12 @@
   dependencies:
     undici-types ">=7.24.0 <7.24.7"
 
-"@types/node@^16.11.26":
-  version "16.18.126"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.126.tgz#27875faa2926c0f475b39a8bb1e546c0176f8d4b"
-  integrity sha512-OTcgaiwfGFBKacvfwuHzzn1KLxH/er8mluiy8/uM3sGXHaRe73RrSIj01jow9t4kJEW633Ov+cOexXeiApTyAw==
+"@types/node@^18.11.18":
+  version "18.19.130"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.130.tgz#da4c6324793a79defb7a62cba3947ec5add00d59"
+  integrity sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/parse-json@^4.0.0":
   version "4.0.2"
@@ -3026,13 +3028,13 @@ electron-winstaller@^2.2.0:
     lodash.template "^4.2.2"
     temp "^0.8.3"
 
-electron@22.3.27:
-  version "22.3.27"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-22.3.27.tgz#b77451a53f0c502e7559cceac28ac58eb289eef8"
-  integrity sha512-7Rht21vHqj4ZFRnKuZdFqZFsvMBCmDqmjetiMqPtF+TmTBiGne1mnstVXOA/SRGhN2Qy5gY5bznJKpiqogjM8A==
+electron@26.6.10:
+  version "26.6.10"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-26.6.10.tgz#01ca7610bd662033ed3ceb70804cbf940c7e6756"
+  integrity sha512-pV2SD0RXzAiNRb/2yZrsVmVkBOMrf+DVsPulIgRjlL0+My9BL5spFuhHVMQO9yHl9tFpWtuRpQv0ofM/i9P8xg==
   dependencies:
     "@electron/get" "^2.0.0"
-    "@types/node" "^16.11.26"
+    "@types/node" "^18.11.18"
     extract-zip "^2.0.1"
 
 emoji-regex@^8.0.0:
@@ -9036,6 +9038,11 @@ underscore@^1.12.1, underscore@^1.9.1, underscore@~1.4.x, underscore@~1.6.0:
   version "7.24.6"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.24.6.tgz#61275b485d7fd4e9d269c7cf04ec2873c9cc0f91"
   integrity sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==
+
+undici-types@~5.26.4:
+  version "5.26.5"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 union-value@^1.0.0:
   version "1.0.0"
