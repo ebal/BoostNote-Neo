@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.19.0 | **Electron 14.2.9 → 42.3.0** (4 phases, Chromium 87→138, Node 12→22, V8 9.3→13.x, clears 22+ CVE alerts); **Jest 22→27** + Babel 7 alongside 6; turndown 4→7; clean up plans + dead code; revert js-yaml 4→3 (lint regression) |
 | 0.18.3 | Upgrade js-yaml 3→4 (-290KB bundle); 7 CVE-forced resolutions (dompurify 3.x, tmpl, lodash.template, path-to-regexp, @babel/runtime, merge, d3-color); upgrade cross-env 7→10, iconv-lite 0.4→0.7, file-uri-to-path 1→2 |
 | 0.18.2 | **React 17.0.2 → 18.3.1** (createRoot); 6 UNSAFE_* → safe lifecycles; migrate 14 AVA tests→Jest; upgrade 11 deps (react-redux, react-autosuggest, react-transition-group, sander, markdown-it-footnote, mdurl, electron-config, markdown-it-multimd-table, copy-to-clipboard, striptags); suppress vm deprecation; drop AVA + 14 orphaned tests |
 | 0.18.1 | **React 16.14.0 → 17.0.2**; `electron-packager` 15→17; bump 4 in-major patches; drop unused deps; 3 deferred Electron 14 follow-ups (menu.popup, printToPDF, nativeWindowOpen) |

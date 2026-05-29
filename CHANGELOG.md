@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0] - 2026-05-28
+
+### Added
+
+- **Electron 14.2.9 → 42.3.0** in 4 phases ([`6c6b1977`](../../commit/6c6b1977), [`7b2c6352`](../../commit/7b2c6352), [`cc284bb6`](../../commit/cc284bb6), [`724de304`](../../commit/724de304)). Chromium 87→138, Node 12→22.x, V8 9.3→13.x. Clears ~22+ Electron-specific Dependabot alerts (#85, #93, #106, #108, #110, #146, #151, #191–204, #208). API-transparent across all 4 phases — one source-touching fix per phase:
+  - **Phase 1 (14→22):** V8 10.6 regex regression fix in `markdown-it-sanitize-html.js` (backreference in character class — `\\2` interpreted as octal, not backreference). Add `sandbox: false` for Electron 20 default flip.
+  - **Phase 2 (22→26):** `webFrame.setVisualZoomLevelLimits` removed in Electron 25 → replaced with DOM-level Ctrl+Wheel guard.
+  - **Phase 3 (26→32):** Renderer reaches **Node 20** milestone. Zero source edits.
+  - **Phase 4 (32→42):** Latest stable Electron (42.3.0). Node 22.x renderer. `@electron/remote` 2.1.3 compatible throughout.
+- **Migrate test runner: Jest 22→27** + Babel 7 alongside Babel 6 ([`2de65b4c`](../../commit/2de65b4c), [`69644fba`](../../commit/69644fba)). Clears `node-notifier` CVE-2020-7669. Jest 27 with `jest-environment-jsdom@27` replaces hand-rolled jsdom setup. 23 files cleaned of redundant DOM setup. Mock fixes: `Menu.buildFromTemplate`, `jest.genMockFunction`→`jest.fn`.
+- **Upgrade `turndown` 4.0.2 → 7.2.4** ([`c78b0db5`](../../commit/c78b0db5)). Internal DOM parser swapped (jsdom→`@mixmark-io/domino`); Electron renderer uses native `DOMParser` regardless. Bundle -1 module.
+
+### Changed
+
+- Clean up `.claude/plans/`: delete 6 completed/stale plan docs, update Excalidraw.md and dead_code_report.md ([`648f7e45`](../../commit/648f7e45)).
+- Remove dead code: `setup-browser-env.js`, `setup-electron-mock.js`, 3 dead `dataApi._` aliases, `isModalOpen` export. Drop `browser-env` + `mock-require` devDeps ([`648f7e45`](../../commit/648f7e45)).
+- Add `.claude/plans/UpgradePlan_Electron14_to_Latest.md` documenting the 4-phase migration ([`6c6b1977`](../../commit/6c6b1977)).
+
+### Fixed
+
+- **Revert `js-yaml` 4.1.1 → 3.14.1** ([`648f7e45`](../../commit/648f7e45)). ESLint 4.19.1 calls `js-yaml.safeLoad()` on every config-file load — v4 removed this API, breaking `npm run lint`. Transitive consumers in markdown-toc/gray-matter/svgo chains also affected.
+
+### Removed
+
+- Drop `browser-env` and `mock-require` devDependencies (only consumed by deleted test helpers) ([`648f7e45`](../../commit/648f7e45)).
+
 ## [0.18.3] - 2026-05-28
 
 ### Added
@@ -497,6 +523,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.19.0]: ../../compare/v0.18.3...v0.19.0
 [0.18.3]: ../../compare/v0.18.2...v0.18.3
 [0.18.2]: ../../compare/v0.18.1...v0.18.2
 [0.18.1]: ../../compare/v0.18.0...v0.18.1
