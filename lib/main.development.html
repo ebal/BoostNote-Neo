@@ -193,13 +193,27 @@
     // Source: cson-parser/lib/parse.js:35 (via @rokt33r/season on every
     // .cson note read/write). Documented in CLAUDE.md item #4.
     (function() {
-      const origWarn = console.warn
-      console.warn = function() {
-        if (arguments.length && typeof arguments[0] === 'string' &&
-            arguments[0].indexOf('vm module of Node.js') !== -1) {
-          return
+      const filters = [
+        'vm module of Node.js',
+        '[Violation]',
+        'non-passive event listener'
+      ]
+      const matches = function(args) {
+        if (!args.length || typeof args[0] !== 'string') return false
+        for (let i = 0; i < filters.length; i++) {
+          if (args[0].indexOf(filters[i]) !== -1) return true
         }
+        return false
+      }
+      const origWarn = console.warn
+      const origLog = console.log
+      console.warn = function() {
+        if (matches(arguments)) return
         return origWarn.apply(console, arguments)
+      }
+      console.log = function() {
+        if (matches(arguments)) return
+        return origLog.apply(console, arguments)
       }
     })()
     const electron = require('electron')
