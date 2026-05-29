@@ -11,6 +11,8 @@ const stylusOptions = {
 }
 
 var config = Object.assign({}, skeleton, {
+  mode: 'development',
+  performance: { hints: false },
   module: {
     rules: [
       {
@@ -50,6 +52,7 @@ var config = Object.assign({}, skeleton, {
       },
       {
         test: /\.json$/,
+        type: 'javascript/auto',
         use: 'json-loader'
       }
     ]

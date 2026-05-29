@@ -124,19 +124,12 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.14.0",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/preset-react": "^7.20.0",
+    "@babel/register": "^7.22.0",
     "babel-jest": "^27.5.1",
-    "babel-loader": "^6.2.0",
-    "babel-plugin-react-transform": "^2.0.0",
-    "babel-plugin-webpack-alias": "^2.1.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-react-hmre": "^1.0.1",
-    "babel-register": "^6.11.6",
+    "babel-loader": "^8.3.0",
     "color": "^3.2.1",
     "copy-to-clipboard": "^3.3.3",
     "cross-env": "^10.1.0",
@@ -171,9 +164,10 @@
     "signale": "^1.4.0",
     "style-loader": "^0.12.4",
     "stylus": "^0.52.4",
-    "stylus-loader": "^2.3.1",
-    "webpack": "^2.7.0",
-    "webpack-dev-server": "^2.11.5"
+    "stylus-loader": "^3.0.2",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^3.11.3"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -182,16 +176,6 @@
       "\\.(css|less|styl)$": "identity-obj-proxy",
       "^browser/(.*)$": "<rootDir>/browser/$1",
       "^lib/(.*)$": "<rootDir>/lib/$1"
-    },
-    "transform": {
-      "^.+\\.jsx?$": [
-        "babel-jest",
-        {
-          "configFile": false,
-          "babelrc": false,
-          "presets": ["@babel/preset-env", "@babel/preset-react"]
-        }
-      ]
     },
     "setupFiles": [
       "<rootDir>/tests/jest.js",
@@ -240,7 +224,7 @@
     "ansi-regex": "^3.0.1",
     "remarkable": "^1.7.2",
     "ajv": "^6.12.3",
-    "acorn": "^5.7.4",
+    "acorn": "^6.4.1",
     "decompress-zip": "^0.3.2",
     "eventsource": "^1.1.1",
     "form-data": "^2.5.4",
@@ -261,6 +245,6 @@
     "open": "^6.0.0",
     "braces": "^3.0.3",
     "uuid": "^9.0.1",
-    "webpack": "^2.7.0"
+    "webpack": "^4.46.0"
   }
 }

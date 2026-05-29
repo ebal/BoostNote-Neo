@@ -12,6 +12,8 @@ const stylusOptions = {
 }
 
 var config = Object.assign({}, skeleton, {
+  mode: 'production',
+  performance: { hints: false },
   module: {
     rules: [
       {
@@ -45,6 +47,7 @@ var config = Object.assign({}, skeleton, {
       },
       {
         test: /\.json$/,
+        type: 'javascript/auto',
         use: 'json-loader'
       }
     ]
@@ -59,7 +62,6 @@ var config = Object.assign({}, skeleton, {
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     new NodeTargetPlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
