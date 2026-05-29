@@ -1,7 +1,7 @@
 ---
 name: build-test-verify
 description: >
-  Handles the full build, test, and verify workflow for BoostNote-Legacy using
+  Handles the full build, test, and verify workflow for BoostNote-Neo using
   Docker containers. Builds for both Intel (amd64) and Apple Silicon (arm64),
   runs tests, lint, and exports .app bundles to ./dist/.
   Trigger: "build, test and verify", "build and test", "build for both platforms",
@@ -38,8 +38,8 @@ COMMIT=$(git rev-parse --short HEAD)
 
 Kick off both builds simultaneously in one message:
 
-- **Intel (amd64):** `docker build --build-arg GIT_COMMIT=$COMMIT -t boostnote-legacy .`
-- **arm64:** `docker build --platform linux/arm64 --build-arg GIT_COMMIT=$COMMIT --build-arg BUILDARCH=arm64 -t boostnote-legacy-arm64 .`
+- **Intel (amd64):** `docker build --build-arg GIT_COMMIT=$COMMIT -t boostnote-neo .`
+- **arm64:** `docker build --platform linux/arm64 --build-arg GIT_COMMIT=$COMMIT --build-arg BUILDARCH=arm64 -t boostnote-neo-arm64 .`
 
 Set `timeout: 600000` (10 min) for each build call. If a build fails, report and stop — do not proceed to tests.
 
@@ -47,17 +47,17 @@ Set `timeout: 600000` (10 min) for each build call. If a build fails, report and
 
 After both builds succeed, run in parallel:
 
-- `docker run --rm boostnote-legacy npm test`
-- `docker run --rm boostnote-legacy-arm64 npm test`
-- `docker run --rm boostnote-legacy npm run lint`
+- `docker run --rm boostnote-neo npm test`
+- `docker run --rm boostnote-neo-arm64 npm test`
+- `docker run --rm boostnote-neo npm run lint`
 
 Set `timeout: 300000` (5 min) for each test call, `120000` (2 min) for lint.
 
 ### 5. Export .app bundles
 
 ```bash
-docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/
-docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
+docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64 ./dist/
+docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
 ```
 
 ### 6. Verify exports

@@ -1,4 +1,4 @@
-# Excalidraw Integration Plan — BoostNote-Legacy
+# Excalidraw Integration Plan — BoostNote-Neo
 
 ## Overview
 

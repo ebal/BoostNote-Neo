@@ -107,7 +107,7 @@ then rerun the quick-verify command above. Same applies if the `bn-deps` image d
 For deps that affect `electron-packager` or `@electron/get` (e.g. `got`, `sha.js`, `tar`), run the full build to exercise the path:
 
 ```bash
-docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .
+docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .
 ```
 
 Skip for renderer-only or HMR-only deps — compile smoke is sufficient.
@@ -144,7 +144,7 @@ Do NOT push.
 - Always run `npm run compile` after install — it is the fastest break detector.
 - For build-time deps that exercise electron-packager, also run the full `docker build .`.
 - Update CLAUDE.md in the same commit.
-- Use `bn-deps` for quick-verify, not the full `boostnote-legacy` image (5 min build vs 5 s compile).
+- Use `bn-deps` for quick-verify, not the full `boostnote-neo` image (5 min build vs 5 s compile).
 - Rebuild `bn-deps` (`docker build --target deps -t bn-deps .`) after introducing a selective `"parent/child"` resolution, or any time a spot-check shows the nested package version disagrees with `yarn.lock`. The image's baked `node_modules` snapshot does not re-link nested directories under `--force` alone — this was the stale-image trap that surfaced after `sanitize-html/postcss ^7.0.39` was introduced.
 - Never run host `npm` / `yarn`. Docker-only policy is hard.
 - Do NOT push the commit.

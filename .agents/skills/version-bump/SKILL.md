@@ -1,7 +1,7 @@
 ---
 name: version-bump
 description: >
-  Handles the full version bump workflow for BoostNote-Legacy. When the user
+  Handles the full version bump workflow for BoostNote-Neo. When the user
   says "bump to version X.Y.Z" or "bump version to X.Y.Z", this skill reads the
   current version, analyzes git log since the last bump, and updates all
   required files (package.json, CHANGELOG.md, README.md, optionally UPGRADE.md).

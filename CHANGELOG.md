@@ -282,7 +282,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 - Replace build-macos-dmgs CI workflow with generic build-boostnote-app workflow ([`0612c9ff`](../../commit/0612c9ff)).
 - Remove `FUNDING.yml`, `.snapcraft/`, and `.vscode/` directories from repository ([`3893a1eb`](../../commit/3893a1eb)).
 - Add comprehensive codebase analysis document ([`b4c17ef6`](../../commit/b4c17ef6)).
-- Update badge URLs to point to ebal/BoostNote-Legacy fork ([`2ae17196`](../../commit/2ae17196)).
+- Update badge URLs to point to A93162639/BoostNote-Neo fork ([`2ae17196`](../../commit/2ae17196)).
 
 ## [0.17.18] - 2026-05-18
 

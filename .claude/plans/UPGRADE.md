@@ -58,7 +58,7 @@ Status: successful
   - `tests/lib/escapeMarkdownPipe.test.js` — new Jest suite (9 cases) for the new helper
   - `CLAUDE.md` — refreshed dep policy, ceilings, skipped CVEs, and the dev-deps removed list
   - `CHANGELOG.md` — version bumps to 0.17.20–0.17.26
-- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .`
 - **verify-per-iteration command** (faster, ~5s vs ~5 min for full pack):
   ```bash
   docker build --target deps -t bn-deps .
@@ -106,8 +106,8 @@ Status: successful
   - `browser/main/NoteList/index.js` (showMessageBoxSync, showSaveDialog Promise, showOpenDialog Promise)
   - `browser/components/MarkdownPreview.js` (showSaveDialog Promise)
   - `AGENTS.md`, `CHANGELOG.md`, `UPGRADE.md`
-- **build command**: `docker build --platform linux/arm64 --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -f Dockerfile.arm64 -t boostnote-legacy-arm64 .`
-- **test command**: `docker run --platform linux/arm64 --rm boostnote-legacy-arm64 npm run test`
+- **build command**: `docker build --platform linux/arm64 --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -f Dockerfile.arm64 -t boostnote-neo-arm64 .`
+- **test command**: `docker run --platform linux/arm64 --rm boostnote-neo-arm64 npm run test`
 - **verification result**: build clean; `file dist/Boostnote-darwin-arm64/Boostnote.app/Contents/MacOS/Boostnote` → `Mach-O 64-bit executable arm64`; AVA all passed; Jest real test files all passed
 - **known issues**: Jest picks up test files inside packaged `dist/Boostnote-darwin-arm64/...` — pre-existing issue, not introduced here; those tests fail with environment mismatch errors
 - **rollback commit**: `git revert HEAD` or `git checkout intel -- .`
@@ -143,8 +143,8 @@ Status: successful
   - `lib/main-menu.js`
   - `package.json`
   - `CHANGELOG.md`
-- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm run test` (AVA + Jest)
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm run test` (AVA + Jest)
 - **verification result**: build clean; host lint 0 errors 0 warnings; pre-existing test failures unchanged
 - **known issues**: same pre-existing Jest failures as 0.16.5
 - **rollback commit**: `git revert HEAD`
@@ -178,8 +178,8 @@ Status: successful
   - `package.json`
   - `yarn.lock`
   - `CHANGELOG.md`
-- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm run test` (AVA + Jest)
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm run test` (AVA + Jest)
 - **verification result**: build clean; host lint 0 errors; pre-existing test failures unchanged
 - **known issues**: same pre-existing Jest failures as 0.16.4 (`createNote`, `deleteFolder`, dist-packaged suite timeouts)
 - **rollback commit**: `git revert HEAD`
@@ -206,8 +206,8 @@ Status: successful
   - `Dockerfile`
   - `package.json`
   - `yarn.lock`
-- **build command**: `docker build -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm run test` (AVA + Jest)
+- **build command**: `docker build -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm run test` (AVA + Jest)
 - **verification result**: all markdown tests pass; checkbox rendering confirmed; app exports and launches correctly
 - **known issues**: `createNote` and `createNoteFromUrl` Jest tests fail with "Target folder doesn't exist" — pre-existing test-data issue unrelated to this iteration
 - **rollback commit**: `git revert HEAD` back to `85d6efc4`
@@ -245,8 +245,8 @@ Status: successful
   - `Dockerfile`
   - `package.json`
   - `yarn.lock`
-- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm run test` (AVA + Jest)
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm run test` (AVA + Jest)
 - **verification result**: host lint clean (0 errors, 0 warnings); app exports and launches correctly
 - **known issues**: Docker's older prettier version flags 6 pre-existing formatting issues in `MarkdownPreview.js`, `markdown.js`, and `store.js` — host prettier accepts them; cosmetic only, no runtime impact
 - **rollback commit**: `git revert HEAD` back to `4d02c6b2`
@@ -275,8 +275,8 @@ Status: successful
   - `MarkdownPreview.js`: scroll/resize listeners marked `{ passive: true }`
   - CodeMirror + react-sortable-hoc patched via Dockerfile `sed` for passive touch events
   - `help.md` version string corrected; CHANGELOG SHA references remapped after filter-repo
-- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm test`
+- **build command**: `docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm test`
 - **verification result**: AVA 14/14 clean; Jest pre-existing failures only; lint 7 pre-existing errors only
 - **known issues**: same pre-existing Jest failures as 0.17.9
 - **rollback commit**: `git checkout v0.17.9`
@@ -310,8 +310,8 @@ Status: successful
   - `lib/main-window.js`
   - `package.json`
   - `yarn.lock`
-- **build command**: `docker build -t boostnote-legacy .`
-- **test command**: `docker run --rm boostnote-legacy npm run test` (AVA + Jest)
+- **build command**: `docker build -t boostnote-neo .`
+- **test command**: `docker run --rm boostnote-neo npm run test` (AVA + Jest)
 - **verification result**: Electron 5.0.13 confirmed; app launches and renders correctly
 - **known issues**: Electron 5 changed defaults for `nodeIntegration` (false) and `contextIsolation` (true); required explicit `nodeIntegration: true` + `contextIsolation: false` in `BrowserWindow` for renderer to access Node APIs. Docker-built x86_64 binary requires Intel macOS or ad-hoc codesign before execution on modern macOS.
 - **rollback commit**: `git revert HEAD`

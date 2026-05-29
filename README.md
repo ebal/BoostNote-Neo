@@ -1,19 +1,19 @@
-<h1 align="center">BoostNote-Legacy</h1>
+<h1 align="center">BoostNote-Neo</h1>
 
 <h4 align="center">Note-taking app for programmers.</h4>
 <h5 align="center">Apps available for Mac (Intel & Apple Silicon), Windows and Linux.</h5>
-<h5 align="center">Built with Electron 14, React + Redux, Webpack 1, and CSSModules.</h5>
+<h5 align="center">Built with Electron 42, React 18 + Redux, Webpack 5, and CSSModules.</h5>
 
 <p align="center">
-  <a href="https://github.com/ebal/BoostNote-Legacy">
+  <a href="https://github.com/A93162639/BoostNote-Neo">
     <img src="https://img.shields.io/badge/status-maintenance-yellow" alt="Maintenance" />
   </a>
-  <a href="https://github.com/ebal/BoostNote-Legacy/releases">
-    <img src="https://img.shields.io/github/v/release/ebal/BoostNote-Legacy" alt="Release" />
+  <a href="https://github.com/A93162639/BoostNote-Neo/releases">
+    <img src="https://img.shields.io/github/v/release/A93162639/BoostNote-Neo" alt="Release" />
   </a>
 </p>
 
-This is the **legacy** branch of Boostnote — a markdown-first, open-source note-taking application for developers. Notes are stored as local files (`.cson`) in user-defined storage directories.
+BoostNote-Neo is a modernized fork of Boostnote Legacy — a markdown-first, open-source note-taking application for developers. Notes are stored as local files (`.cson`) in user-defined storage directories.
 
 ---
 
@@ -93,7 +93,7 @@ All builds run **inside Docker** — never run `npm`/`yarn`/`electron`/`grunt` o
 ### amd64 (Intel Mac / Linux / Windows)
 
 ```bash
-docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .
+docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .
 ```
 
 ### arm64 (Apple Silicon Mac)
@@ -102,16 +102,16 @@ docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-l
 docker build --platform linux/arm64 \
   --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) \
   --build-arg BUILDARCH=arm64 \
-  -t boostnote-legacy-arm64 .
+  -t boostnote-neo-arm64 .
 ```
 
 ### Export all artifacts
 
 ```bash
 # Intel
-docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64.zip ./dist/ && docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
+docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64 ./dist/ && docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64.zip ./dist/ && docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
 # Apple Silicon
-docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/ && docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
+docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/ && docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
 ```
 
 ---
@@ -119,7 +119,7 @@ docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwi
 ## Development
 
 ```bash
-docker run --rm boostnote-legacy npm run dev
+docker run --rm boostnote-neo npm run dev
 ```
 
 Starts webpack-dev-server on `:8080` with Electron HMR.
@@ -130,13 +130,13 @@ Starts webpack-dev-server on `:8080` with Electron HMR.
 
 ```bash
 # All tests
-docker run --rm boostnote-legacy npm test
+docker run --rm boostnote-neo npm test
 
 # Lint
-docker run --rm boostnote-legacy npm run lint
+docker run --rm boostnote-neo npm run lint
 
 # Jest only (alias)
-docker run --rm boostnote-legacy npm run jest
+docker run --rm boostnote-neo npm run jest
 ```
 
 > **Note:** Jest picks up test files inside `dist/Boostnote-darwin-*/` — pre-existing failures with environment mismatch. `attachmentManagement` test fails with `fs-extra`/`graceful-fs` incompatibility; `normalizeEditorFontFamily` test fails with CSS quoting mismatch. These are unrelated to code changes.
