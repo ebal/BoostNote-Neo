@@ -9,12 +9,12 @@ Support Excalidraw-style diagrams (hand-drawn whiteboard drawings) in BoostNote 
 
 ## Constraints
 
-- Webpack 1 cannot bundle modern ESM — Excalidraw must be a **script external**
-- Electron 14.2.9 / Chromium 93 / Node 14.17 — Excalidraw 0.18.x is now within runtime support. The earlier Excalidraw 0.15.x / 0.17.x fallback pin is no longer required.
-- React 18.3.1 is already present (shared, not bundled) — Excalidraw can share it (Excalidraw 0.18.x peer-supports React 17/18).
-- Docker-only build: all deps go via `package.json` + yarn resolutions
-- `@excalidraw/excalidraw` v0.18.1: **1.1 MB** minified (344 KB gzipped)
-- Only ships ESM — no official UMD build; need to serve from CDN (esm.run / unpkg / jsdelivr) or self-host the production bundle
+- Webpack 5 + Babel 7 — modern ESM bundles fine. Excalidraw can be bundled directly via `import` or kept as a `<script>` external for bundle-size reasons (see Open questions).
+- Electron 42.3.0 / Chromium 138 / Node 22.x — no runtime ceiling; any current Excalidraw release works.
+- React 18.3.1 is already present (shared as runtime external, not bundled) — Excalidraw can share it (peer-supports React 17/18; v19 not yet).
+- Docker-only build: all deps go via `package.json` + yarn resolutions.
+- `@excalidraw/excalidraw` v0.18.1: **1.1 MB** minified (344 KB gzipped).
+- ESM-only — no official UMD build; either bundle through webpack 5 or serve via CDN (esm.run / unpkg / jsdelivr).
 
 ## Recommended Approach (Phase 1)
 
@@ -37,7 +37,7 @@ Support Excalidraw-style diagrams (hand-drawn whiteboard drawings) in BoostNote 
 | # | File | Change |
 |---|------|--------|
 | 1 | `package.json` | Add resolutions to pin `@excalidraw/excalidraw` version; add CDN URL to externals config |
-| 2 | `webpack-skeleton.js` | Add `@excalidraw/excalidraw` to `externals` (loaded from CDN, not bundled) |
+| 2 | `webpack-skeleton.js` | Either add `@excalidraw/excalidraw` to `externals` (CDN load, smaller bundle) **or** bundle directly via `import` (webpack 5 handles the ESM-only entry). Decide per Open questions below. |
 | 3 | `browser/main/lib/dataApi/attachmentManagement.js` | Add `.excalidraw` extension to `ATTACHMENTS_EXTENSIONS` or equivalent allowlist; handle `.excalidraw` in `copyAttachment()` so the file is stored as a note attachment |
 | 4 | `browser/main/lib/dataApi/subTool/attachmentUrlFixer.js` (or `fixLocalURLS`) | After replacing `:storage/...` with file paths, detect `.excalidraw` extension in resolved URLs; instead of `<img src="file:///...">`, load the JSON, render via `exportToSvg()`, and inject `<div class="excalidraw-render">svg</div>` |
 | 5 | `browser/components/markdown.styl` | Add `.excalidraw-render` styles (max-width, responsive) |
@@ -111,10 +111,10 @@ Pass `appState: { theme: isDark ? 'dark' : 'light' }` to `exportToSvg()` for aut
 
 ## Open questions
 
-- [ ] **CDN or self-host?** Self-hosting adds ~1.1 MB to the app bundle; CDN requires internet on first render
-- [ ] **Which Excalidraw version?** Latest (0.18.x) may drop Electron 11 compat — may need to pin older (0.15.x or 0.17.x). Resolution: pin older while still on Electron 11; re-evaluate after the Electron 14 bump in `UpgradePlan_Electron11_to_Electron14.md` lands (Chrome 93 lifts the runtime ceiling).
-- [ ] **Font handling:** Excalidraw's default Virgil font is loaded from CDN — need to decide if we bundle or hot-link
-- [ ] **Attachment flow for `.excalidraw`:** Should the JSON be stored raw (large) or minified? Excalidraw apps use pretty-printed JSON
+- [ ] **CDN, self-host, or bundle?** Bundling via webpack 5 import adds ~1.1 MB to `compiled/main.js`; CDN load requires internet on first render but keeps the bundle smaller; self-host (copy production bundle into the .app) is offline-safe but still adds to install size.
+- [ ] **Which Excalidraw version?** Latest stable on the 0.x line (no runtime gate post-Electron-42); pin via yarn resolution.
+- [ ] **Font handling:** Excalidraw's default Virgil font is loaded from CDN — bundle or hot-link?
+- [ ] **Attachment flow for `.excalidraw`:** Store JSON raw (large) or minified? Excalidraw apps use pretty-printed JSON.
 
 ## Out of scope (Phase 1)
 
