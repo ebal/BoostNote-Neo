@@ -1,7 +1,6 @@
-import mermaidAPI from 'mermaid/dist/mermaid.min.js'
+import mermaid from 'mermaid'
 import uiThemes from 'browser/lib/ui-themes'
 
-// fixes bad styling in the mermaid dark theme
 const darkThemeStyling = `
 .loopText tspan {
   fill: white;
@@ -20,7 +19,7 @@ function getId() {
   return id
 }
 
-function render(element, content, theme, enableHTMLLabel) {
+async function render(element, content, theme, enableHTMLLabel) {
   try {
     const height = element.attributes.getNamedItem('data-height')
     const isPredefined = height && height.value !== 'undefined'
@@ -33,7 +32,8 @@ function render(element, content, theme, enableHTMLLabel) {
       item => item.name === theme && item.isDark
     )
 
-    mermaidAPI.initialize({
+    mermaid.initialize({
+      startOnLoad: false,
       theme: isDarkTheme ? 'dark' : 'default',
       themeCSS: isDarkTheme ? darkThemeStyling : '',
       flowchart: {
@@ -44,36 +44,36 @@ function render(element, content, theme, enableHTMLLabel) {
       }
     })
 
-    mermaidAPI.render(getId(), content, svgGraph => {
-      element.innerHTML = svgGraph
+    const { svg, bindFunctions } = await mermaid.render(getId(), content)
+    element.innerHTML = svg
+    if (bindFunctions) bindFunctions(element)
 
-      if (!isPredefined) {
-        const el = element.firstChild
-        const viewBoxAttr = el.getAttribute('viewBox')
-        if (!viewBoxAttr) return
+    if (!isPredefined) {
+      const el = element.firstChild
+      const viewBoxAttr = el && el.getAttribute && el.getAttribute('viewBox')
+      if (!viewBoxAttr) return
 
-        const viewBox = viewBoxAttr.split(' ')
-        const vbW = parseFloat(viewBox[2])
-        const vbH = parseFloat(viewBox[3])
-        if (!isFinite(vbW) || !isFinite(vbH) || vbW <= 0 || vbH <= 0) return
+      const viewBox = viewBoxAttr.split(' ')
+      const vbW = parseFloat(viewBox[2])
+      const vbH = parseFloat(viewBox[3])
+      if (!isFinite(vbW) || !isFinite(vbH) || vbW <= 0 || vbH <= 0) return
 
-        let ratio = vbW / vbH
+      let ratio = vbW / vbH
 
-        if (el.style.maxWidth) {
-          const maxWidth = parseFloat(el.style.maxWidth)
-          if (isFinite(maxWidth) && maxWidth > 0) {
-            ratio *= el.parentNode.clientWidth / maxWidth
-          }
+      if (el.style.maxWidth) {
+        const maxWidth = parseFloat(el.style.maxWidth)
+        if (isFinite(maxWidth) && maxWidth > 0) {
+          ratio *= el.parentNode.clientWidth / maxWidth
         }
-
-        if (!isFinite(ratio) || ratio <= 0) return
-        const height = el.parentNode.clientWidth / ratio
-        if (!isFinite(height) || height <= 0) return
-
-        el.setAttribute('ratio', ratio)
-        el.setAttribute('height', height)
       }
-    })
+
+      if (!isFinite(ratio) || ratio <= 0) return
+      const h = el.parentNode.clientWidth / ratio
+      if (!isFinite(h) || h <= 0) return
+
+      el.setAttribute('ratio', ratio)
+      el.setAttribute('height', h)
+    }
   } catch (e) {
     element.className = 'mermaid-error'
     element.innerHTML = 'mermaid diagram parse error: ' + e.message
