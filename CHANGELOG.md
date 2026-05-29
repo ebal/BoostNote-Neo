@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.2] - 2026-05-29
+
+### Security
+
+- **markdown-it ReDoS (GHSA #226, vulnerable `>= 13.0.0, < 14.1.1`)** — direct dep bumped `^13.0.2` → `^14.1.1` and the `markdownlint@0.37.4` exact pin `markdown-it "14.1.0"` overridden via the selective resolution `"markdownlint/markdown-it": "14.1.1"`. markdown-it 14 ships only `lib/token.mjs` (no `lib/token.js`) and `@hikerpig/markdown-it-toc-and-anchor@4.5.0` does `require("markdown-it/lib/token")` — webpack 5 resolves through the `.mjs` extension once added to `resolve.extensions` (`webpack-skeleton.js`).
+- **semver ReDoS (GHSA #165, vulnerable `< 5.7.2`)** — `electron-packager > get-package-info > read-pkg-up > read-pkg > normalize-package-data` pulled in semver 5.5.0 via the `"semver@2 || 3 || 4 || 5"` range. Multi-level selective resolutions `"read-pkg/normalize-package-data": "^2.5.0"` + `"read-pkg/normalize-package-data/semver": "^5.7.2"` collapse the range to the patched 5.7.2. The `electron-packager/**/semver` wildcard form was tried first but yarn 1 smashed unrelated `^6.2.0` / `^7.1.3` consumers down to 5.7.2 — the multi-level form is the safe one.
+
 ## [0.20.1] - 2026-05-29
 
 ### Fixed

@@ -7,7 +7,7 @@ var config = {
     main: ['./browser/main/index.js']
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.styl'],
+    extensions: ['.js', '.mjs', '.jsx', '.styl'],
     aliasFields: ['browser'],
     mainFields: ['webpack', 'browserify', 'jam', 'main'],
     alias: {

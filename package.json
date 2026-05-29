@@ -1,7 +1,7 @@
 {
   "name": "boost",
   "productName": "Boostnote",
-  "version": "0.20.1",
+  "version": "0.20.2",
   "main": "index.js",
   "description": "Boostnote",
   "license": "GPL-3.0",
@@ -78,7 +78,7 @@
     "katex": "^0.16.22",
     "lodash": "^4.17.21",
     "lodash-move": "^1.1.1",
-    "markdown-it": "^13.0.2",
+    "markdown-it": "^14.1.1",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-admonition": "^1.0.4",
     "markdown-it-emoji": "^1.4.0",
@@ -232,6 +232,9 @@
     "uuid": "^11.1.1",
     "webpack": "^5.90.0",
     "eslint/ajv": "^6.12.3",
-    "eslint/table/ajv": "^6.12.3"
+    "eslint/table/ajv": "^6.12.3",
+    "read-pkg/normalize-package-data": "^2.5.0",
+    "read-pkg/normalize-package-data/semver": "^5.7.2",
+    "markdownlint/markdown-it": "14.1.1"
   }
 }
