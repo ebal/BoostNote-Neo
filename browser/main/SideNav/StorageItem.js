@@ -15,7 +15,7 @@ import { push } from 'connected-react-router'
 
 const remote = require('@electron/remote')
 const { dialog } = remote
-const escapeStringRegexp = require('escape-string-regexp')
+const { escapeStringRegexp } = require('browser/lib/utils')
 const path = require('path')
 
 class StorageItem extends React.Component {

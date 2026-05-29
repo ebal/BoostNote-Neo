@@ -4,7 +4,7 @@ const path = require('path')
 const findStorage = require('browser/lib/findStorage')
 const mdurl = require('mdurl')
 const fse = require('fs-extra')
-const escapeStringRegexp = require('escape-string-regexp')
+const { escapeStringRegexp } = require('browser/lib/utils')
 const sander = require('sander')
 const url = require('url')
 import i18n from 'browser/lib/i18n'

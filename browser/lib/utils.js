@@ -6,6 +6,10 @@ export function lastFindInArray(array, callback) {
   }
 }
 
+export function escapeStringRegexp(str) {
+  return str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d')
+}
+
 export function escapeHtmlCharacters(
   html,
   opt = { detectCodeBlock: false, skipSingleQuote: false }
