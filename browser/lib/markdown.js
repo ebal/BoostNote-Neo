@@ -8,6 +8,8 @@ import markdownItTocAndAnchor from '@hikerpig/markdown-it-toc-and-anchor'
 import _ from 'lodash'
 import ConfigManager from 'browser/main/lib/ConfigManager'
 import katex from 'katex'
+import 'katex/contrib/mhchem'
+import 'katex/contrib/auto-render'
 import { escapeHtmlCharacters, lastFindInArray } from './utils'
 
 function createGutter(str, firstLineNumber) {
