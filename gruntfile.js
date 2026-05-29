@@ -15,28 +15,12 @@ module.exports = function(grunt) {
     }
   }
   const OSX_COMMON_NAME = authCode != null ? authCode.OSX_COMMON_NAME : ''
-  const WIN_CERT_PASSWORD = authCode != null ? authCode.WIN_CERT_PASSWORD : ''
 
   var initConfig = {
-    pkg: grunt.file.readJSON('package.json'),
-    'create-windows-installer': {
-      x64: {
-        appDirectory: path.join(__dirname, 'dist', 'Boostnote-win32-x64'),
-        outputDirectory: path.join(__dirname, 'dist'),
-        authors: 'MAISIN&CO., Inc.',
-        exe: 'Boostnote.exe',
-        loadingGif: path.join(__dirname, 'resources/boostnote-install.gif'),
-        iconUrl: path.join(__dirname, 'resources/app.ico'),
-        setupIcon: path.join(__dirname, 'resources/dmg.ico'),
-        certificateFile: path.join(__dirname, 'secret', 'authenticode_cer.p12'),
-        certificatePassword: WIN_CERT_PASSWORD,
-        noMsi: true
-      }
-    }
+    pkg: grunt.file.readJSON('package.json')
   }
 
   grunt.initConfig(initConfig)
-  grunt.loadNpmTasks('grunt-electron-installer')
 
   grunt.registerTask('compile', function() {
     var done = this.async()
@@ -224,7 +208,7 @@ module.exports = function(grunt) {
 
     switch (platform) {
       case 'win':
-        grunt.task.run(['compile', 'pack:win', 'create-windows-installer'])
+        grunt.task.run(['compile', 'pack:win'])
         break
       case 'osx':
         grunt.task.run(['compile', 'pack:osx', 'codesign', 'zip:osx'])

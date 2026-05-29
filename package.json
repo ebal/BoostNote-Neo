@@ -157,14 +157,12 @@
     "eslint-plugin-standard": "^3.0.1",
     "faker": "^5.5.3",
     "grunt": "^1.6.1",
-    "grunt-electron-installer": "2.1.0",
     "history": "^4.9.0",
     "husky": "^4.3.8",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
     "jest-localstorage-mock": "^2.4.26",
-    "jsdom": "^9.4.2",
     "json-loader": "^0.5.4",
     "markdownlint": "^0.11.0",
     "nib": "^1.2.0",
@@ -261,6 +259,7 @@
     "d3-color": "^3.1.0",
     "@tootallnate/once": "^2.0.1",
     "open": "^6.0.0",
-    "braces": "^3.0.3"
+    "braces": "^3.0.3",
+    "uuid": "^9.0.1"
   }
 }
