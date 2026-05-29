@@ -29,8 +29,6 @@ jobs:
     name: Build Intel macOS app
     runs-on: ubuntu-24.04
     needs: compute-version
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -62,8 +60,6 @@ jobs:
     name: Build Apple Silicon macOS app
     runs-on: ubuntu-24.04
     needs: compute-version
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -100,8 +96,6 @@ jobs:
     name: Build Linux x64 app
     runs-on: ubuntu-24.04
     needs: compute-version
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -151,7 +145,7 @@ jobs:
           find dist-artifacts -type f -name "*.zip" -o -name "*.tar.gz" | xargs -I {} cp {} release-artifacts/
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.compute-version.outputs.version }}
           name: Boostnote v${{ needs.compute-version.outputs.version }}
