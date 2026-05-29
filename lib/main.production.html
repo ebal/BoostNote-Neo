@@ -192,7 +192,7 @@
       const origWarn = console.warn
       console.warn = function() {
         if (arguments.length && typeof arguments[0] === 'string' &&
-            arguments[0].indexOf('vm module of Node.js is deprecated') !== -1) {
+            arguments[0].indexOf('vm module of Node.js') !== -1) {
           return
         }
         return origWarn.apply(console, arguments)
