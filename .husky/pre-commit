@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# Skip if eslint not installed (host without node_modules; per CLAUDE.md
+# the project enforces a Docker-only npm/yarn policy).
+if [ ! -x "node_modules/.bin/eslint" ]; then
+  echo "husky: skipping pre-commit lint (node_modules absent — Docker-only policy)"
+  exit 0
+fi
+npm run lint
