@@ -1,8 +1,0 @@
-Repository: ebal/BoostNote-Legacy
-Active gh account: ebal
-Discovering alerts...
-Found alerts up to #225, fetching open alerts...
-[
-{"created_at":"2026-05-22T07:47:23Z","ecosystem":"npm","manifest":null,"number":47,"package":"ajv","patched_version":"6.12.3","severity":"medium","state":"open","summary":"Prototype Pollution in Ajv","vulnerable_range":"\u003c 6.12.3"}
-]
-Done.
