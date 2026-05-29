@@ -1,10 +1,9 @@
-import { combineReducers, createStore, compose, applyMiddleware } from 'redux'
+import { combineReducers, createStore, applyMiddleware } from 'redux'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory as createHistory } from 'history'
 import ConfigManager from 'browser/main/lib/ConfigManager'
 import { Map, Set } from 'browser/lib/Mutable'
 import _ from 'lodash'
-import DevTools from './DevTools'
 
 function defaultDataMap() {
   return {
@@ -464,12 +463,7 @@ const reducer = combineReducers({
 const store = createStore(
   reducer,
   undefined,
-  process.env.NODE_ENV === 'development'
-    ? compose(
-        applyMiddleware(routerMiddleware(history)),
-        DevTools.instrument()
-      )
-    : applyMiddleware(routerMiddleware(history))
+  applyMiddleware(routerMiddleware(history))
 )
 
 export { store, history }
