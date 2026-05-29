@@ -258,6 +258,9 @@
     "react-router/path-to-regexp": "^1.9.0",
     "@babel/runtime": "^7.26.10",
     "merge": "^2.1.1",
-    "d3-color": "^3.1.0"
+    "d3-color": "^3.1.0",
+    "@tootallnate/once": "^2.0.1",
+    "open": "^6.0.0",
+    "braces": "^3.0.3"
   }
 }
