@@ -54,9 +54,9 @@ Webpack aliases: `lib` → `./lib`, `browser` → `./browser`. These are used th
 
 ## Toolchain quirks
 
-- **Webpack 1 + Babel 6** — loader chains use `!` syntax (e.g. `style!css?modules!stylus`), not the modern `use:[]` form.
+- **Webpack 5 + Babel 7** (migrated in v0.20.0 from webpack 1 + babel 6). `module.rules` array form; loader options under `options:` object. `targets: { ie: 11 }` in `.babelrc` forces full ES5 transpile — required to keep ES5 HOCs (`react-css-modules`) compatible with user code (see "Babel target quirk" below). Terser `keep_classnames + keep_fnames + ecma:5` in webpack-production.config.js preserves the ES5 output through minify.
 - **Externals:** electron, react, redux, codemirror, lodash, moment, prettier are loaded via `<script>` tags in the HTML skeleton (`webpack-skeleton.js`), not bundled. Do not attempt to import them as if they were bundled.
-- **`process` shim:** Webpack 1 injects `process.versions = {}`. Any dep reading `process.versions.node` at module load (e.g. `fs-extra@7+`) crashes. Pin such deps or external them.
+- **`process` shim (legacy webpack 1 quirk, mostly resolved in webpack 5):** Webpack 5 with `target: 'electron-renderer'` uses real Node's `process` — no shim. `resolve.fallback: false` for all node built-ins in `webpack-skeleton.js` because `nodeIntegration: true` loads modules through real Node, not webpack polyfills.
 - **CSS Modules** via `react-css-modules` + Stylus. Class name pattern: `[name]__[local]___[path]`.
 - **HMR dev:** Manual refresh needed when editing constructors or adding new CSS classes (registered at construction time).
 
@@ -142,10 +142,23 @@ The `-v /app/node_modules` anonymous volume preserves the container's `node_modu
 
 ## Outstanding security work (next priorities)
 
-Ordered by runtime impact (renderer-bundled first, build-only / blocked last). Items already applied or explicitly skipped live in the **Dependency policy** section above.
+All previously blocked items cleared by v0.20.0 webpack 1→5 + babel 6→7 migration (see `.claude/plans/UpgradePlan_Webpack5_Zero_Alerts.md`). Open Dependabot alerts: **0**.
 
-1. **`markdown-it` 5.1.0 and 8.4.2** still pinned by transitive consumers (`@enyaxu/markdown-it-anchor@5`, etc.); resolve to the already-locked 12.3.2 via the `resolutions` block once the parser-plugin chain (footnote, kbd, anchor) is verified.
-2. ~~**Mermaid tier B / C** (`~9.3.0` then `^9.4.3`)~~ — **empirically blocked 2026-05-28**: 9.3.0's UMD ships ES2019 optional-catch syntax that webpack 1's acorn 5.7.4 cannot parse. Defer to webpack 1 → 2+ migration.
-3. **Webpack 1 ceiling** — `webpack-dev-server@1.16.5`, `loader-utils@0.2.17`, `postcss 5.x`, `braces 1.x/2.x`, `babel-traverse 6.26`, `uuid >= 10`, `mermaid 10+`, `markdownlint >= 0.12`, `json5 2+`. All gated on webpack 1 → 5 migration (which brings acorn 8+ for ES2020/ES2019 syntax). Out of scope for incremental work.
+1. **`markdown-it` 5.1.0 and 8.4.2** still pinned by transitive consumers (`@enyaxu/markdown-it-anchor@5`, etc.); resolve to the already-locked 12.3.2 via the `resolutions` block once the parser-plugin chain (footnote, kbd, anchor) is verified. Not a CVE; bundle-dedup improvement.
+2. **markdownlint 0.11 → 0.34+** still pending. 0.34+ is ESM-only requires dynamic `await import(...)` in `browser/components/CodeEditor.js:31`. No CVE in alert list — not urgent.
+3. ~~**Webpack 1 ceiling**~~ — **done 2026-05-29** in 7 phases (v0.20.0). Webpack 5.107.2 + babel 7 + acorn 8. Cleared 15 open Dependabot alerts.
 4. ~~**Electron renderer `vm` deprecation warning** — **Suppressed 2026-05-28** via `app.commandLine.appendSwitch('disable-features', 'V8VmDeprecation')` in `lib/main-app.js`. vm is still functional through Electron 42.~~
 5. ~~**Electron 14→42** — **Completed 2026-05-28** in 4 phases. See `.claude/plans/UpgradePlan_Electron14_to_Latest.md`.~~
+
+## Babel target quirk (v0.20.0)
+
+`.babelrc` uses `targets: { ie: 11 }` — full ES5 transpile of user code. This is deliberate, not legacy. **Do not change to a modern target** (electron, chrome, defaults) without reading this section.
+
+Reason: several node_modules deps ship pre-transpiled ES5 with `_inherits` HOC pattern that wraps user components via `class WrappedComponent extends UserComponent` → at runtime `_Component.apply(this, arguments)`. When user code is ES6 class, calling it via `.apply(this, ...)` (no `new`) triggers V8's "Class constructor X cannot be invoked without 'new'" error. Specifically affects:
+
+- `react-css-modules@4.7.11` (`dist/extendReactClass.js`) — wraps Main + every CSS-Modules-styled component
+- Other suspects with ES5 HOC pattern: `react-debounce-render`, `react-autosuggest@10`, `react-image-carousel`, `react-composition-input`, `react-sortable-hoc`, `react-color`, `connected-react-router`
+
+Forcing user code to ES5 (matching the deps' transpile level) avoids the cross-class boundary. Verified by inspecting `compiled/main.js`: contains `function Main(a)` (not `class Main`), 87 `_inherits` helpers — all ES5.
+
+Webpack-production.config.js terser also pinned to `ecma: 5` for the same reason — `keep_classnames: true, keep_fnames: true` keep names readable in stack traces for debugging without restoring ES6 syntax.

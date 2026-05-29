@@ -42,15 +42,15 @@ Node 22 (bookworm) inside Docker. Unified Dockerfile supports both amd64 and arm
 
 ## Toolchain
 
-- Webpack 1 + Babel 6 — loader chains use `!` syntax (`style!css?modules!stylus`)
+- Webpack 5 + Babel 7 (migrated from webpack 1 + babel 6 in v0.20.0) — `module.rules` array, loader `use:` config
 - Many deps externaled (electron, react, redux, codemirror, lodash, moment, prettier) — loaded via `<script>` tags, not bundled (see `webpack-skeleton.js`)
 - CSS Modules via `react-css-modules` + Stylus; class pattern `[name]__[local]___[path]`
-- **Webpack `process` shim:** Webpack 1 injects `process.versions = {}`. Any dep reading `process.versions.node` at module load (e.g. `fs-extra@7+`) crashes. Pin such deps or external them.
+- `.babelrc` target `ie: 11` — full ES5 transpile, required to match ES5 HOC pattern in `react-css-modules` and friends. See CLAUDE.md "Babel target quirk" before changing.
+- Terser `keep_classnames`, `keep_fnames`, `ecma: 5` in webpack-production.config.js — preserves ES5 output and readable names.
 
 ## Dependency quirks
 
-- **uuid v11 broken with Webpack 1:** uuid v11 CJS dist uses ES2020+ syntax (optional chaining, nullish coalescing). Webpack 1's bundled acorn parser cannot handle it. Keep uuid pinned to `^9.0.1`.
-- **uuid CVE (GHSA-j3pc-g49g-gw9v):** Only affects `v3()/v5()/v6()` with external output buffers. Our usage is `v4()` only — not affected.
+- **uuid v11 now supported (v0.20.0):** acorn 8 in webpack 5 parses ES2020 syntax. uuid pinned to `^11.1.1`. Code uses `v4()` only.
 - **`request` removal:** Removed from tree by deleting unused `jsdom@^9.4.2` and `grunt-electron-installer` devDeps. The `grunt-electron-installer` also pulled in `uuid@3.x` (function-call API), which conflicted with modern uuid resolution.
 - **Windows installer removed:** `grunt-electron-installer` + `create-windows-installer` grunt task removed. Re-add when Windows builds are needed.
 - **Yarn resolutions preferred:** Use `"resolutions"` in package.json to pin transitive deps rather than bumping dep ranges directly — minimizes lockfile churn.
