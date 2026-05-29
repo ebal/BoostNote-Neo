@@ -28,7 +28,7 @@ function migrateFromV5Storage(storagePath) {
         .then(() => boostnoteJSONData)
     })
     .then(function fetchNotes(boostnoteJSONData) {
-      var fetchNotesFromEachFolder = boostnoteJSONData.folders.map(function(
+      var fetchNotesFromEachFolder = boostnoteJSONData.folders.map(function (
         folder
       ) {
         const folderDataJSONPath = path.join(
@@ -40,7 +40,7 @@ function migrateFromV5Storage(storagePath) {
           .readFile(folderDataJSONPath, {
             encoding: 'utf-8'
           })
-          .then(function(rawData) {
+          .then(function (rawData) {
             var data = JSON.parse(rawData)
             if (!_.isArray(data.notes))
               throw new Error('value of notes is not an array.')

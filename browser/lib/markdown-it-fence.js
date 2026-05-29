@@ -1,7 +1,8 @@
 'use strict'
 
-module.exports = function(md, renderers, defaultRenderer) {
-  const paramsRE = /^[ \t]*([\w+#-]+)?(?:\(\s*[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?(?:\s+[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?)*\s*\))?(?::([^:]*)(?::(\d+))?)?\s*$/
+module.exports = function (md, renderers, defaultRenderer) {
+  const paramsRE =
+    /^[ \t]*([\w+#-]+)?(?:\(\s*[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?(?:\s+[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?)*\s*\))?(?::([^:]*)(?::(\d+))?)?\s*$/
 
   function fence(state, startLine, endLine, silent) {
     let pos = state.bMarks[startLine] + state.tShift[startLine]
@@ -89,7 +90,8 @@ module.exports = function(md, renderers, defaultRenderer) {
 
       if (match[2]) {
         const params = match[2]
-        const regex = /(\w[-\w]*)(?:=(?:'(.*?[^\\])?'|"(.*?[^\\])?"|([^'"][^\s]*)))?/g
+        const regex =
+          /(\w[-\w]*)(?:=(?:'(.*?[^\\])?'|"(.*?[^\\])?"|([^'"][^\s]*)))?/g
 
         let name, value
         while ((match = regex.exec(params))) {

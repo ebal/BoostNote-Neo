@@ -3,7 +3,7 @@ class MutableMap {
     this._map = new Map(iterable)
     Object.defineProperty(this, 'size', {
       get: () => this._map.size,
-      set: function(value) {
+      set: function (value) {
         this['size'] = value
       }
     })
@@ -62,7 +62,7 @@ class MutableSet {
     this._set = new Set(iterable)
     Object.defineProperty(this, 'size', {
       get: () => this._set.size,
-      set: function(value) {
+      set: function (value) {
         this['size'] = value
       }
     })
@@ -86,7 +86,7 @@ class MutableSet {
 
   map(cb) {
     const result = []
-    this._set.forEach(function(value, key) {
+    this._set.forEach(function (value, key) {
       result.push(cb(value, key))
     })
 

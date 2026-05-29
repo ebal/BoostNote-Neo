@@ -7,7 +7,7 @@ const languages = [
 
 module.exports = {
   getLocales() {
-    return languages.reduce(function(localeList, locale) {
+    return languages.reduce(function (localeList, locale) {
       localeList.push(locale.locale)
       return localeList
     }, [])

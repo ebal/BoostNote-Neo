@@ -23,12 +23,10 @@ class TagSelect extends React.Component {
     this.onInputBlur = this.onInputBlur.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.onInputKeyDown = this.onInputKeyDown.bind(this)
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(
-      this
-    )
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(
-      this
-    )
+    this.onSuggestionsClearRequested =
+      this.onSuggestionsClearRequested.bind(this)
+    this.onSuggestionsFetchRequested =
+      this.onSuggestionsFetchRequested.bind(this)
     this.onSuggestionSelected = this.onSuggestionSelected.bind(this)
   }
 

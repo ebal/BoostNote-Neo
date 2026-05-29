@@ -11,11 +11,11 @@ import { ConnectedRouter } from 'connected-react-router'
 require('./lib/ipcClient')
 require('../lib/customMeta')
 
-document.addEventListener('drop', function(e) {
+document.addEventListener('drop', function (e) {
   e.preventDefault()
   e.stopPropagation()
 })
-document.addEventListener('dragover', function(e) {
+document.addEventListener('dragover', function (e) {
   e.preventDefault()
   e.stopPropagation()
 })
@@ -27,7 +27,7 @@ let isAltWithMouse = false
 let isAltWithOtherKey = false
 let isOtherKey = false
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Alt') {
     isAltPressing = true
     if (isOtherKey) {
@@ -41,13 +41,13 @@ document.addEventListener('keydown', function(e) {
   }
 })
 
-document.addEventListener('mousedown', function(e) {
+document.addEventListener('mousedown', function (e) {
   if (isAltPressing) {
     isAltWithMouse = true
   }
 })
 
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
   if (e.key === 'Alt') {
     if (isAltWithMouse || isAltWithOtherKey) {
       e.preventDefault()
@@ -59,7 +59,7 @@ document.addEventListener('keyup', function(e) {
   }
 })
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const className = e.target.className
   if (!className && typeof className !== 'string') return
   const isInfoButton = className.includes('infoButton')

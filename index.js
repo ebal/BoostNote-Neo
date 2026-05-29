@@ -15,20 +15,20 @@ function execMainApp() {
     try {
       updateProcess = ChildProcess.spawn(updateDotExePath, args)
     } catch (e) {
-      process.nextTick(function() {
+      process.nextTick(function () {
         cb(e)
       })
       return
     }
 
-    updateProcess.stdout.on('data', function(data) {
+    updateProcess.stdout.on('data', function (data) {
       stdout += data
     })
 
-    updateProcess.on('error', function(_error) {
+    updateProcess.on('error', function (_error) {
       error = _error
     })
-    updateProcess.on('close', function(code, signal) {
+    updateProcess.on('close', function (code, signal) {
       if (code !== 0) {
         error = new Error('Command failed: ' + (signal != null ? signal : code))
         error.code = code
@@ -39,7 +39,7 @@ function execMainApp() {
     })
   }
 
-  var handleStartupEvent = function() {
+  var handleStartupEvent = function () {
     if (process.platform !== 'win32') {
       return false
     }
@@ -47,7 +47,7 @@ function execMainApp() {
     var squirrelCommand = process.argv[1]
     switch (squirrelCommand) {
       case '--squirrel-install':
-        spawnUpdate(['--createShortcut', exeName], function(err) {
+        spawnUpdate(['--createShortcut', exeName], function (err) {
           if (err) console.error(err)
           app.quit()
         })
@@ -56,7 +56,7 @@ function execMainApp() {
         app.quit()
         return true
       case '--squirrel-uninstall':
-        spawnUpdate(['--removeShortcut', exeName], function(err) {
+        spawnUpdate(['--removeShortcut', exeName], function (err) {
           if (err) console.error(err)
           app.quit()
         })

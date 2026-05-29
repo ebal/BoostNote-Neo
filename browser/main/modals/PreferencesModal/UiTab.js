@@ -114,8 +114,8 @@ class UiTab extends React.Component {
         language:
           this.refs.uiLanguage != null ? this.refs.uiLanguage.value : 'en',
         defaultNote: this.refs.defaultNote.value,
-        tagNewNoteWithFilteringTags: this.refs.tagNewNoteWithFilteringTags
-          .checked,
+        tagNewNoteWithFilteringTags:
+          this.refs.tagNewNoteWithFilteringTags.checked,
         showCopyNotification: this.refs.showCopyNotification.checked,
         confirmDeletion: this.refs.confirmDeletion.checked,
         showOnlyRelatedTags: this.refs.showOnlyRelatedTags.checked,
@@ -150,8 +150,8 @@ class UiTab extends React.Component {
         matchingTriples: this.refs.matchingTriples.value,
         explodingPairs: this.refs.explodingPairs.value,
         codeBlockMatchingPairs: this.refs.codeBlockMatchingPairs.value,
-        codeBlockMatchingCloseBefore: this.refs.codeBlockMatchingCloseBefore
-          .value,
+        codeBlockMatchingCloseBefore:
+          this.refs.codeBlockMatchingCloseBefore.value,
         codeBlockMatchingTriples: this.refs.codeBlockMatchingTriples.value,
         codeBlockExplodingPairs: this.refs.codeBlockExplodingPairs.value,
         spellcheck: this.refs.spellcheck.checked,

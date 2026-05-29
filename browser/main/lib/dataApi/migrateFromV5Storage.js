@@ -18,7 +18,7 @@ function migrateFromV5Storage(storageKey, data) {
   } catch (e) {
     return Promise.reject(e)
   }
-  return resolveStorageData(targetStorage).then(function(storage) {
+  return resolveStorageData(targetStorage).then(function (storage) {
     return importAll(storage, data)
   })
 }
@@ -26,7 +26,7 @@ function migrateFromV5Storage(storageKey, data) {
 function importAll(storage, data) {
   const oldArticles = data.articles
   const notes = []
-  data.folders.forEach(function(oldFolder) {
+  data.folders.forEach(function (oldFolder) {
     let folderKey = keygen()
     while (storage.folders.some(folder => folder.key === folderKey)) {
       folderKey = keygen()
@@ -100,7 +100,7 @@ function importAll(storage, data) {
     })
   })
 
-  notes.forEach(function(note) {
+  notes.forEach(function (note) {
     CSON.writeFileSync(
       path.join(storage.path, 'notes', note.key + '.cson'),
       _.omit(note, ['storage', 'key'])

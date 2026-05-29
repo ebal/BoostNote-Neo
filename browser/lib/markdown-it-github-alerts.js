@@ -57,10 +57,7 @@ module.exports = function githubAlertsPlugin(md) {
 
       // Rewrite the blockquote wrapper into a div with alert classes.
       tokens[i].tag = 'div'
-      tokens[i].attrSet(
-        'class',
-        'markdown-alert markdown-alert-' + type
-      )
+      tokens[i].attrSet('class', 'markdown-alert markdown-alert-' + type)
       tokens[closeIdx].tag = 'div'
 
       // Build the title paragraph and insert before the body paragraph.

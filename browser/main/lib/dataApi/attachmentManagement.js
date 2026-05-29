@@ -196,8 +196,9 @@ function copyAttachment(
 
       let destinationName
       if (useRandomName) {
-        destinationName = `${uniqueSlug()}${path.extname(sourceURL.pathname) ||
-          '.png'}`
+        destinationName = `${uniqueSlug()}${
+          path.extname(sourceURL.pathname) || '.png'
+        }`
       } else {
         destinationName = path.basename(sourceURL.pathname)
       }
@@ -311,7 +312,7 @@ function fixLocalURLS(renderedHTML, storagePath) {
       '/?' + STORAGE_FOLDER_PLACEHOLDER + '(?:(?:\\/|%5C)[-.\\w]+)+',
       'g'
     ),
-    function(match) {
+    function (match) {
       return match
         .replace(encodedWin32SeparatorRegex, '/')
         .replace(storageRegex, storageUrl)
@@ -490,7 +491,7 @@ function handlePasteImageEvent(
   const imageName = `${uniqueSlug()}.png`
   const imagePath = path.join(destinationDir, imageName)
 
-  reader.onloadend = function() {
+  reader.onloadend = function () {
     base64data = reader.result.replace(/^data:image\/png;base64,/, '')
     base64data += base64data.replace('+', ' ')
     const binaryData = new Buffer(base64data, 'base64').toString('binary')
@@ -715,7 +716,7 @@ function replaceNoteKeyWithNewNoteKey(noteContent, oldNoteKey, newNoteKey) {
 function replaceStorageReferences(input, noteKey, destinationFolder) {
   return input.replace(
     new RegExp('/?' + STORAGE_FOLDER_PLACEHOLDER + '[^"\\)<\\s]+', 'g'),
-    function(match) {
+    function (match) {
       return match
         .replace(new RegExp(mdurl.encode(path.win32.sep), 'g'), path.posix.sep)
         .replace(new RegExp(mdurl.encode(path.posix.sep), 'g'), path.posix.sep)

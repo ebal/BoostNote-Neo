@@ -7,19 +7,7 @@ import context from 'browser/lib/context'
 import EventEmitter from 'browser/main/lib/eventEmitter'
 
 const zoomOptions = [
-  0.8,
-  0.9,
-  1,
-  1.1,
-  1.2,
-  1.3,
-  1.4,
-  1.5,
-  1.6,
-  1.7,
-  1.8,
-  1.9,
-  2.0
+  0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0
 ]
 
 class StatusBar extends React.Component {

@@ -1,6 +1,7 @@
 {
   "extends": ["standard", "standard-jsx", "plugin:react/recommended", "prettier"],
   "plugins": ["react", "prettier"],
+  "parser": "babel-eslint",
   "rules": {
     "no-useless-escape": 0,
     "prefer-const": ["warn", {

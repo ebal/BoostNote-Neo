@@ -12,9 +12,8 @@ const dummyStoragePath = path.join(os.tmpdir(), 'test/migrate-test-storage')
 const context = {}
 
 beforeEach(() => {
-  const dummyData = (context.dummyData = TestDummy.dummyLegacyStorage(
-    dummyStoragePath
-  ))
+  const dummyData = (context.dummyData =
+    TestDummy.dummyLegacyStorage(dummyStoragePath))
   console.log('init count', dummyData.notes.length)
   localStorage.setItem('storages', JSON.stringify([dummyData.cache]))
 })
@@ -36,7 +35,7 @@ test('Migrate legacy storage into v1 storage', () => {
       const noteMap = fileList.map(filePath => {
         return CSON.readFileSync(path.join(noteDirPath, filePath))
       })
-      dummyData.notes.forEach(function(targetNote) {
+      dummyData.notes.forEach(function (targetNote) {
         expect(
           _.find(noteMap, {
             title: targetNote.title,
@@ -46,7 +45,7 @@ test('Migrate legacy storage into v1 storage', () => {
       })
 
       // Check legacy folder directory is removed
-      dummyData.json.folders.forEach(function(folder) {
+      dummyData.json.folders.forEach(function (folder) {
         try {
           sander.statSync(dummyStoragePath, folder.key)
           throw new Error('Folder still remains. ENOENT error must be occured.')

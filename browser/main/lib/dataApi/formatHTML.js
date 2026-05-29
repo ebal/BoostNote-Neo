@@ -106,7 +106,7 @@ export default function formatHTML(props) {
 
   const files = [getCodeThemeLink(codeBlockTheme), ...CSS_FILES]
 
-  return function(note, targetPath, exportTasks) {
+  return function (note, targetPath, exportTasks) {
     const styles = files
       .map(file => `<link rel="stylesheet" href="css/${path.basename(file)}">`)
       .join('\n')
@@ -479,10 +479,11 @@ document.addEventListener('DOMContentLoaded', displaySequences);
 
     body = markdown.render(note.content)
 
-    const attachmentsAbsolutePaths = attachmentManagement.getAbsolutePathsOfAttachmentsInContent(
-      note.content,
-      props.storagePath
-    )
+    const attachmentsAbsolutePaths =
+      attachmentManagement.getAbsolutePathsOfAttachmentsInContent(
+        note.content,
+        props.storagePath
+      )
 
     files.forEach(file => {
       exportTasks.push({

@@ -52,7 +52,7 @@ function deleteFolder(storageKey, folderKey) {
       })
       return Promise.all(deleteAllNotes).then(() => storage)
     })
-    .then(function(storage) {
+    .then(function (storage) {
       CSON.writeFileSync(
         path.join(storage.path, 'boostnote.json'),
         _.pick(storage, ['folders', 'version'])

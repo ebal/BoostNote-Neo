@@ -60,7 +60,7 @@ class FolderItem extends React.Component {
       showColumnPicker: true,
       colorPickerPos: { left: 0, top: 0 }
     })
-    this.setState({ folder }, function() {
+    this.setState({ folder }, function () {
       // After the color picker has been painted, re-calculate its position
       // by comparing its dimensions to the host dimensions.
       const { hostBoundingBox } = this.props

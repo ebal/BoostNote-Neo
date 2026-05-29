@@ -56,7 +56,7 @@ function addStorage(input) {
       localStorage.setItem('storages', JSON.stringify(rawStorages))
       return newStorage
     })
-    .then(function(storage) {
+    .then(function (storage) {
       return resolveStorageNotes(storage).then(notes => {
         let unknownCount = 0
         notes.forEach(note => {

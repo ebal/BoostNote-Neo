@@ -19,6 +19,11 @@ module.exports = {
   MenuItem: jest.fn(),
   clipboard: { writeText: noop, readText: () => '' },
   shell: { openExternal: noop, openPath: noop },
-  ipcRenderer: { on: noop, off: noop, send: noop, invoke: () => Promise.resolve() },
+  ipcRenderer: {
+    on: noop,
+    off: noop,
+    send: noop,
+    invoke: () => Promise.resolve()
+  },
   webFrame: { setZoomFactor: noop, setZoomLevel: noop }
 }

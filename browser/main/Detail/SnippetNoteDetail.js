@@ -529,7 +529,7 @@ class SnippetNoteDetail extends React.Component {
   handleModeButtonClick(e, index) {
     const templetes = []
     CodeMirror.modeInfo
-      .sort(function(a, b) {
+      .sort(function (a, b) {
         return a.name.localeCompare(b.name)
       })
       .forEach(mode => {

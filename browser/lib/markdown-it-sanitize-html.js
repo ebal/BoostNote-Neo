@@ -46,7 +46,8 @@ const tagRegex = /<([A-Z][A-Z0-9]*)\b([^>]*)\/?>|<\/([A-Z][A-Z0-9]*)\s*>/i
 // crashing `match[1].toLowerCase()` downstream. Rewrite to explicit
 // alternation for double-quoted, single-quoted, and unquoted attribute
 // values. Capture groups now: 1 = name, 2 = value (without quotes).
-const attributesRegex = /([A-Z][A-Z0-9]*)(?:=(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/gi
+const attributesRegex =
+  /([A-Z][A-Z0-9]*)(?:=(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/gi
 
 function sanitizeBlock(html, options) {
   const tagPattern = /<[^>]*>/g
@@ -92,7 +93,8 @@ function sanitizeInline(html, options) {
 
     while ((match = attributesRegex.exec(attributes))) {
       if (!match[1]) {
-        if (match.index === attributesRegex.lastIndex) attributesRegex.lastIndex++
+        if (match.index === attributesRegex.lastIndex)
+          attributesRegex.lastIndex++
         continue
       }
       name = match[1].toLowerCase()
@@ -100,7 +102,7 @@ function sanitizeInline(html, options) {
       // style: match[2] = double-quoted, match[3] = single-quoted,
       // match[4] = unquoted. Bare attributes have all three undefined.
       const hasValue = match[2] != null || match[3] != null || match[4] != null
-      value = hasValue ? (match[2] || match[3] || match[4]) : undefined
+      value = hasValue ? match[2] || match[3] || match[4] : undefined
 
       if (
         allowedAttributes['*'].indexOf(name) !== -1 ||

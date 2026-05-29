@@ -7,7 +7,7 @@ import functions from './shortcut'
 
 let shortcuts = CM.get().hotkey
 
-ee.on('config-renew', function() {
+ee.on('config-renew', function () {
   // only update if hotkey changed !
   const newHotkey = CM.get().hotkey
   if (!isObjectEqual(newHotkey, shortcuts)) {

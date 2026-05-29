@@ -202,7 +202,7 @@ class Markdown {
       inlineClose: config.preview.latexInlineClose,
       blockOpen: config.preview.latexBlockOpen,
       blockClose: config.preview.latexBlockClose,
-      inlineRenderer: function(str) {
+      inlineRenderer: function (str) {
         let output = ''
         try {
           output = katex.renderToString(str.trim())
@@ -211,7 +211,7 @@ class Markdown {
         }
         return output
       },
-      blockRenderer: function(str) {
+      blockRenderer: function (str) {
         let output = ''
         try {
           output = katex.renderToString(str.trim(), { displayMode: true })
@@ -285,9 +285,7 @@ class Markdown {
 
           return `<pre class="fence" data-line="${token.map[0]}">
             <span class="filename">${token.fileName}</span>
-            <div class="flowchart" data-height="${token.parameters.height}">${
-            token.content
-          }</div>
+            <div class="flowchart" data-height="${token.parameters.height}">${token.content}</div>
           </pre>`
         },
         flow: token => {
@@ -295,9 +293,7 @@ class Markdown {
 
           return `<pre class="fence" data-line="${token.map[0]}">
             <span class="filename">${token.fileName}</span>
-            <div class="flowchart" data-height="${token.parameters.height}">${
-            token.content
-          }</div>
+            <div class="flowchart" data-height="${token.parameters.height}">${token.content}</div>
           </pre>`
         },
         gallery: token => {
@@ -316,9 +312,7 @@ class Markdown {
 
           return `<pre class="fence" data-line="${token.map[0]}">
               <span class="filename">${token.fileName}</span>
-              <div class="gallery" data-autoplay="${
-                token.parameters.autoplay
-              }" data-height="${token.parameters.height}">${content}</div>
+              <div class="gallery" data-autoplay="${token.parameters.autoplay}" data-height="${token.parameters.height}">${content}</div>
             </pre>`
         },
         mermaid: token => {
@@ -326,9 +320,7 @@ class Markdown {
 
           return `<pre class="fence" data-line="${token.map[0]}">
             <span class="filename">${token.fileName}</span>
-            <div class="mermaid" data-height="${token.parameters.height}">${
-            token.content
-          }</div>
+            <div class="mermaid" data-height="${token.parameters.height}">${token.content}</div>
           </pre>`
         },
         sequence: token => {
@@ -336,9 +328,7 @@ class Markdown {
 
           return `<pre class="fence" data-line="${token.map[0]}">
             <span class="filename">${token.fileName}</span>
-            <div class="sequence" data-height="${token.parameters.height}">${
-            token.content
-          }</div>
+            <div class="sequence" data-height="${token.parameters.height}">${token.content}</div>
           </pre>`
         },
         plantuml: token => {
@@ -388,7 +378,7 @@ class Markdown {
     const plantUmlServerAddress = plantUmlStripTrailingSlash(
       config.preview.plantUMLServerAddress
     )
-    const parsePlantUml = function(umlCode, openMarker, closeMarker, type) {
+    const parsePlantUml = function (umlCode, openMarker, closeMarker, type) {
       const s = unescape(encodeURIComponent(umlCode))
       const zippedCode = deflate.encode64(
         deflate.zip_deflate(`${openMarker}\n${s}\n${closeMarker}`, 9)
@@ -434,96 +424,96 @@ class Markdown {
     })
 
     // Override task item
-    this.md.block.ruler.at('paragraph', function(
-      state,
-      startLine /*, endLine */
-    ) {
-      let content, terminate, i, l, token
-      let nextLine = startLine + 1
-      const terminatorRules = state.md.block.ruler.getRules('paragraph')
-      const endLine = state.lineMax
+    this.md.block.ruler.at(
+      'paragraph',
+      function (state, startLine /*, endLine */) {
+        let content, terminate, i, l, token
+        let nextLine = startLine + 1
+        const terminatorRules = state.md.block.ruler.getRules('paragraph')
+        const endLine = state.lineMax
 
-      // jump line-by-line until empty one or EOF
-      for (; nextLine < endLine && !state.isEmpty(nextLine); nextLine++) {
-        // this would be a code block normally, but after paragraph
-        // it's considered a lazy continuation regardless of what's there
-        if (state.sCount[nextLine] - state.blkIndent > 3) {
-          continue
-        }
+        // jump line-by-line until empty one or EOF
+        for (; nextLine < endLine && !state.isEmpty(nextLine); nextLine++) {
+          // this would be a code block normally, but after paragraph
+          // it's considered a lazy continuation regardless of what's there
+          if (state.sCount[nextLine] - state.blkIndent > 3) {
+            continue
+          }
 
-        // quirk for blockquotes, this line should already be checked by that rule
-        if (state.sCount[nextLine] < 0) {
-          continue
-        }
+          // quirk for blockquotes, this line should already be checked by that rule
+          if (state.sCount[nextLine] < 0) {
+            continue
+          }
 
-        // Some tags can terminate paragraph without empty line.
-        terminate = false
-        for (i = 0, l = terminatorRules.length; i < l; i++) {
-          if (terminatorRules[i](state, nextLine, endLine, true)) {
-            terminate = true
+          // Some tags can terminate paragraph without empty line.
+          terminate = false
+          for (i = 0, l = terminatorRules.length; i < l; i++) {
+            if (terminatorRules[i](state, nextLine, endLine, true)) {
+              terminate = true
+              break
+            }
+          }
+          if (terminate) {
             break
           }
         }
-        if (terminate) {
-          break
-        }
-      }
 
-      content = state
-        .getLines(startLine, nextLine, state.blkIndent, false)
-        .trim()
+        content = state
+          .getLines(startLine, nextLine, state.blkIndent, false)
+          .trim()
 
-      state.line = nextLine
+        state.line = nextLine
 
-      token = state.push('paragraph_open', 'p', 1)
-      token.map = [startLine, state.line]
+        token = state.push('paragraph_open', 'p', 1)
+        token.map = [startLine, state.line]
 
-      const match = content.match(/^\[( |x)\] ?(.+)/i)
-      if (match) {
-        const liToken = lastFindInArray(
-          state.tokens,
-          token => token.type === 'list_item_open'
-        )
-        const liTokenIdx = liToken ? state.tokens.indexOf(liToken) : -1
-        const insideListItem =
-          liTokenIdx >= 0 &&
-          !state.tokens
-            .slice(liTokenIdx + 1)
-            .some(t => t.type === 'list_item_close')
-        if (insideListItem) {
-          if (!liToken.attrs) {
-            liToken.attrs = []
+        const match = content.match(/^\[( |x)\] ?(.+)/i)
+        if (match) {
+          const liToken = lastFindInArray(
+            state.tokens,
+            token => token.type === 'list_item_open'
+          )
+          const liTokenIdx = liToken ? state.tokens.indexOf(liToken) : -1
+          const insideListItem =
+            liTokenIdx >= 0 &&
+            !state.tokens
+              .slice(liTokenIdx + 1)
+              .some(t => t.type === 'list_item_close')
+          if (insideListItem) {
+            if (!liToken.attrs) {
+              liToken.attrs = []
+            }
+            if (config.preview.lineThroughCheckbox) {
+              liToken.attrs.push([
+                'class',
+                `taskListItem${match[1] !== ' ' ? ' checked' : ''}`
+              ])
+            } else {
+              liToken.attrs.push(['class', 'taskListItem'])
+            }
+            content = `<label class='taskListItem${
+              match[1] !== ' ' ? ' checked' : ''
+            }' for='checkbox-${startLine + 1}'><input type='checkbox'${
+              match[1] !== ' ' ? ' checked' : ''
+            } id='checkbox-${startLine + 1}'/> ${content.substring(
+              4,
+              content.length
+            )}</label>`
           }
-          if (config.preview.lineThroughCheckbox) {
-            liToken.attrs.push([
-              'class',
-              `taskListItem${match[1] !== ' ' ? ' checked' : ''}`
-            ])
-          } else {
-            liToken.attrs.push(['class', 'taskListItem'])
-          }
-          content = `<label class='taskListItem${
-            match[1] !== ' ' ? ' checked' : ''
-          }' for='checkbox-${startLine + 1}'><input type='checkbox'${
-            match[1] !== ' ' ? ' checked' : ''
-          } id='checkbox-${startLine + 1}'/> ${content.substring(
-            4,
-            content.length
-          )}</label>`
         }
+
+        token = state.push('inline', '', 0)
+        token.content = content
+        token.map = [startLine, state.line]
+        token.children = []
+
+        token = state.push('paragraph_close', 'p', -1)
+
+        return true
       }
+    )
 
-      token = state.push('inline', '', 0)
-      token.content = content
-      token.map = [startLine, state.line]
-      token.children = []
-
-      token = state.push('paragraph_close', 'p', -1)
-
-      return true
-    })
-
-    this.md.renderer.rules.code_inline = function(tokens, idx) {
+    this.md.renderer.rules.code_inline = function (tokens, idx) {
       const token = tokens[idx]
 
       return (

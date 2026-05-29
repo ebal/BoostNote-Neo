@@ -2,7 +2,7 @@ import formatHTML from './formatHTML'
 const remote = require('@electron/remote')
 
 export default function formatPDF(props) {
-  return function(note, targetPath, exportTasks) {
+  return function (note, targetPath, exportTasks) {
     const printout = new remote.BrowserWindow({
       show: false,
       webPreferences: { webSecurity: false, javascript: false }

@@ -17,8 +17,8 @@ const { ipcRenderer, clipboard } = require('electron')
 const remote = require('@electron/remote')
 import normalizeEditorFontFamily from 'browser/lib/normalizeEditorFontFamily'
 const spellcheck = require('browser/lib/spellcheck')
-const buildEditorContextMenu = require('browser/lib/contextMenuBuilder')
-  .buildEditorContextMenu
+const buildEditorContextMenu =
+  require('browser/lib/contextMenuBuilder').buildEditorContextMenu
 import { createTurndownService } from '../lib/turndown'
 import { languageMaps } from '../lib/CMLanguageList'
 import snippetManager from '../lib/SnippetManager'
@@ -104,7 +104,7 @@ export default class CodeEditor extends React.Component {
     this.formatTable = () => this.handleFormatTable()
 
     if (props.switchPreview !== 'RIGHTCLICK') {
-      this.contextMenuHandler = function(editor, event) {
+      this.contextMenuHandler = function (editor, event) {
         const menu = buildEditorContextMenu(editor, event)
         if (menu != null) {
           setTimeout(
@@ -137,7 +137,7 @@ export default class CodeEditor extends React.Component {
     if (component.searchState) cm.removeOverlay(component.searchState)
     if (msg.length < 1) return
 
-    cm.operation(function() {
+    cm.operation(function () {
       component.searchState = makeOverlay(msg, 'searching')
       cm.addOverlay(component.searchState)
 
@@ -147,7 +147,7 @@ export default class CodeEditor extends React.Component {
           'gi'
         )
         return {
-          token: function(stream) {
+          token: function (stream) {
             query.lastIndex = stream.pos
             var match = query.exec(stream.string)
             if (match && match.index === stream.pos) {
@@ -188,7 +188,7 @@ export default class CodeEditor extends React.Component {
     const expandSnippet = snippetManager.expandSnippet
 
     this.defaultKeyMap = CodeMirror.normalizeKeyMap({
-      Tab: function(cm) {
+      Tab: function (cm) {
         const cursor = cm.getCursor()
         const line = cm.getLine(cursor.line)
         const cursorPosition = cursor.ch
@@ -230,13 +230,13 @@ export default class CodeEditor extends React.Component {
           }
         }
       },
-      'Cmd-Left': function(cm) {
+      'Cmd-Left': function (cm) {
         cm.execCommand('goLineLeft')
       },
-      'Cmd-T': function(cm) {
+      'Cmd-T': function (cm) {
         // Do nothing
       },
-      [translateHotkey(hotkey.insertDate)]: function(cm) {
+      [translateHotkey(hotkey.insertDate)]: function (cm) {
         const dateNow = new Date()
         if (self.props.dateFormatISO8601) {
           cm.replaceSelection(dateNow.toISOString().split('T')[0])
@@ -244,7 +244,7 @@ export default class CodeEditor extends React.Component {
           cm.replaceSelection(dateNow.toLocaleDateString())
         }
       },
-      [translateHotkey(hotkey.insertDateTime)]: function(cm) {
+      [translateHotkey(hotkey.insertDateTime)]: function (cm) {
         const dateNow = new Date()
         if (self.props.dateFormatISO8601) {
           cm.replaceSelection(dateNow.toISOString())
@@ -365,13 +365,11 @@ export default class CodeEditor extends React.Component {
       prettierConfig: this.props.prettierConfig
     })
 
-    this.editor.getWrapperElement().style.fontFamily = normalizeEditorFontFamily(
-      this.props.fontFamily
-    )
+    this.editor.getWrapperElement().style.fontFamily =
+      normalizeEditorFontFamily(this.props.fontFamily)
 
-    document.querySelector(
-      '.CodeMirror-lint-markers'
-    ).style.display = enableMarkdownLint ? 'inline-block' : 'none'
+    document.querySelector('.CodeMirror-lint-markers').style.display =
+      enableMarkdownLint ? 'inline-block' : 'none'
 
     if (!this.props.mode && this.props.value && this.props.autoDetect) {
       this.autoDetectLanguage(this.props.value)
@@ -620,9 +618,8 @@ export default class CodeEditor extends React.Component {
       needRefresh = true
     }
     if (prevProps.fontFamily !== this.props.fontFamily) {
-      this.editor.getWrapperElement().style.fontFamily = normalizeEditorFontFamily(
-        this.props.fontFamily
-      )
+      this.editor.getWrapperElement().style.fontFamily =
+        normalizeEditorFontFamily(this.props.fontFamily)
       needRefresh = true
     }
     if (prevProps.keyMap !== this.props.keyMap) {
@@ -1317,10 +1314,7 @@ export default class CodeEditor extends React.Component {
     return contentType
       .split(';')
       .filter(str => {
-        return str
-          .trim()
-          .toLowerCase()
-          .startsWith('charset')
+        return str.trim().toLowerCase().startsWith('charset')
       })
       .map(str => {
         return str.replace(/['"]/g, '').split('=')[1]

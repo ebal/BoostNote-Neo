@@ -13,14 +13,15 @@ const delimiterRegExp = /^\-{3}/
  * ```
  */
 export default function formatMarkdown(props) {
-  return function(note, targetPath, exportTasks) {
+  return function (note, targetPath, exportTasks) {
     let result = note.content
 
     if (props.storagePath && note.key) {
-      const attachmentsAbsolutePaths = attachmentManagement.getAbsolutePathsOfAttachmentsInContent(
-        result,
-        props.storagePath
-      )
+      const attachmentsAbsolutePaths =
+        attachmentManagement.getAbsolutePathsOfAttachmentsInContent(
+          result,
+          props.storagePath
+        )
 
       const destinationFolder = props.export.prefixAttachmentFolder
         ? `${path.parse(targetPath).name} - ${

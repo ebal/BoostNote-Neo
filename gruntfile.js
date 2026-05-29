@@ -3,7 +3,7 @@ const path = require('path')
 const ChildProcess = require('child_process')
 const packager = require('electron-packager')
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   var authCode
   try {
     authCode = grunt.file.readJSON('secret/auth_code.json')
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig(initConfig)
 
-  grunt.registerTask('compile', function() {
+  grunt.registerTask('compile', function () {
     var done = this.async()
     var execPath =
       path.join('node_modules', '.bin', 'webpack') +
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
           NODE_ENV: 'production'
         })
       },
-      function(err, stdout, stderr) {
+      function (err, stdout, stderr) {
         grunt.log.writeln(stdout)
 
         if (err) {
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
     )
   })
 
-  grunt.registerTask('pack', function(platform) {
+  grunt.registerTask('pack', function (platform) {
     var outDir = process.env.PACK_OUT_DIR || path.join(__dirname, 'dist')
     grunt.log.writeln(outDir)
     var done = this.async()
@@ -65,7 +65,8 @@ module.exports = function(grunt) {
       prune: true,
       overwrite: true,
       out: outDir,
-      ignore: /node_modules\/ace-builds\/(?!src-min)|node_modules\/ace-builds\/(?=src-min-noconflict)|node_modules\/devicon\/icons|^\/browser|^\/secret|\.babelrc|\.gitignore|^\/\.gitmodules|^\/gruntfile|^\/readme.md|^\/webpack|^\/node_modules\/grunt/
+      ignore:
+        /node_modules\/ace-builds\/(?!src-min)|node_modules\/ace-builds\/(?=src-min-noconflict)|node_modules\/devicon\/icons|^\/browser|^\/secret|\.babelrc|\.gitignore|^\/\.gitmodules|^\/gruntfile|^\/readme.md|^\/webpack|^\/node_modules\/grunt/
     }
     switch (platform) {
       case 'win':
@@ -84,11 +85,11 @@ module.exports = function(grunt) {
           }
         })
         packager(opts)
-          .then(function(appPaths) {
+          .then(function (appPaths) {
             grunt.log.writeln('packaged: ' + appPaths.join(', '))
             done()
           })
-          .catch(function(err) {
+          .catch(function (err) {
             grunt.log.writeln(err)
             done(err)
           })
@@ -100,11 +101,11 @@ module.exports = function(grunt) {
           appCategoryType: 'public.app-category.developer-tools'
         })
         packager(opts)
-          .then(function(appPaths) {
+          .then(function (appPaths) {
             grunt.log.writeln('packaged: ' + appPaths.join(', '))
             done()
           })
-          .catch(function(err) {
+          .catch(function (err) {
             grunt.log.writeln(err)
             done(err)
           })
@@ -117,11 +118,11 @@ module.exports = function(grunt) {
           appCategoryType: 'public.app-category.developer-tools'
         })
         packager(opts)
-          .then(function(appPaths) {
+          .then(function (appPaths) {
             grunt.log.writeln('packaged: ' + appPaths.join(', '))
             done()
           })
-          .catch(function(err) {
+          .catch(function (err) {
             grunt.log.writeln(err)
             done(err)
           })
@@ -132,11 +133,11 @@ module.exports = function(grunt) {
           icon: path.join(__dirname, 'resources/app.png')
         })
         packager(opts)
-          .then(function(appPaths) {
+          .then(function (appPaths) {
             grunt.log.writeln('packaged: ' + appPaths.join(', '))
             done()
           })
-          .catch(function(err) {
+          .catch(function (err) {
             grunt.log.writeln(err)
             done(err)
           })
@@ -144,7 +145,7 @@ module.exports = function(grunt) {
     }
   })
 
-  grunt.registerTask('codesign', function(platform) {
+  grunt.registerTask('codesign', function (platform) {
     var done = this.async()
     if (process.platform !== 'darwin') {
       done(false)
@@ -153,7 +154,7 @@ module.exports = function(grunt) {
 
     ChildProcess.exec(
       `codesign --verbose --deep --force --timestamp=none --sign \"${OSX_COMMON_NAME}\" dist/Boostnote-darwin-x64/Boostnote.app`,
-      function(err, stdout, stderr) {
+      function (err, stdout, stderr) {
         grunt.log.writeln(stdout)
         if (err) {
           grunt.log.writeln(err)
@@ -166,14 +167,14 @@ module.exports = function(grunt) {
     )
   })
 
-  grunt.registerTask('zip', function(platform) {
+  grunt.registerTask('zip', function (platform) {
     var done = this.async()
     switch (platform) {
       case 'osx':
         var execPath =
           'cd dist/Boostnote-darwin-x64 && zip -r -y -q ../Boostnote-mac.zip Boostnote.app'
         grunt.log.writeln(execPath)
-        ChildProcess.exec(execPath, function(err, stdout, stderr) {
+        ChildProcess.exec(execPath, function (err, stdout, stderr) {
           grunt.log.writeln(stdout)
           if (err) {
             grunt.log.writeln(err)
@@ -203,7 +204,7 @@ module.exports = function(grunt) {
     }
   }
 
-  grunt.registerTask('build', function(platform) {
+  grunt.registerTask('build', function (platform) {
     if (platform == null) platform = getTarget()
 
     switch (platform) {
@@ -219,7 +220,7 @@ module.exports = function(grunt) {
     }
   })
 
-  grunt.registerTask('pre-build', function(platform) {
+  grunt.registerTask('pre-build', function (platform) {
     if (platform == null) platform = getTarget()
 
     switch (platform) {
@@ -234,7 +235,7 @@ module.exports = function(grunt) {
     }
   })
 
-  grunt.registerTask('bfm', function() {
+  grunt.registerTask('bfm', function () {
     const Color = require('color')
     const parseCSS = require('css').parse
 

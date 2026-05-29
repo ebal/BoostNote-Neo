@@ -54,7 +54,7 @@ test('Delete a note', () => {
           )
           return data
         })
-        .then(function(data) {
+        .then(function (data) {
           return deleteNote(storageKey, data.key)
         })
     })

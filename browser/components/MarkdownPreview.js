@@ -413,9 +413,8 @@ class MarkdownPreview extends React.Component {
       RTL
     } = getStyleParams(this.props)
 
-    this.getWindow().document.getElementById(
-      'codeTheme'
-    ).href = getCodeThemeLink(codeBlockTheme)
+    this.getWindow().document.getElementById('codeTheme').href =
+      getCodeThemeLink(codeBlockTheme)
 
     this.getWindow().document.getElementById('style').innerHTML = buildStyle(
       fontFamily,
@@ -465,10 +464,8 @@ class MarkdownPreview extends React.Component {
     }
     const renderedHTML = this.markdown.render(value)
     attachmentManagement.migrateAttachments(value, storagePath, noteKey)
-    this.refs.root.contentWindow.document.body.innerHTML = attachmentManagement.fixLocalURLS(
-      renderedHTML,
-      storagePath
-    )
+    this.refs.root.contentWindow.document.body.innerHTML =
+      attachmentManagement.fixLocalURLS(renderedHTML, storagePath)
     _.forEach(
       this.refs.root.contentWindow.document.querySelectorAll(
         'input[type="checkbox"]'
@@ -641,18 +638,16 @@ class MarkdownPreview extends React.Component {
       }
     })
 
-    const imgList = markdownPreviewIframe.contentWindow.document.body.querySelectorAll(
-      'img'
-    )
+    const imgList =
+      markdownPreviewIframe.contentWindow.document.body.querySelectorAll('img')
     for (const img of imgList) {
       const parentEl = img.parentElement
       this.setImgOnClickEventHelper(img, rect)
       imgObserver.observe(parentEl, config)
     }
 
-    const aList = markdownPreviewIframe.contentWindow.document.body.querySelectorAll(
-      'a'
-    )
+    const aList =
+      markdownPreviewIframe.contentWindow.document.body.querySelectorAll('a')
     for (const a of aList) {
       a.removeEventListener('click', this.linkClickHandler)
       a.addEventListener('click', this.linkClickHandler)
@@ -756,9 +751,8 @@ class MarkdownPreview extends React.Component {
    * @param {Number} targetLine
    */
   scrollToLine(targetLine) {
-    const blocks = this.getWindow().document.querySelectorAll(
-      'body [data-line]'
-    )
+    const blocks =
+      this.getWindow().document.querySelectorAll('body [data-line]')
 
     for (let index = 0; index < blocks.length; index++) {
       let block = blocks[index]
@@ -911,9 +905,4 @@ MarkdownPreview.propTypes = {
   breaks: PropTypes.bool
 }
 
-export default connect(
-  null,
-  null,
-  null,
-  { forwardRef: true }
-)(MarkdownPreview)
+export default connect(null, null, null, { forwardRef: true })(MarkdownPreview)

@@ -53,10 +53,10 @@ test('Export a folder', () => {
   }
 
   return createNote(storageKey, input1)
-    .then(function() {
+    .then(function () {
       return createNote(storageKey, input2)
     })
-    .then(function() {
+    .then(function () {
       return exportFolder(storageKey, folderKey, 'md', storagePath, config)
     })
     .then(function assert() {
