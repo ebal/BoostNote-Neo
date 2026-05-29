@@ -1,6 +1,7 @@
 const skeleton = require('./webpack-skeleton')
 const webpack = require('webpack')
 const path = require('path')
+const TerserPlugin = require('terser-webpack-plugin')
 
 const stylusLoaderOptions = {
   stylusOptions: {
@@ -15,6 +16,19 @@ const stylusLoaderOptions = {
 var config = Object.assign({}, skeleton, {
   mode: 'production',
   performance: { hints: false },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: 2020,
+          keep_classnames: true,
+          keep_fnames: true,
+          compress: { ecma: 2020 },
+          output: { ecma: 2020 }
+        }
+      })
+    ]
+  },
   module: {
     rules: [
       {
