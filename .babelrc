@@ -1,6 +1,11 @@
 {
   "presets": [
-    ["@babel/preset-env", { "targets": { "electron": "42" }, "modules": "commonjs" }],
+    ["@babel/preset-env", {
+      "targets": { "chrome": "138" },
+      "modules": "commonjs",
+      "exclude": ["@babel/plugin-transform-classes", "@babel/plugin-transform-spread"],
+      "bugfixes": true
+    }],
     "@babel/preset-react"
   ]
 }
