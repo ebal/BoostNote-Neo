@@ -1,23 +1,56 @@
 const skeleton = require('./webpack-skeleton')
 const path = require('path')
 
+const stylusOptions = {
+  use: [require('nib')()],
+  import: [
+    '~nib/lib/nib/index.styl',
+    path.join(__dirname, 'browser/styles/index.styl')
+  ],
+  sourceMap: true
+}
+
 var config = Object.assign({}, skeleton, {
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js?$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel?cacheDirectory'
+        use: {
+          loader: 'babel-loader',
+          options: { cacheDirectory: true }
+        }
+      },
+      {
+        test: /global\.styl$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'stylus-loader', options: stylusOptions }
+        ]
       },
       {
         test: /\.styl$/,
-        exclude: /(node_modules|bower_components)/,
-        loader:
-          'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[path]!stylus?sourceMap'
+        exclude: /(node_modules|bower_components|global\.styl$)/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]__[local]___[path]'
+            }
+          },
+          {
+            loader: 'stylus-loader',
+            options: stylusOptions
+          }
+        ]
       },
       {
         test: /\.json$/,
-        loader: 'json'
+        use: 'json-loader'
       }
     ]
   },
@@ -28,7 +61,6 @@ var config = Object.assign({}, skeleton, {
     libraryTarget: 'commonjs2',
     publicPath: 'http://localhost:8080/assets/'
   },
-  debug: true,
   devtool: 'cheap-module-eval-source-map',
   devServer: {
     port: 8080,

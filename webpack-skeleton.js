@@ -7,28 +7,18 @@ var config = {
     main: ['./browser/main/index.js']
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.styl'],
-    packageMains: [
-      'webpack',
-      'browser',
-      'web',
-      'browserify',
-      ['jam', 'main'],
-      'main'
-    ],
+    extensions: ['.js', '.jsx', '.styl'],
+    aliasFields: ['browser'],
+    mainFields: ['webpack', 'browserify', 'jam', 'main'],
     alias: {
       lib: path.join(__dirname, 'lib'),
       browser: path.join(__dirname, 'browser')
     }
   },
-  plugins: [new webpack.NoErrorsPlugin(), new NodeTargetPlugin()],
-  stylus: {
-    use: [require('nib')()],
-    import: [
-      '~nib/lib/nib/index.styl',
-      path.join(__dirname, 'browser/styles/index.styl')
-    ]
-  },
+  plugins: [
+    new webpack.NoEmitOnErrorsPlugin(),
+    new NodeTargetPlugin()
+  ],
   externals: [
     'prettier',
     'node-ipc',
