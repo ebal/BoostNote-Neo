@@ -71,9 +71,10 @@ var config = Object.assign({}, skeleton, {
   output: {
     path: path.join(__dirname, 'compiled'),
     filename: '[name].js',
+    chunkFilename: '[name].chunk.js',
     libraryTarget: 'commonjs2',
     sourceMapFilename: '[name].map',
-    publicPath: 'http://localhost:8080/assets/'
+    publicPath: '../compiled/'
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
