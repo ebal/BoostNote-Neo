@@ -2,12 +2,14 @@ const skeleton = require('./webpack-skeleton')
 const webpack = require('webpack')
 const path = require('path')
 
-const stylusOptions = {
-  use: [require('nib')()],
-  import: [
-    '~nib/lib/nib/index.styl',
-    path.join(__dirname, 'browser/styles/index.styl')
-  ]
+const stylusLoaderOptions = {
+  stylusOptions: {
+    use: [require('nib')()],
+    import: [
+      '~nib/lib/nib/index.styl',
+      path.join(__dirname, 'browser/styles/index.styl')
+    ]
+  }
 }
 
 var config = Object.assign({}, skeleton, {
@@ -25,7 +27,7 @@ var config = Object.assign({}, skeleton, {
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader' },
-          { loader: 'stylus-loader', options: stylusOptions }
+          { loader: 'stylus-loader', options: stylusLoaderOptions }
         ]
       },
       {
@@ -36,12 +38,13 @@ var config = Object.assign({}, skeleton, {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]___[path]'
+              modules: {
+                localIdentName: '[name]__[local]___[path]'
+              },
+              importLoaders: 1
             }
           },
-          { loader: 'stylus-loader', options: stylusOptions }
+          { loader: 'stylus-loader', options: stylusLoaderOptions }
         ]
       },
       {
