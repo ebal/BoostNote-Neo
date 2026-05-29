@@ -1,7 +1,13 @@
 {
   "extends": ["standard", "standard-jsx", "plugin:react/recommended", "prettier"],
   "plugins": ["react", "prettier"],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+  },
   "rules": {
     "no-useless-escape": 0,
     "prefer-const": ["warn", {
@@ -10,11 +16,36 @@
     "no-unused-vars": "warn",
     "no-undef": "warn",
     "no-lone-blocks": "warn",
+    "no-use-before-define": "warn",
+    "no-prototype-builtins": "warn",
+    "prefer-regex-literals": "warn",
+    "lines-between-class-members": "warn",
+    "import/no-webpack-loader-syntax": 0,
+    "no-var": "warn",
+    "object-shorthand": 0,
+    "import/first": 0,
+    "import/no-named-default": 0,
+    "import/no-absolute-path": 0,
+    "prefer-promise-reject-errors": "warn",
+    "array-callback-return": "warn",
+    "dot-notation": "warn",
+    "no-unused-expressions": "warn",
+    "no-empty": "warn",
+    "no-useless-return": "warn",
+    "no-unreachable-loop": "warn",
+    "no-case-declarations": "warn",
+    "n/no-deprecated-api": "warn",
+    "n/no-path-concat": "warn",
+    "n/no-callback-literal": 0,
     "react/prop-types": 0,
     "react/no-string-refs": 0,
     "react/no-find-dom-node": "warn",
     "react/no-render-return-value": "warn",
     "react/no-deprecated": "warn",
+    "react/no-unknown-property": 0,
+    "react/jsx-handler-names": "warn",
+    "react/jsx-fragments": "warn",
+    "react/jsx-no-target-blank": "warn",
     "prettier/prettier": ["error"]
   },
   "globals": {
