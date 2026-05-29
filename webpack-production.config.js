@@ -1,7 +1,6 @@
 const skeleton = require('./webpack-skeleton')
 const webpack = require('webpack')
 const path = require('path')
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
 
 const stylusOptions = {
   use: [require('nib')()],
@@ -61,7 +60,6 @@ var config = Object.assign({}, skeleton, {
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new NodeTargetPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),

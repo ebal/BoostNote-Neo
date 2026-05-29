@@ -165,9 +165,9 @@
     "style-loader": "^0.12.4",
     "stylus": "^0.52.4",
     "stylus-loader": "^3.0.2",
-    "webpack": "^4.46.0",
+    "webpack": "^5.90.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^3.11.3"
+    "webpack-dev-server": "^4.15.1"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -223,8 +223,7 @@
     "set-value": "^2.0.1",
     "ansi-regex": "^3.0.1",
     "remarkable": "^1.7.2",
-    "ajv": "^6.12.3",
-    "acorn": "^6.4.1",
+    "acorn": "^8.0.0",
     "decompress-zip": "^0.3.2",
     "eventsource": "^1.1.1",
     "form-data": "^2.5.4",
@@ -245,6 +244,6 @@
     "open": "^6.0.0",
     "braces": "^3.0.3",
     "uuid": "^9.0.1",
-    "webpack": "^4.46.0"
+    "webpack": "^5.90.0"
   }
 }

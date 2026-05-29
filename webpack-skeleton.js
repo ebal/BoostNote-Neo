@@ -1,8 +1,8 @@
 const webpack = require('webpack')
 const path = require('path')
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
 
 var config = {
+  target: 'electron-renderer',
   entry: {
     main: ['./browser/main/index.js']
   },
@@ -13,12 +13,32 @@ var config = {
     alias: {
       lib: path.join(__dirname, 'lib'),
       browser: path.join(__dirname, 'browser')
+    },
+    fallback: {
+      buffer: false,
+      crypto: false,
+      stream: false,
+      path: false,
+      fs: false,
+      os: false,
+      util: false,
+      url: false,
+      querystring: false,
+      tty: false,
+      assert: false,
+      zlib: false,
+      http: false,
+      https: false,
+      child_process: false,
+      net: false,
+      tls: false,
+      dns: false,
+      module: false,
+      readline: false,
+      vm: false
     }
   },
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new NodeTargetPlugin()
-  ],
+  plugins: [new webpack.NoEmitOnErrorsPlugin()],
   externals: [
     'prettier',
     'node-ipc',
