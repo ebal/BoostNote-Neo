@@ -20,11 +20,11 @@ var config = Object.assign({}, skeleton, {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          ecma: 2020,
+          ecma: 5,
           keep_classnames: true,
           keep_fnames: true,
-          compress: { ecma: 2020 },
-          output: { ecma: 2020 }
+          compress: { ecma: 5 },
+          output: { ecma: 5 }
         }
       })
     ]
