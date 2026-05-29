@@ -1,4 +1,4 @@
-import { combineReducers, createStore, applyMiddleware } from 'redux'
+import { combineReducers, legacy_createStore as createStore, applyMiddleware } from 'redux'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory as createHistory } from 'history'
 import ConfigManager from 'browser/main/lib/ConfigManager'
