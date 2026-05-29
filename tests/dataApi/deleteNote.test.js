@@ -1,18 +1,6 @@
 const createNote = require('browser/main/lib/dataApi/createNote')
 const deleteNote = require('browser/main/lib/dataApi/deleteNote')
 
-global.document = require('jsdom').jsdom('<body></body>')
-global.window = document.defaultView
-Object.defineProperty(global, 'navigator', {
-  get: () => window.navigator,
-  configurable: true
-})
-
-const Storage = require('dom-storage')
-const localStorage = (window.localStorage = global.localStorage = new Storage(
-  null,
-  { strict: true }
-))
 const path = require('path')
 const TestDummy = require('../fixtures/TestDummy')
 const sander = require('sander')

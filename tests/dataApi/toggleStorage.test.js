@@ -1,17 +1,5 @@
 const toggleStorage = require('browser/main/lib/dataApi/toggleStorage')
 
-global.document = require('jsdom').jsdom('<body></body>')
-global.window = document.defaultView
-Object.defineProperty(global, 'navigator', {
-  get: () => window.navigator,
-  configurable: true
-})
-
-const Storage = require('dom-storage')
-const localStorage = (window.localStorage = global.localStorage = new Storage(
-  null,
-  { strict: true }
-))
 const path = require('path')
 const _ = require('lodash')
 const TestDummy = require('../fixtures/TestDummy')
