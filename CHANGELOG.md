@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.1] - 2026-05-29
+
+### Fixed
+
+- **Babel ES5 target regression** — 4-commit fix chain: start with `chrome 138` (preserves ES6 classes for terser, but ES5 bundle-size-critical deps like `create-react-class` wrap `new Component()` which then fails), switch terser to `ecma: 2020`, then force `targets: ['ie 11']` + `useBuiltIns: false` to match the full ES5 minimum required by `react-css-modules` HOC wrappers and other ES5-distributing deps ([`83795c29`](../../commit/83795c29), [`0d94823b`](../../commit/0d94823b), [`15a98c3a`](../../commit/15a98c3a), [`3c6a1c72`](../../commit/3c6a1c72)).
+- **css-loader 6 export shape** — `markdown.styl` extraction failed because css-loader 6 returns `CSS modules` as a named export (`style.__locallyScoped__`) instead of `module.exports.locals`. Wrapped the extractor to read the new shape ([`b41dc540`](../../commit/b41dc540)).
+- **Mermaid 10 `import()` chunks** — dynamic `import()` in mermaid 10's lazy-load chain produces separate JS chunks that 404 in the `.app` bundle (Electron loads `file://`). Fixed via `output.publicPath` in webpack-production.config.js ([`3d7856ab`](../../commit/3d7856ab)).
+- **Chrome console noise suppression** — broadened `console.filter` to silence `[Violation]` reports (added `'Violation'` + `'violation'` substrings) and the `@font-face` slow-network warning via `font-display: block` in the preview iframe ([`cc850bdb`](../../commit/cc850bdb), [`6f94c6f0`](../../commit/6f94c6f0), [`d7cc2786`](../../commit/d7cc2786)).
+- **Electron 42 vm warning filter** — broadened the `V8VmDeprecation` substring match to suppress the warning on Electron 42 ([`34b42bfe`](../../commit/34b42bfe)).
+- **ajv prototype pollution alert #47** — patched via resolution ([`a41ba25b`](../../commit/a41ba25b)).
+
+### Changed
+
+- **Drop stale resolutions + devDeps** — remove 10+ resolution entries that are no longer needed post webpack 5 (babel-6-specific pins, webpack-1-specific pins). Drop `jest-localstorage-mock` (bundled in jest-environment-jsdom 27) ([`39b52195`](../../commit/39b52195)).
+- **Inline DevTools no-op stub** — move the DevTools placeholder directly into `browser/main/index.js`, delete `browser/main/DevTools/` directory ([`c6b8a115`](../../commit/c6b8a115)).
+- **Clean up completed plan docs** — remove `UpgradePlan_Electron14_to_Latest.md` and `dead_code_report.md` from `.claude/plans/` ([`c6b8a115`](../../commit/c6b8a115)).
+
+### Documentation
+
+- Update CLAUDE.md and AGENTS.md for the v0.20.0 webpack 5 / babel 7 / zero-alerts state ([`9425bc08`](../../commit/9425bc08)).
+
 ## [0.20.0] - 2026-05-29
 
 ### Added
@@ -535,6 +556,8 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 [0.17.13]: ../../compare/v0.17.12...v0.17.13
 [0.17.12]: ../../compare/v0.17.10...v0.17.12
 [0.17.10]: ../../compare/v0.17.9...v0.17.10
+[0.20.1]: ../../compare/v0.20.0...v0.20.1
+[0.20.0]: ../../compare/v0.19.0...v0.20.0
 [0.19.0]: ../../compare/v0.18.3...v0.19.0
 [0.18.3]: ../../compare/v0.18.2...v0.18.3
 [0.18.2]: ../../compare/v0.18.1...v0.18.2

@@ -38,6 +38,7 @@ This is the **legacy** branch of Boostnote — a markdown-first, open-source not
 
 | Version | What changed |
 |---------|-------------|
+| 0.20.1 | Fix babel ES5 target chain; fix css-loader 6 export shape; fix mermaid 10 import() publicPath; fix Chrome console noise (Violation + font-display); fix Electron 42 vm filter; patch ajv #47; drop stale resolutions + devDeps; inline DevTools stub; clean up plans |
 | 0.20.0 | **Webpack 1.15.0 → 5.107.2** (7 phases) + **Babel 6 → 7** + acorn 5→8 + post-acorn deps (uuid 9→11, mermaid 9→10, highlight.js 10→11); rewrote `MermaidRender.js` for v10 Promise API; CSS Modules under css-loader 6 schema; dev script rewritten for wds 5 — clears all 15 open Dependabot alerts |
 | 0.19.0 | **Electron 14.2.9 → 42.3.0** (4 phases, Chromium 87→138, Node 12→22, V8 9.3→13.x, clears 22+ CVE alerts); **Jest 22→27** + Babel 7 alongside 6; turndown 4→7; clean up plans + dead code; revert js-yaml 4→3 (lint regression) |
 | 0.18.3 | Upgrade js-yaml 3→4 (-290KB bundle); 7 CVE-forced resolutions (dompurify 3.x, tmpl, lodash.template, path-to-regexp, @babel/runtime, merge, d3-color); upgrade cross-env 7→10, iconv-lite 0.4→0.7, file-uri-to-path 1→2 |
