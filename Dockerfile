@@ -1,20 +1,20 @@
-# Unified Dockerfile for BoostNote-Legacy
+# Unified Dockerfile for BoostNote-Neo
 # Builds for both amd64 (Intel Mac) and arm64 (Apple Silicon).
 #
 # Build for Intel Mac / amd64:
-#   docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-legacy .
+#   docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-neo .
 #
 # Build for Apple Silicon / arm64:
 #   docker build --platform linux/arm64 \
 #     --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) \
-#     --build-arg BUILDARCH=arm64 -t boostnote-legacy-arm64 .
+#     --build-arg BUILDARCH=arm64 -t boostnote-neo-arm64 .
 #
 # Export:
-#   docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64 ./dist/
-#   docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-darwin-x64.zip ./dist/
-#   docker cp $(docker create --rm boostnote-legacy):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
-#   docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
-#   docker cp $(docker create --rm boostnote-legacy-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
+#   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64 ./dist/
+#   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64.zip ./dist/
+#   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
+#   docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
+#   docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
 
 ARG BUILDARCH=amd64
 
