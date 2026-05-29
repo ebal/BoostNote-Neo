@@ -600,6 +600,7 @@ export function buildStyle(
   font-style: normal;
   font-weight: normal;
   text-rendering: optimizeLegibility;
+  font-display: block;
 }
 @font-face {
   font-family: 'Lato';
@@ -609,6 +610,7 @@ export function buildStyle(
   font-style: normal;
   font-weight: 700;
   text-rendering: optimizeLegibility;
+  font-display: block;
 }
 @font-face {
   font-family: 'JetBrains Mono';
@@ -616,6 +618,7 @@ export function buildStyle(
   font-style: normal;
   font-weight: normal;
   text-rendering: optimizeLegibility;
+  font-display: block;
 }
 @font-face {
   font-family: 'JetBrains Mono';
@@ -623,6 +626,7 @@ export function buildStyle(
   font-style: normal;
   font-weight: bold;
   text-rendering: optimizeLegibility;
+  font-display: block;
 }
 @font-face {
   font-family: 'JetBrains Mono';
@@ -630,6 +634,7 @@ export function buildStyle(
   font-style: italic;
   font-weight: normal;
   text-rendering: optimizeLegibility;
+  font-display: block;
 }
 @font-face {
   font-family: 'Material Icons';
@@ -640,6 +645,7 @@ export function buildStyle(
        url('${appPath}/resources/fonts/MaterialIcons-Regular.woff2') format('woff2'),
        url('${appPath}/resources/fonts/MaterialIcons-Regular.woff') format('woff'),
        url('${appPath}/resources/fonts/MaterialIcons-Regular.ttf') format('truetype');
+  font-display: block;
 }
 ${markdownStyle}
 
