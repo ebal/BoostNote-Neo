@@ -23,10 +23,18 @@ module.exports = {
     openExternal: noop,
     openPath: noop
   },
-  Menu: jest.fn().mockImplementation(() => ({
-    append: noop,
-    popup: noop
-  })),
+  Menu: Object.assign(
+    jest.fn().mockImplementation(() => ({
+      append: noop,
+      popup: noop
+    })),
+    {
+      buildFromTemplate: jest.fn().mockImplementation(() => ({
+        popup: noop,
+        append: noop
+      }))
+    }
+  ),
   MenuItem: jest.fn(),
   BrowserWindow: jest.fn().mockImplementation(() => ({
     loadURL: noop,
