@@ -16,7 +16,9 @@ const appPath = fileUrl(
 
 let markdownStyle = ''
 try {
-  markdownStyle = require('!!css-loader!stylus-loader!../../../components/markdown.styl')[0][1]
+  const css = require('!!css-loader!stylus-loader!../../../components/markdown.styl')
+  const entries = css.default || css
+  markdownStyle = entries[0][1]
 } catch (e) {}
 
 export const CSS_FILES = [
