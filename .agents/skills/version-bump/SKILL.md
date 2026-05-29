@@ -69,7 +69,7 @@ At the **bottom** of the file, add a comparison link:
 
 ### 6. Update `README.md`
 
-Prepend a new row to the "Recent updates (v0.16.x)" table:
+Prepend a new row to the "Recent updates" table:
 
 ```markdown
 | NEW_VER | Short description of the main change |
@@ -77,11 +77,11 @@ Prepend a new row to the "Recent updates (v0.16.x)" table:
 
 Keep the table in reverse chronological order (newest first).
 
-### 7. Optionally update `UPGRADE.md`
+### 7. Optionally update `.claude/plans/UPGRADE.md`
 
-Only if the bump involves a significant change (Electron version, build system, major feature removal). If updating:
-- Add a row to the "Known versions" table
-- Add a new "Iterations" section documenting source/target versions, changed files, build/test commands, verification
+Only if the bump involves a significant Electron version or build-system change. UPGRADE.md is now a thin skeleton (rules + known-versions table + notable-jumps summary); CHANGELOG.md is the canonical per-iteration record. If updating UPGRADE.md:
+- Add or update a row in the "Known versions" table (`Electron / Chrome / Node / V8` columns).
+- Add a one-line entry in the "Iteration history" section pointing back at the matching CHANGELOG section.
 
 ### 8. Commit
 

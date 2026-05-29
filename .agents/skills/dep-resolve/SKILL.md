@@ -3,11 +3,11 @@ name: dep-resolve
 description: >
   Automates CVE patch resolution for transitive npm dependencies via yarn
   resolutions. Given a vulnerable dependency name and target patched version,
-  investigates the dependency tree, checks for breaking changes and the
-  Webpack 1 ESM cliff, applies the resolution to package.json (chronological
-  insertion at end of the resolutions block), regenerates yarn.lock via the
-  bn-deps quick-verify image, runs the compile smoke, optionally runs the
-  full docker build for build-time deps, updates CLAUDE.md, and commits.
+  investigates the dependency tree, checks for breaking changes, applies the
+  resolution to package.json (chronological insertion at end of the
+  resolutions block), regenerates yarn.lock via the bn-deps quick-verify
+  image, runs the compile smoke, optionally runs the full docker build for
+  build-time deps, updates CLAUDE.md when warranted, and commits.
   Trigger: "resolve CVE", "patch dep", "force dep X to Y", "investigate dep".
 ---
 
@@ -17,7 +17,8 @@ description: >
 
 - **Docker-only policy.** Never run `npm` / `yarn` / `electron` / `grunt` / `node` on the host. Allowed host commands: `git`, `docker`, `codesign`.
 - **yarn is canonical**, not npm. The lockfile is `yarn.lock`. `npm install` is wrong — it would generate `package-lock.json` and never touch `yarn.lock`.
-- **Webpack 1 ESM cliff.** Packages that ship pure ESM (`"type": "module"` with no `main` field) cannot be resolved by webpack 1. Known blocked majors: `uuid 12+`, `mermaid 10+`, `json5 2+`, `highlight.js 11+`. Always inspect the target's `package.json` for `main` before accepting a major bump.
+- **Toolchain (post-v0.20.0):** webpack 5 + babel 7 + acorn 8. The legacy ESM / acorn cliffs that blocked uuid 10+, mermaid 10+, highlight.js 11+, json5 2+ are gone — every previously-blocked major has since landed. Still inspect the target's `package.json` `main` / `type` / `exports` fields before a major bump, since pure-ESM packages that only ship `.mjs` may still require `resolve.extensions` adjustments in `webpack-skeleton.js` (see the `markdown-it/lib/token.mjs` case in CLAUDE.md).
+- **Hard exact-pin invariants** — see CLAUDE.md "Active exact-pin invariants" (`raphael 2.2.7`, `flowchart.js 1.12.0`, `codemirror-mode-elixir 1.1.1`). Re-adding `^` to any of these breaks the build at next `yarn install --force`.
 
 ## Steps
 
@@ -38,28 +39,28 @@ Trace the consumer chain upward to a top-level entry in `package.json` (`depende
 
 ### 2. Classify scope
 
-Tag the consumer chain into one of CLAUDE.md's three groups. This determines doc placement and verify depth:
+Determines verify depth + commit-message scope tag:
 
-- **Renderer / runtime-touching** — bundled into `compiled/main.js` or loaded via `webpack-skeleton.js#externals` at Electron runtime. Highest stakes. Examples: `lodash`, `moment`, `highlight.js`, `dot-prop`, `decode-uri-component` (via `query-string`).
-- **Build-time only (loader / packager chain)** — used by webpack loaders, electron-packager, electron download, etc. Never enters the shipped binary. Examples: `json5`, `node-fetch`, `tough-cookie`, `got` (via `@electron/get`), `ws` (via `jsdom` test helpers).
-- **Dev-server (HMR) only** — used by `webpack-dev-server@1.16.5` middleware or `babel-preset-react-hmre`. Constant-folded out of the production compile. Examples: `cookie`, `serve-static`, `sockjs`, `url-parse`.
+- **Renderer / runtime-touching** — bundled into `compiled/main.js` or loaded via `webpack-skeleton.js#externals` at Electron runtime. Highest stakes. Examples: `lodash`, `moment`, `highlight.js`, `dompurify`, `markdown-it`, `mermaid`, `codemirror`.
+- **Build-time only (loader / packager chain)** — used by webpack loaders, electron-packager, `@electron/get`, etc. Never enters the shipped binary. Examples: `json5`, `node-fetch`, `tough-cookie`, `got`, `tar`.
+- **Dev-server (HMR) only** — used by `webpack-dev-server@5` middleware. Constant-folded out of the production compile. Examples: `cookie`, `serve-static`, `sockjs`.
 
 ### 3. Check breaking-change surface
 
 - **Patch bump within same minor** (`0.2.0` → `0.2.2`) — safe, accept.
 - **Minor bump within `^` range** — safe unless changelog calls out a behavior change in the surface actually called by the consumer.
 - **Major bump** — read release notes between current and target. For renderer-touching deps, audit every call site in `browser/` and `lib/`. For build-only, the worst case is build break, which `docker build .` catches.
-- **Pure ESM cliff** — `curl -s https://registry.npmjs.org/<dep>/<target> | jq '.main, .type, .exports'`. If `main` is absent or `type: "module"` without a CJS export, webpack 1 will not resolve it. Cannot bump.
+- **ESM-only shape check** — `curl -s https://registry.npmjs.org/<dep>/<target> | jq '.main, .type, .exports'`. Webpack 5 handles ESM natively, but a target that ships only `.mjs` may still need `resolve.extensions` updated (see `markdown-it/lib/token.mjs` in CLAUDE.md "Outstanding security work" §1).
 
 ### 4. Pick range syntax
 
 Match the existing project convention — do NOT blindly default to `^`:
 
 - `^X.Y.Z` — default for most deps (caret = same major).
-- `~X.Y.Z` — tilde when capping at a minor (e.g. `mermaid ~9.1.7` to stay below v9.2's lazy-load rewrite).
-- Bare `X.Y.Z` — exact pin (e.g. `unique-slug 2.0.0`) only when an exact match is required.
+- `~X.Y.Z` — tilde when capping at a minor (used when an intra-major release is known to regress).
+- Bare `X.Y.Z` — exact pin only when required (`raphael`, `flowchart.js`, `codemirror-mode-elixir` — see CLAUDE.md "Active exact-pin invariants").
 
-For companion deps that fix a sub-tree (e.g. `sanitize-html/postcss` selectively), use the selective form `"<parent>/<child>": "^X.Y.Z"` instead of a global resolution.
+For companion deps that fix a sub-tree, use the selective form `"<parent>/<child>": "^X.Y.Z"` instead of a global resolution (example: `"markdownlint/markdown-it": "14.1.1"` in CLAUDE.md §1).
 
 ### 5. Add resolution to `package.json`
 
@@ -81,7 +82,7 @@ docker run --rm -v "$(pwd)":/app -v /app/node_modules -w /app bn-deps \
 - `-v "$(pwd)":/app` — bind-mount host repo so `yarn.lock` is rewritten on the host filesystem. Without this the lock change is lost when the container exits.
 - `-v /app/node_modules` — anonymous volume preserves the container's pre-installed `node_modules`, so yarn doesn't reinstall the world.
 - `--force` — defeats CLAUDE.md's "stale-deps trap": yarn may otherwise decide the lockfile is satisfied and skip the rewrite, leaving the new resolution inert.
-- `--ignore-engines` — silences peer-dep noise from the Webpack 1 / Babel 6 stack.
+- `--ignore-engines` — silences peer-dep noise from the few remaining deps with strict Node-version peers.
 - `npm run compile` — fastest reliable signal (~5s) that the dep change has not broken the webpack bundle.
 
 Confirm afterwards: `grep -nE "^<dep-name>@" yarn.lock` should show the patched version. For deps that resolve under a nested `node_modules/<parent>/node_modules/` path (selective resolutions like `"sanitize-html/postcss"`), also spot-check the file on disk:
@@ -112,15 +113,16 @@ docker build --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) -t boostnote-n
 
 Skip for renderer-only or HMR-only deps — compile smoke is sufficient.
 
-### 8. Update CLAUDE.md
+### 8. Update CLAUDE.md (only when warranted)
 
-Add an entry to the matching group in the `## Dependency policy` section (see step 2). For each entry record:
+CLAUDE.md "Dependency policy" was trimmed in v0.20.x — per-resolution forensics no longer live there (the lockfile is the source of truth). Only update CLAUDE.md when the change adds or modifies a **long-lived invariant**:
 
-- The consumer chain (e.g. `query-string` → `decode-uri-component`).
-- The CVE id(s) patched and a one-line reachability note (which sink, why exploitable or unreachable).
-- The verification performed (compile, full docker build, smoke render, etc.).
+- A new entry under "Active exact-pin invariants" (caret-forbidden pin).
+- A change to "Active exact-pin invariants" (lifting a pin, retargeting a pin).
+- A net-new structural quirk that a future maintainer would otherwise rediscover (e.g. selective resolution that needs `resolve.extensions` update).
+- If the dep is on the `## Outstanding security work` list, remove it there and renumber.
 
-If the dep is on the `## Outstanding security work (next priorities)` list, remove it there and renumber.
+Routine `resolutions` entries do NOT need CLAUDE.md updates — the commit message + CHANGELOG carry the why.
 
 ### 9. Commit
 
@@ -143,7 +145,7 @@ Do NOT push.
 - Always regenerate `yarn.lock` with the full quick-verify command including bind mount and `--force`. A package.json-only commit is incomplete and leaves the patch inert (see commit `2d0c1f5a` for the cautionary example).
 - Always run `npm run compile` after install — it is the fastest break detector.
 - For build-time deps that exercise electron-packager, also run the full `docker build .`.
-- Update CLAUDE.md in the same commit.
+- Update CLAUDE.md in the same commit only when the change is a long-lived invariant (see step 8). Routine resolutions: skip.
 - Use `bn-deps` for quick-verify, not the full `boostnote-neo` image (5 min build vs 5 s compile).
 - Rebuild `bn-deps` (`docker build --target deps -t bn-deps .`) after introducing a selective `"parent/child"` resolution, or any time a spot-check shows the nested package version disagrees with `yarn.lock`. The image's baked `node_modules` snapshot does not re-link nested directories under `--force` alone — this was the stale-image trap that surfaced after `sanitize-html/postcss ^7.0.39` was introduced.
 - Never run host `npm` / `yarn`. Docker-only policy is hard.
