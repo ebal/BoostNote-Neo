@@ -47,6 +47,14 @@ Node 22 (bookworm) inside Docker. Unified Dockerfile supports both amd64 and arm
 - CSS Modules via `react-css-modules` + Stylus; class pattern `[name]__[local]___[path]`
 - **Webpack `process` shim:** Webpack 1 injects `process.versions = {}`. Any dep reading `process.versions.node` at module load (e.g. `fs-extra@7+`) crashes. Pin such deps or external them.
 
+## Dependency quirks
+
+- **uuid v11 broken with Webpack 1:** uuid v11 CJS dist uses ES2020+ syntax (optional chaining, nullish coalescing). Webpack 1's bundled acorn parser cannot handle it. Keep uuid pinned to `^9.0.1`.
+- **uuid CVE (GHSA-j3pc-g49g-gw9v):** Only affects `v3()/v5()/v6()` with external output buffers. Our usage is `v4()` only — not affected.
+- **`request` removal:** Removed from tree by deleting unused `jsdom@^9.4.2` and `grunt-electron-installer` devDeps. The `grunt-electron-installer` also pulled in `uuid@3.x` (function-call API), which conflicted with modern uuid resolution.
+- **Windows installer removed:** `grunt-electron-installer` + `create-windows-installer` grunt task removed. Re-add when Windows builds are needed.
+- **Yarn resolutions preferred:** Use `"resolutions"` in package.json to pin transitive deps rather than bumping dep ranges directly — minimizes lockfile churn.
+
 ## Electron quirks
 
 - **Dialog API:** Electron 9+ removed sync/callback forms. Use `showMessageBoxSync` and Promise-based `showOpenDialog`/`showSaveDialog`
