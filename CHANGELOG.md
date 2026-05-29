@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.0] - 2026-05-29
+
+### Added
+
+- **Webpack 1.15.0 → 5.107.2** + **Babel 6 → 7** + **post-acorn dep bumps** in 7 phases. Clears all 15 open Dependabot alerts (#3, #92, #107, #118, #120, #136, #143, #144, #217, #218, #219, #220, #221, #222, #223). Plan: `.claude/plans/UpgradePlan_Webpack5_Zero_Alerts.md`.
+  - **Phase 1 (webpack 1→2):** `loaders:` → `rules:`; loader URL syntax → `use[]` with options; `NoErrorsPlugin` → `NoEmitOnErrorsPlugin`; `OccurenceOrderPlugin` typo fix; loader names need `-loader` suffix.
+  - **Phase 2 (webpack 2→4 + babel 6→7):** Add `mode:`; drop babel-core/preset-env/preset-es2015/preset-react/preset-react-hmre/plugin-react-transform/plugin-webpack-alias; `babel-loader` 6 → 8; `babel-register` → `@babel/register`. `.babelrc` rewritten with `@babel/preset-env` + `modules: 'commonjs'`. `acorn` resolution 5.7.4 → 6.4.1. Drop `babel-traverse@6.x` from tree — clears alert #120.
+  - **Phase 3 (webpack 4→5 + acorn 8):** Drop `NodeTargetPlugin`; use `target: 'electron-renderer'`. `resolve.fallback: false` for Node built-ins. `acorn` resolution 6.4.1 → 8.0.0. Drop `ajv` resolution (lets babel-loader 8 keep nested ajv 6 while webpack 5 ships ajv 8).
+  - **Phase 4 (post-acorn deps):** `uuid` 9.0.1 → 11.1.1 (clears #223). `mermaid` 9.1.7 → 10.9.6 — `mermaid.render()` callback API → Promise (`MermaidRender.js` rewritten async/await). Clears #136, #218, #219, #220, #221. `highlight.js` 10.4.1 → 11.11.1.
+  - **Phase 5 (postcss 8 chain):** `css-loader` 0.19 → 6.10 (CSS Modules config moves under `options.modules.*`); `style-loader` 0.12 → 3.3; `stylus-loader` 3 → 7.1 (options wrap in `stylusOptions`); `stylus` 0.52 → 0.62. Brings `postcss` 8 transitively — clears #107, #217.
+  - **Phase 6 (webpack-dev-server 1→5):** `wds` 1.16.5 → 5.2.4. `dev-scripts/dev.js` rewritten for v5 API (`new WebpackDevServer(options, compiler)`, `server.start()`/`.stop()`, `client.overlay.warnings: false`). Clears #3, #92, #118, #143, #144, #222.
+
 ## [0.19.0] - 2026-05-28
 
 ### Added
