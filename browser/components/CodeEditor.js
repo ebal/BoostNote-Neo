@@ -28,7 +28,6 @@ import {
   generateInEditor,
   tocExistsInEditor
 } from 'browser/lib/markdown-toc-generator'
-import markdownlint from 'markdownlint'
 import Jsonlint from 'jsonlint-mod'
 import { DEFAULT_CONFIG } from '../main/lib/ConfigManager'
 import prettier from 'prettier'
@@ -789,13 +788,14 @@ export default class CodeEditor extends React.Component {
       config: lintConfigJson
     }
 
-    return markdownlint(lintOptions, (err, result) => {
-      if (!err) {
+    import('markdownlint/promise')
+      .then(mod => mod.default(lintOptions))
+      .then(result => {
         const foundIssues = []
         const splitText = text.split('\n')
-        result.content.map(item => {
+        result.content.forEach(item => {
           let ruleNames = ''
-          item.ruleNames.map((ruleName, index) => {
+          item.ruleNames.forEach((ruleName, index) => {
             ruleNames += ruleName
             ruleNames += index === item.ruleNames.length - 1 ? ': ' : '/'
           })
@@ -808,8 +808,8 @@ export default class CodeEditor extends React.Component {
           })
         })
         updateLinting(foundIssues)
-      }
-    })
+      })
+      .catch(() => {})
   }
 
   setMode(mode) {
