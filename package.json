@@ -78,7 +78,7 @@
     "katex": "^0.16.22",
     "lodash": "^4.17.21",
     "lodash-move": "^1.1.1",
-    "markdown-it": "^13.0.2",
+    "markdown-it": "^14.1.1",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-admonition": "^1.0.4",
     "markdown-it-emoji": "^1.4.0",
