@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.20.2] - 2026-05-29
+## [0.20.2] - 2026-05-30
+
+### Added
+
+- **KaTeX mhchem + auto-render extensions** — load `mhchem` and `auto-render` plugins so `\ce{}`, `\pu{}`, and `$...$` / `$$...$$` delimiters render correctly in markdown preview ([`8d5510e1`](../../commit/8d5510e1)).
+
+### Changed
+
+- **Bridge renderer clipboard through ipcMain** — refactor clipboard access to route through `ipcMain` instead of direct renderer calls, improving security and compatibility with Electron 42's context isolation path ([`021272b2`](../../commit/021272b2)).
 
 ### Security
 
@@ -27,6 +35,13 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 - **Drop stale resolutions + devDeps** — remove 10+ resolution entries that are no longer needed post webpack 5 (babel-6-specific pins, webpack-1-specific pins). Drop `jest-localstorage-mock` (bundled in jest-environment-jsdom 27) ([`39b52195`](../../commit/39b52195)).
 - **Inline DevTools no-op stub** — move the DevTools placeholder directly into `browser/main/index.js`, delete `browser/main/DevTools/` directory ([`c6b8a115`](../../commit/c6b8a115)).
 - **Clean up completed plan docs** — remove `UpgradePlan_Electron14_to_Latest.md` and `dead_code_report.md` from `.claude/plans/` ([`c6b8a115`](../../commit/c6b8a115)).
+- **Tier A deps** — `katex` ^0.16.22, `markdown-it` ^13.0.2 ([`6d1f38d1`](../../commit/6d1f38d1)).
+- **Tier B deps** — `mermaid` ^11.4.0, `redux` ^5.0.1, `react-redux` ^9.2.0 ([`b63481f2`](../../commit/b63481f2)).
+- Inline `escape-string-regexp` helper, drop dep ([`b761f30d`](../../commit/b761f30d)).
+- Upgrade `markdownlint` 0.11 → 0.37 via dynamic import ([`3d51c7b0`](../../commit/3d51c7b0)).
+- Upgrade `prettier` 1.19.1 → 2.8.8 + `@babel/eslint-parser` ([`dc4017b4`](../../commit/dc4017b4)).
+- Upgrade `husky` 4.3.8 → 9.1.7 ([`17d4790f`](../../commit/17d4790f)).
+- Upgrade `eslint` 4 → 8 + plugin chain modernized ([`f01782de`](../../commit/f01782de)).
 
 ### Documentation
 
@@ -555,6 +570,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
+[0.20.2]: ../../compare/v0.20.1...v0.20.2
 [0.17.19]: ../../compare/v0.17.18...v0.17.19
 [0.17.18]: ../../compare/v0.17.17...v0.17.18
 [0.17.16]: ../../compare/v0.17.15...v0.17.16

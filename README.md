@@ -30,14 +30,15 @@ BoostNote-Neo is a modernized fork of Boostnote Legacy — a markdown-first, ope
 
 ---
 
-![BoostNote Markdown](./Screenshots/BoostNote_Markdown.png)
+![BoostNote Markdown](./Screenshots/Boostnote-Neo_03.Markdown.png)
 
-[More screenshots](./screenshots.md)
+[More Screenshots](./Screenshots.md)
 
 ## Recent updates
 
 | Version | What changed |
 |---------|-------------|
+| 0.20.2 | Patch semver + markdown-it ReDoS alerts; bundle redux + react-redux (drop UMD externals); KaTeX mhchem + auto-render extensions; bridge renderer clipboard through ipcMain |
 | 0.20.1 | Fix babel ES5 target chain; fix css-loader 6 export shape; fix mermaid 10 import() publicPath; fix Chrome console noise (Violation + font-display); fix Electron 42 vm filter; patch ajv #47; drop stale resolutions + devDeps; inline DevTools stub; clean up plans |
 | 0.20.0 | **Webpack 1.15.0 → 5.107.2** (7 phases) + **Babel 6 → 7** + acorn 5→8 + post-acorn deps (uuid 9→11, mermaid 9→10, highlight.js 10→11); rewrote `MermaidRender.js` for v10 Promise API; CSS Modules under css-loader 6 schema; dev script rewritten for wds 5 — clears all 15 open Dependabot alerts |
 | 0.19.0 | **Electron 14.2.9 → 42.3.0** (4 phases, Chromium 87→138, Node 12→22, V8 9.3→13.x, clears 22+ CVE alerts); **Jest 22→27** + Babel 7 alongside 6; turndown 4→7; clean up plans + dead code; revert js-yaml 4→3 (lint regression) |
@@ -165,15 +166,15 @@ browser/main/index.js (webpack entry → compiled/main.js)
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Electron 14.2.9 (Chrome 93, Node 14.17, V8 9.3) |
-| UI | React 16 + React Router 5 |
-| State | Redux 4 + Immutable.js (via Mutable.js wrappers) |
-| Editor | CodeMirror 5 (GFM mode + custom BFM mode) |
-| Markdown | markdown-it 12 (15 plugins) |
+| Runtime | Electron 42.3.0 (Chromium 138, Node 22, V8 13.x) |
+| UI | React 18.3.1 + React Router 5 |
+| State | Redux 5.0.1 + react-redux 9.2.0 + Immutable.js (via Mutable.js wrappers) |
+| Editor | CodeMirror 5.65 (GFM mode + custom BFM mode) |
+| Markdown | markdown-it 14.1.1 (15 plugins) |
 | CSS | Stylus + CSS Modules |
-| Build | Webpack 5 + Babel 7 + Grunt |
-| Packaging | electron-packager 15 |
-| Tests | Jest |
+| Build | Webpack 5.90 + Babel 7 + Grunt |
+| Packaging | electron-packager 17.1.2 |
+| Tests | Jest 27 |
 
 ---
 
