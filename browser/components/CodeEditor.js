@@ -13,7 +13,7 @@ import iconv from 'iconv-lite'
 
 import { isMarkdownTitleURL, escapeMarkdownPipe } from 'browser/lib/utils'
 import styles from '../components/CodeEditor.styl'
-const { ipcRenderer, clipboard } = require('electron')
+const { ipcRenderer } = require('electron')
 const remote = require('@electron/remote')
 import normalizeEditorFontFamily from 'browser/lib/normalizeEditorFontFamily'
 const spellcheck = require('browser/lib/spellcheck')
@@ -1122,7 +1122,7 @@ export default class CodeEditor extends React.Component {
       return false
     }
 
-    const pastedTxt = clipboard.readText()
+    const pastedTxt = ipcRenderer.sendSync('clipboard:read-text')
 
     if (isInFencedCodeBlock(editor)) {
       this.handlePasteText(editor, pastedTxt)
@@ -1141,16 +1141,16 @@ export default class CodeEditor extends React.Component {
           this.editor.replaceSelection(modifiedText)
         })
     } else {
-      const image = clipboard.readImage()
-      if (!image.isEmpty()) {
+      const imagePng = ipcRenderer.sendSync('clipboard:read-image-png')
+      if (imagePng) {
         attachmentManagement.handlePasteNativeImage(
           this,
           storageKey,
           noteKey,
-          image
+          imagePng
         )
       } else if (enableSmartPaste || forceSmartPaste) {
-        const pastedHtml = clipboard.readHTML()
+        const pastedHtml = ipcRenderer.sendSync('clipboard:read-html')
         if (pastedHtml.length > 0) {
           this.handlePasteHtml(editor, pastedHtml)
         } else {

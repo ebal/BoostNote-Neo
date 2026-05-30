@@ -516,9 +516,9 @@ function handlePasteImageEvent(
  * @param {CodeEditor} codeEditor Markdown editor. Its insertAttachmentMd() method will be called to include the markdown code
  * @param {String} storageKey Key of the current storage
  * @param {String} noteKey Key of the current note
- * @param {NativeImage} image The native image
+ * @param {Buffer|Uint8Array} imagePng PNG-encoded image bytes
  */
-function handlePasteNativeImage(codeEditor, storageKey, noteKey, image) {
+function handlePasteNativeImage(codeEditor, storageKey, noteKey, imagePng) {
   if (!codeEditor) {
     throw new Error('codeEditor has to be given')
   }
@@ -529,8 +529,8 @@ function handlePasteNativeImage(codeEditor, storageKey, noteKey, image) {
   if (!noteKey) {
     throw new Error('noteKey has to be given')
   }
-  if (!image) {
-    throw new Error('image has to be given')
+  if (!imagePng) {
+    throw new Error('imagePng has to be given')
   }
 
   const targetStorage = findStorage.findStorage(storageKey)
@@ -545,8 +545,7 @@ function handlePasteNativeImage(codeEditor, storageKey, noteKey, image) {
   const imageName = `${uniqueSlug()}.png`
   const imagePath = path.join(destinationDir, imageName)
 
-  const binaryData = image.toPNG()
-  fs.writeFileSync(imagePath, binaryData, 'binary')
+  fs.writeFileSync(imagePath, imagePng, 'binary')
 
   const imageReferencePath = path.join(
     STORAGE_FOLDER_PLACEHOLDER,

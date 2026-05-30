@@ -1,7 +1,7 @@
 import i18n from 'browser/lib/i18n'
 import fs from 'fs'
 
-const { clipboard, shell } = require('electron')
+const { ipcRenderer, shell } = require('electron')
 const remote = require('@electron/remote')
 const { Menu } = remote
 const spellcheck = require('./spellcheck')
@@ -142,7 +142,7 @@ const buildMarkdownPreviewContextMenu = function (markdownPreview, event) {
     // Add option to context menu to copy url
     template.push({
       label: i18n.__('Copy Url'),
-      click: e => clipboard.writeText(href)
+      click: e => ipcRenderer.sendSync('clipboard:write-text', href)
     })
   }
   return Menu.buildFromTemplate(template)
