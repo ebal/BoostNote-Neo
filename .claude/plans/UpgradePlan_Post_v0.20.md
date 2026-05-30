@@ -20,6 +20,8 @@ Open Dependabot alerts: **0**.
 - `prettier` 1.19.1 → `^2.8.8` + `babel-eslint` parser (commit `dc4017b4`) — partial; v3 still deferred
 - `eslint` 4.18.2 → `^8.57.1` + plugin chain modernized (commit `f01782de`) — partial; v9 flat config still deferred
 - `semver` GHSA #165 patched via selective resolution (commit `feb40a04`)
+- `katex` mhchem + auto-render extensions loaded (commit `8d5510e1`)
+- Renderer clipboard access bridged via `ipcMain` sync handlers — first step toward `contextIsolation: true` (see Tier C strategic item)
 
 ## Remaining backlog
 
@@ -39,6 +41,7 @@ Open Dependabot alerts: **0**.
 | prop-types | ^15.8.1 | — | already latest |
 | electron-debug | ^4.1.0 | — | already latest; verify Electron 42 compat or replace (see Tier C) |
 | electron-devtools-installer | ^4.0.0 | — | already latest |
+| @electron/remote | (pinned) | — | audit current pin vs latest. Used in `browser/components/CodeEditor.js:17` and `browser/lib/contextMenuBuilder.js:5`. Long-term goal = drop entirely once renderer no longer requires it (paired with contextIsolation flip — Tier C strategic). |
 
 ### Tier B — minor-breaking, focused refactor
 
@@ -63,7 +66,7 @@ Open Dependabot alerts: **0**.
 | babel-jest | ^27.5.1 | ^29.7.0 | paired with jest |
 | jest-environment-jsdom | ^27.5.1 | ^29.7.0 | paired with jest |
 | chart.js | 2.9.4 | 4.4.0 | v3/v4 named imports, scale config rewrite. Touch every chart call site. |
-| react | 18.3.1 | 19.0.0 | v19 strict mode + new `use()` hook + deprecated forwardRef path. Bundled ES5 deps (`react-css-modules`, `react-debounce-render`) likely incompatible — same class-constructor cliff that motivates the `targets: { ie: 11 }` babel config. **Blocked** until those deps replaced or modernized. |
+| react | 18.3.1 | 19.0.0 | v19 strict mode + new `use()` hook + deprecated forwardRef path. Bundled ES5 deps (`react-css-modules`, `react-debounce-render`) likely incompatible — same class-constructor cliff that motivates the `targets: { ie: 11 }` babel config. **Blocked** until those deps replaced or modernized. **Unblock recipe:** webpack 5 + css-loader native CSS-Modules support already in pipeline — `import styles from './foo.styl'` works without HOC. Replace `react-css-modules` consumers with direct named-class imports. Removing the HOC also lifts the `targets: { ie: 11 }` constraint → unlocks modern babel target + bundle-size win. |
 | react-router-dom | 5.3.4 | 6.28.0 | v6 removed `Switch`, `Route component`, `useHistory`. Touch every route. Pairs with `connected-react-router` replacement below. |
 | connected-react-router | 6.9.3 | (archived) | replace with `redux-first-router` or manual router-redux glue. Coupled with React Router 6. |
 | query-string | 6.14.1 | 9.1.1 | v7+ ESM-only. Used in `newNote.js`, `Detail/*`, `NoteList/index.js`. Either drop (use native `URLSearchParams`) or dynamic `import()`. |
@@ -72,6 +75,7 @@ Open Dependabot alerts: **0**.
 
 - **json-loader removal** — webpack 5 natively handles JSON. Delete the rule from both `webpack.config.js` and `webpack-production.config.js`. Remove `json-loader` from devDependencies.
 - **electron-debug** — `^4.1.0` unmaintained since 2020. Verify Electron 42 compat or replace with inline `process.env.NODE_ENV === 'development'` guard.
+- **Strategic: `contextIsolation: true` flip.** `lib/main-window.js` currently sets `nodeIntegration: true, contextIsolation: false, sandbox: false`. Renderer call sites that `require('electron')` directly: `browser/components/CodeEditor.js`, `browser/lib/contextMenuBuilder.js`, `browser/main/modals/PreferencesModal/{HotkeyTab,PluginsTab,UiTab,Blog,ExportTab}.js`, `browser/main/lib/{ipcClient,eventEmitter,ConfigManager}.js` (8+ call sites). Flipping the flag requires a preload script + `contextBridge.exposeInMainWorld` shim for every renderer-side electron API. Clipboard IPC bridge (2026-05-30) is the first step. Each renderer module migrated chips away at the blocker. No CVE driving — pure deprecation-clock work.
 
 ### Tier D — pinned (cliffs — do not bump)
 
@@ -86,30 +90,58 @@ Open Dependabot alerts: **0**.
 
 ## Recommended sequence
 
-### Phase 1 — Build toolchain (Tier A + B, lowest risk)
+Each step independently bisectable. Do not bundle steps across CSS-runtime / build-chain / formatting boundaries — a regression in any one collapses the bisect target.
 
-1. **webpack + babel + loaders + uuid** — bump all Tier A + Tier B build deps in one shot. `babel-loader` v10, `css-loader` v7, `style-loader` v4, `stylus-loader` v8, `webpack-cli` v7, `uuid` v14, add `terser-webpack-plugin` explicitly.
-2. **json-loader removal** — delete rule + dep while touching webpack configs.
-3. **electron-debug** — verify or replace.
+### Phase 1 — Build toolchain (split for bisect)
 
-**Verify:** compile, lint, test.
+**1a — Pure Tier A patch/minor (near-zero risk).**
+- webpack ^5.107.2
+- all `@babel/*` ^7.29.7
+- uuid v14 (codebase only uses `v4()` — stable across majors)
+- react-redux 9.3
+- stylus 0.64
+
+Verify: compile, smoke-test app launch + a markdown render.
+
+**1b — Build chain only (no runtime CSS impact).**
+- babel-loader v10 (drops Node <18; Docker runs Node 22 — fine)
+- webpack-cli v7 (CLI flags changed — check `gruntfile.js` webpack call site)
+- add explicit `terser-webpack-plugin` ^5.6.1 devDep
+
+Verify: `compiled/main.js` still contains `function Main(a)` + `_inherits` helpers (ES5 output preserved per CLAUDE.md "Babel target quirk"). Full `docker build .`.
+
+**1c — CSS runtime (highest risk).**
+- css-loader v7
+- style-loader v4
+- stylus-loader v8
+
+**Critical:** css-loader v7 defaults to `esModule: true` + `namedExport: true` for CSS Modules. `react-css-modules` consumes the default export → silent class-name breakage. Either pin `esModule: false, namedExport: false` in the loader options block of both `webpack.config.js` and `webpack-production.config.js`, or migrate off `react-css-modules` first (see React 19 unblock recipe in Tier C). Verify `[name]__[local]___[path]` rendering in DevTools across SideNav + NoteList + Detail.
+
+**1d — Cleanup.**
+- json-loader rule + devDep removal (webpack 5 native JSON)
+- electron-debug verify on Electron 42 (drop-in expected; do not pre-replace)
 
 ### Phase 2 — Jest 27 → 29 (Tier C)
 
-4. **jest + babel-jest + jest-environment-jsdom 27→29** — snapshot regen, timer mock audit.
+- jest + babel-jest + jest-environment-jsdom 27 → 29
+- Snapshot regen + timer-mock audit
+- Pre-existing 6 `done` + Promise dual-pattern fails (CLAUDE.md) still fail under 29 — not a regression but flag in PR
 
-**Verify:** test, update snapshots, review snapshot diffs.
+### Phase 3 — Formatting + lint (decoupled)
 
-### Phase 3 — Formatting + lint overhaul (Tier B, deferred)
+**3a — prettier 2 → 3.** Single reformat commit. Whole-repo diff but mechanical. Clears the host/Docker prettier-mismatch quirk in CLAUDE.md once host + image both run v3.
 
-5. **prettier 3 + eslint 9** — big formatting churn but clears the host/Docker mismatch in one shot. Coordinate with husky 9 (already current).
-6. **electron-packager → @electron/packager** — trivial drop-in.
+**3b — eslint 8 → 9.** Independent. Flat config (`eslint.config.js`) + ESM-only. Drop legacy `.eslintrc` + `eslint-config-standard@6`. Full plugin chain re-pin. Husky pre-commit hook reconfig.
+
+**3c — electron-packager → @electron/packager.** Trivial drop-in import-path swap; verify gruntfile + Dockerfile call sites.
 
 ### Phase 4 — Major refactors (Tier C, deferred bundle)
 
-7. **query-string drop / URLSearchParams swap** — small surface, removes one Tier C item.
-8. **chart.js 4** — deferred. Dedicated audit per chart call site.
-9. **React 19 + Router 6 + connected-react-router replacement** — deferred bundle. Blocked by ES5 HOC deps; either replace `react-css-modules` / `react-debounce-render` or wait for native-ESM successors.
+- **query-string drop / URLSearchParams swap.** Small surface (newNote.js, Detail/*, NoteList/index.js).
+- **chart.js 2 → 4.** Per-call-site audit (named imports + scale config rewrite).
+- **`react-css-modules` removal.** Native CSS-Modules via webpack 5 — `import styles from './foo.styl'`, replace `<div styleName="foo">` with `<div className={styles.foo}>`. Unlocks both React 19 path and modern babel target.
+- **React 19 + Router 6 + connected-react-router replacement.** Bundle. Blocked by `react-css-modules` removal above. `connected-react-router` archived — replace with `redux-first-router` or manual router-redux glue.
+- **Strategic: `contextIsolation: true` flip.** Migrate renderer `require('electron')` call sites to IPC + preload contextBridge one-by-one. Clipboard bridge (done) = template.
 
 ## Out of scope
 
