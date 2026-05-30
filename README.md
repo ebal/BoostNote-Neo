@@ -38,6 +38,7 @@ BoostNote-Neo is a modernized fork of Boostnote Legacy — a markdown-first, ope
 
 | Version | What changed |
 |---------|-------------|
+| 0.20.3 | Dockerfile cleanup (drop fakeroot, fix node:20 comment drift); refresh dep-resolve + version-bump skills; add React 19 unblock recipe to bisect plan |
 | 0.20.2 | Patch semver + markdown-it ReDoS alerts; bundle redux + react-redux (drop UMD externals); KaTeX mhchem + auto-render extensions; bridge renderer clipboard through ipcMain |
 | 0.20.1 | Fix babel ES5 target chain; fix css-loader 6 export shape; fix mermaid 10 import() publicPath; fix Chrome console noise (Violation + font-display); fix Electron 42 vm filter; patch ajv #47; drop stale resolutions + devDeps; inline DevTools stub; clean up plans |
 | 0.20.0 | **Webpack 1.15.0 → 5.107.2** (7 phases) + **Babel 6 → 7** + acorn 5→8 + post-acorn deps (uuid 9→11, mermaid 9→10, highlight.js 10→11); rewrote `MermaidRender.js` for v10 Promise API; CSS Modules under css-loader 6 schema; dev script rewritten for wds 5 — clears all 15 open Dependabot alerts |

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.3] - 2026-05-30
+
+### Changed
+
+- **Dockerfile cleanup** — drop dead `fakeroot` apt dependency, fix `node:20` comment drift, rename boostnote-legacy → boostnote-neo in comments ([`1cd05537`](../../commit/1cd05537), [`0ac0e9f9`](../../commit/0ac0e9f9)).
+- **Skills & plans refresh** — update dep-resolve + version-bump skills for post-v0.20.0 state; fold toolchain backlog into UpgradePlan; add React 19 unblock recipe to bisect plan ([`9fd4d654`](../../commit/9fd4d654), [`d7db9165`](../../commit/d7db9165), [`aa9e1310`](../../commit/aa9e1310)).
+
 ## [0.20.2] - 2026-05-30
 
 ### Added
@@ -570,6 +577,7 @@ The format is based on [Common Changelog](https://common-changelog.org) and this
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
+[0.20.3]: ../../compare/v0.20.2...v0.20.3
 [0.20.2]: ../../compare/v0.20.1...v0.20.2
 [0.17.19]: ../../compare/v0.17.18...v0.17.19
 [0.17.18]: ../../compare/v0.17.17...v0.17.18
