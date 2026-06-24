@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Common Changelog](https://common-changelog.org) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.4] - 2026-06-24
+
+### Security
+
+- **markdown-it quadratic-complexity DoS in smartquotes** — bumped `^14.1.1` → `^14.2.0` and the `markdownlint/markdown-it` selective resolution `14.1.1` → `14.2.0`. The old smartquotes core rule rewrote strings via `replaceAt`, drivable to O(n²) on crafted input; 14.2.0 replaces it with a single linear scan. markdown-it is the live note renderer, so untrusted note content reaches this rule ([`4d470e96`](../../commit/4d470e96)).
+- **dompurify** — HTML sanitizer bumped `3.4.7` → `3.4.11` ([`8703a34f`](../../commit/8703a34f)).
+- **undici** — HTTP client bumped `7.26.0` → `7.28.0` ([`5dc43e0c`](../../commit/5dc43e0c)).
+- **form-data** — multipart boundary-generation hardening, `3.0.4` → `3.0.5`, pinned via resolutions. Dev-only transitive (jsdom test environment) ([`c3ec97b8`](../../commit/c3ec97b8)).
+
+### Changed
+
+- **js-yaml 3 → 4** — major maintenance bump `3.14.2` → `4.2.0`. All app call sites already used the v4 API (`yaml.load` / `yaml.dump` / `jsyaml.load`); the removed `safeLoad` / `safeDump` callers (gray-matter via `markdown-toc`, grunt) sit on dead code paths. Resolution collapsed to a single hoisted 4.2.0 ([`0379595b`](../../commit/0379595b)).
+- **webpack-dev-server** — dev-only HMR tool bumped `5.2.4` → `5.2.5` ([`8fb69528`](../../commit/8fb69528)).
+- **http-proxy-middleware** — dev-only transitive (webpack-dev-server) bumped `2.0.9` → `2.0.10`, pinned via resolutions ([`87e29311`](../../commit/87e29311)).
+- **launch-editor** — dev-tool bumped `2.14.0` → `2.14.1` ([`fd5657d2`](../../commit/fd5657d2)).
+
 ## [0.20.3] - 2026-05-30
 
 ### Changed
