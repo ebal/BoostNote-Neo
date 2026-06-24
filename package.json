@@ -184,6 +184,7 @@
   },
   "resolutions": {
     "form-data": "3.0.5",
+    "http-proxy-middleware": "^2.0.10",
     "launch-editor": "2.14.1",
     "undici": "7.28.0",
     "json5": "^1.0.2",
