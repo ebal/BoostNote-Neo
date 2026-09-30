@@ -17,13 +17,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Removed
 
+- **`query-string` dependency and its `decode-uri-component` resolution** — the resolution was left orphaned once nothing required the package; yarn 1 keeps materializing a resolved entry even with no requester, so the lock carried 0.2.2 until the resolution was removed as well ([`f01b7195`](../../commit/f01b7195)).
 - **Two obsolete global resolutions** — `minimatch "^3.1.4"` and `brace-expansion "^1.1.18"`. Both were collapsing every copy in the tree to an old CJS major, which broke `@electron/packager` 20's ESM named imports (`import { minimatch }`, `import { expand }`). Neither was still doing work: minimatch was pinned for CVE-2022-3517 (fixed in 3.0.5) and brace-expansion for #256/#273/#282 (fixed in 1.1.18), and every legacy consumer's declared range already resolves at or above those. The tree now carries minimatch 3.1.5 + 10.2.6 and brace-expansion 1.1.21 + 5.0.12, keeping both advisories patched on the legacy majors while letting the modern majors work ([`fb337f0d`](../../commit/fb337f0d)).
 
 - **hosted-git-info → `^2.8.9`** — clears #46 (medium): ReDoS, vulnerable `< 2.8.9`. Reached via `normalize-package-data@2.x`, which the existing `read-pkg/normalize-package-data` resolution deliberately holds at 2.x; 2.8.9 is simultaneously the last 2.x release and the patched one, so the pin stays in-major and `normalize-package-data` is untouched at 2.5.0. This alert had been open since 2026-05-22 and was missed by the earlier enumerations in this cycle — the helper script only scanned from #244 upward, so anything older than that was invisible to it.
 
-One alert remains open:
+- **query-string removed, replaced with a URLSearchParams shim** — clears #280 (medium): exponential decoding of malformed percent-encoded input in `decode-uri-component`. No upgrade path existed: every `query-string` major (6–9) depends on it and the only patched release (0.5.0) is ESM-only *and* drops the `+` → space substitution CJS `query-string@6` relied on. `browser/lib/queryString.js` now provides `parse`/`stringify` on the platform's `URLSearchParams`; the six importing modules changed only their import specifier. `query-string`, `decode-uri-component` and `strict-uri-encode` are all gone from the lockfile and from the packaged app ([`f01b7195`](../../commit/f01b7195)).
 
-- **decode-uri-component #280 (medium)** — no fixed version is usable. Every `query-string` major (6, 7, 8 and 9) depends on `decode-uri-component`, and the only patched version, 0.5.0, is ESM-only *and* drops the `+` → space substitution that CJS `query-string@6.14.1` relies on; everything at or below 0.4.2 is vulnerable. There is no upgrade path — the fix is to drop `query-string` for `URLSearchParams` (8 files, ~24 call sites, two distinct operations), deferred as a standalone change since it is routing code with thin test coverage and the decoded input is app-generated (`?key=<noteHash>`).
+**Zero open Dependabot alerts** as of this entry — down from 59 at the start of the cycle.
 
 ### Removed
 
