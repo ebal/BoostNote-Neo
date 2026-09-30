@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.5] - 2026-09-30
+
+Dependency security sweep: 56 of 59 open Dependabot alerts cleared across 19 packages.
+
+### Security
+
+- **Electron 42.3.0 → 42.9.2** — clears 8 high-severity advisories ([#311–#318]). Two `<webview>` Node-integration-in-Web-Workers escapes, cross-origin reads through the file and HTTP protocol handlers without `corsEnabled`, and two classes of dropped HTML sandbox inheritance for popups and windows opened from a sandboxed document. The CORS pair matters most here: the renderer runs on `file://` with `nodeIntegration` enabled. `config.electron-version` bumped in lockstep — `grunt pack` reads it to select the runtime it downloads ([`89e2d108`](../../commit/89e2d108)).
+- **js-yaml `^4.2.0` → `^4.3.2`** — three high-severity quadratic-CPU advisories in YAML merge-key chains and `!!omap` resolution (#254, #274, #308). Reachable from note content: `MarkdownPreview.js:574` runs `yaml.load()` on chart-block bodies and `formatMarkdown.js:87` parses front matter ([`7799d974`](../../commit/7799d974)).
+- **linkify-it → `^5.0.2`** — quadratic-complexity DoS in the `mailto:` validator scan loop (#245, high). Live on every preview render, since `markdown.js` enables `linkify` by default ([`7799d974`](../../commit/7799d974)).
+- **mermaid `^11.4.0` → `^11.16.1`** — prototype pollution in architecture diagrams and the config API, CSS injection reaching sibling elements, and infinite-loop DoS in XY charts and radar diagrams (#267–#271) ([`7799d974`](../../commit/7799d974)).
+- **toml → `^4.2.0`** — prototype pollution via `__proto__` key-path desynchronization and uncontrolled recursion (#288, #289, high). Reached through `markdown-toc` → `gray-matter` when generating a TOC over a note with `+++` TOML front matter ([`7799d974`](../../commit/7799d974)).
+- **websocket-driver → `^0.7.5`** — message corruption via abuse of protocol length headers (#244, **critical**). The tree carried a vulnerable 0.7.0 under `sockjs`'s `>=0.5.1` range alongside a clean 0.7.4; now collapsed to one copy ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **@xmldom/xmldom → `^0.9.12`** — 10 alerts: element, attribute, DocType and processing-instruction name injection bypassing `requireWellFormed`, plus quadratic-time parsing and attribute deduplication. Build-time only, via `electron-packager` → `plist` ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **fast-uri → `^3.1.6`** — 6 alerts: host confusion and SSRF via IDN canonicalization, backslash authority delimiters and repeated percent-decoding ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **undici `7.28.0` → `7.29.0`** — cross-user disclosure via degenerate cache directives, response desynchronization, cookie-attribute and CRLF injection (#259–#263) ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **brace-expansion → `^1.1.18`** — unbounded expansion and OOM crash; two of the three advisories bypass earlier mitigations (#256, #273, #282) ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **postcss → `^8.5.23`** — `sourceMappingURL` path traversal disclosing arbitrary `.map` files (#258, #277) ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **webpack-dev-server `^5.2.5` → `^5.2.6`** — CSRF against internal developer endpoints and DoS via malformed `Host`/`Origin` headers (#252, #253) ([`efcfc8a7`](../../commit/efcfc8a7)).
+- **dompurify → `^3.4.13`** (#246, #272), **shell-quote → `^1.9.0`** (#251), **browserslist → `^4.28.7`** (#292), **baseline-browser-mapping → `^2.11.0`** (#307), **postcss-selector-parser → `^7.1.3`** (#281), **immutable → `^4.3.9`** (#290, #309) ([`efcfc8a7`](../../commit/efcfc8a7)).
+
+Two alerts remain open by design:
+
+- **extract-zip #278/#306 (high)** — no patched version exists; 2.0.1 is simultaneously the latest and the vulnerable release. Build-time only, unpacking Electron archives already checksum-verified by `@electron/get`.
+- **decode-uri-component #280 (medium)** — the 0.5.0 fix is ESM-only and drops the `+` → space substitution that 0.2.x performed, both of which CJS `query-string@6.14.1` depends on. Left at 0.2.2; resolves with the planned `URLSearchParams` migration.
+
+### Fixed
+
+- **Stale Dependabot record** — `CLAUDE.md` and `UpgradePlan_Post_v0.20.md` both claimed "Open Dependabot alerts: 0", written 2026-05-29 and four months out of date. Replaced with the real disposition plus a note to verify with `gh` rather than trusting the file ([`9ba84216`](../../commit/9ba84216)).
+- **README tech-stack drift** — Electron pinned at 42.3.0, markdown-it at 14.1.1, and a claim that state uses "Immutable.js (via Mutable.js wrappers)". `browser/lib/Mutable.js` wraps native `Map`/`Set`, and nothing in `browser/`, `lib/` or `tests/` imports `immutable` — it is transitive under `connected-react-router` alone.
+
+### Changed
+
+- **CHANGELOG format** — declared convention switched from Common Changelog to [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/). Existing entries already used its change groups, so only the stated format was wrong ([`f90b87fb`](../../commit/f90b87fb)).
+
+### Notes
+
+- **Pre-existing jest resolution gap (not fixed).** Three suites (`tests/lib/markdown.test.js`, `tests/dataApi/exportStorage.test.js`, `tests/dataApi/exportFolder.test.js`) fail to load on `Cannot find module 'markdown-it/lib/token'`. `resolve.extensions` is a webpack setting, so the `.mjs` fix recorded for the markdown-it 14 bump never applied to jest, which defaults `moduleFileExtensions` without `mjs`. Confirmed identical against a pre-sweep baseline image, so it predates this release. The one-line fix is documented in `CLAUDE.md` but deferred to its own change.
+- **Verification.** `yarn.lock` regenerated inside the Docker deps stage for each commit; `npm run compile` clean apart from the documented `markdownlint` warning; ES5 bundle invariant intact (`function Main`, no `class Main`); jest failure set byte-identical to a baseline image built from the pre-sweep manifests (13 suites / 15 tests failing before and after); full `docker build .` green with all four artifacts; packaged `Electron Framework` `CFBundleVersion` confirmed `42.9.2`.
+
 ## [0.20.4] - 2026-06-24
 
 ### Security
