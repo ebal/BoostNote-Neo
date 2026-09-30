@@ -126,7 +126,6 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/preset-react": "^7.20.0",
-    "@babel/register": "^7.22.0",
     "@babel/eslint-parser": "^7.25.9",
     "@electron/packager": "^20.3.0",
     "babel-jest": "^27.5.1",
