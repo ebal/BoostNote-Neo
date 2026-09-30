@@ -38,8 +38,8 @@ jobs:
 
       - name: Build Intel macOS app in Docker
         run: |
-          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-legacy .
-          docker create --name boostnote-x64 boostnote-legacy
+          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-neo .
+          docker create --name boostnote-x64 boostnote-neo
           mkdir -p dist
 
       - name: Export Intel macOS artifacts
@@ -74,8 +74,8 @@ jobs:
 
       - name: Build Apple Silicon macOS app in Docker
         run: |
-          docker build --platform linux/arm64 --build-arg GIT_COMMIT=${{ github.sha }} --build-arg BUILDARCH=arm64 -t boostnote-legacy-arm64 .
-          docker create --name boostnote-arm64 boostnote-legacy-arm64
+          docker build --platform linux/arm64 --build-arg GIT_COMMIT=${{ github.sha }} --build-arg BUILDARCH=arm64 -t boostnote-neo-arm64 .
+          docker create --name boostnote-arm64 boostnote-neo-arm64
           mkdir -p dist
 
       - name: Export Apple Silicon macOS artifacts
@@ -105,8 +105,8 @@ jobs:
 
       - name: Build Linux x64 app in Docker
         run: |
-          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-legacy-linux .
-          docker create --name boostnote-linux boostnote-legacy-linux
+          docker build --build-arg GIT_COMMIT=${{ github.sha }} -t boostnote-neo-linux .
+          docker create --name boostnote-linux boostnote-neo-linux
           mkdir -p dist
 
       - name: Export Linux x64 artifacts
