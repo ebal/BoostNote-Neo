@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
-# Skip if eslint not installed (host without node_modules; per CLAUDE.md
-# the project enforces a Docker-only npm/yarn policy).
+# Skip if eslint not installed. The project enforces a Docker-only
+# npm/yarn policy, so the host has no node_modules and lint runs in the
+# image instead: docker run --rm boostnote-neo npm run lint
 if [ ! -x "node_modules/.bin/eslint" ]; then
   echo "husky: skipping pre-commit lint (node_modules absent — Docker-only policy)"
   exit 0
