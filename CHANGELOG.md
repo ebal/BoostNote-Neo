@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- **AI agent tooling and docs** — deleted `.agents/skills/`, `.claude/plans/`, `CLAUDE.md`, `AGENTS.md`, `SKILLS.md` and `skills-lock.json`. No build, test, lint, packaging or CI path read any of them. Two live references were updated rather than left dangling: the `.husky/pre-commit` comment now states the Docker-only lint policy directly, and the jest `moduleFileExtensions` fix is inlined in the 0.20.5 entry below instead of pointing at a deleted file.
+- **Unreferenced fonts and images** — 83 files, ~3.8 MB. `resources/fonts/KaTeX_*` (80 files) was dead: KaTeX ships its own fonts in `node_modules/katex/dist/fonts` and `katex.min.css` loads them by relative URL, so math rendering never used the tracked copies — which still carried `.eot` variants modern KaTeX no longer ships. Also `resources/repository/top.png` (upstream README banner, unreferenced since the readme rewrite) and `resources/dmg.{ico,png}` (no DMG build exists). The 12 remaining files in `resources/fonts` — Lato, JetBrainsMono, MaterialIcons — are the exact set referenced by `formatHTML.js` and `lib/main.{development,production}.html`.
+- **Orphaned test files** — `tests/dataApi/addStorage.js` and `tests/dataApi/init.js` both `require('ava')`, match no jest `testMatch` pattern and are imported by nothing, so they had never executed since the AVA → jest migration. `tests/lib/snapshots/markdown-test.js.md` is the corresponding AVA snapshot; the jest equivalent is `tests/lib/__snapshots__/markdown.test.js.snap`. Executed suite count unchanged at 39.
+
+### Changed
+
+- **CI image tags** — workflow build images renamed `boostnote-legacy*` → `boostnote-neo*`, drift left over from the repository rename in [`49534880`](../../commit/49534880). Tag names are local to each job and never pushed to a registry, so workflow output is unaffected.
+
+### Fixed
+
+- **`.gitignore`** — ignore the local `apple.silicon.sh` build helper.
+
 ## [0.20.5] - 2026-09-30
 
 Dependency security sweep: 56 of 59 open Dependabot alerts cleared across 19 packages.
