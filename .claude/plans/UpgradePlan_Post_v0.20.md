@@ -5,7 +5,7 @@ Originally drafted 2026-05-29 after webpack 5 / babel 7 / acorn 8 migration. Mos
 Build toolchain bumps (babel, loaders, webpack-cli, uuid, jest) added 2026-05-29 —
 see **[Tier A](#tier-a--safe-in-major)** through **[Tier C](#tier-c--major-breaking-larger-refactor)** below.
 
-Open Dependabot alerts: **0**.
+Open Dependabot alerts: **3** after the 2026-09-30 sweep (2 × `extract-zip` with no fix available, 1 × `decode-uri-component` blocked on the `query-string` removal). See CLAUDE.md "Alert sweep 2026-09-30" for the full disposition.
 
 ## Done since the original survey
 
