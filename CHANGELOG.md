@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Security
+
+- **Electron 42.9.2 → 42.11.10** — clears #320 (high): sandboxed preload code cache poisoning by a compromised renderer (vulnerable `>= 42.3.3, < 42.10.0`). Took the newest 42.x patch rather than the minimum 42.10.0. Not reachable today — the app ships no preload script and runs `sandbox: false` — but it becomes reachable with the planned `contextIsolation` + preload migration, so patched rather than dismissed ([`4860bd3e`](../../commit/4860bd3e)).
+- **markdown-it `^14.2.0` → `^14.3.1`** — clears #319 (medium): two quadratic paths under `linkify: true`, distinct from the linkify-it advisory patched in 0.20.5. A few hundred KB of crafted markdown blocks the event loop for tens of seconds, and `markdown.js` enables linkify by default, so this is live on every preview render. The fix is an in-major patch, not the 15.x line. The `markdownlint/markdown-it` override moves to `14.3.2` to match what `^14.3.1` resolves to, keeping one hoisted copy; markdownlint still pins `14.1.0` exactly, so the override remains necessary ([`52f763d5`](../../commit/52f763d5)).
+- **moment `^2.30.1` → `^2.31.0`** — clears #330 (medium): path traversal via a crafted non-string locale name. Resolution bumped in lockstep ([`52f763d5`](../../commit/52f763d5)).
+- **undici `7.29.0` → `7.29.1`** — clears 6 alerts, all dev-scope: TLS certificate validation bypass via dropped `connect` options in `BalancedPool` (#323, high), cross-user cookie disclosure via `Set-Cookie` caching (#325), DoS via orphaned `RetryHandler` body (#329), unsafe-method response caching and replay (#322), response truncation in the dump interceptor (#324), and downstream response splitting via the retry interceptor (#328). undici reaches the tree only through `@electron/get` during `grunt pack` ([`3e7eaed6`](../../commit/3e7eaed6)).
+
+Three alerts remain open, unchanged from 0.20.5:
+
+- **extract-zip #278/#306 (high)** — still no patched release; 2.0.1 remains both latest and vulnerable.
+- **decode-uri-component #280 (medium)** — no CJS fix exists. The advisory's first patched version is 0.5.0, which is ESM-only and drops the `+` → space substitution that CJS `query-string@6.14.1` depends on; every version at or below 0.4.2 is vulnerable. Genuinely blocked until `query-string` is replaced with `URLSearchParams`.
+
 ### Removed
 
 - **AI agent tooling and docs** — deleted `.agents/skills/`, `.claude/plans/`, `CLAUDE.md`, `AGENTS.md`, `SKILLS.md` and `skills-lock.json`. No build, test, lint, packaging or CI path read any of them. Two live references were updated rather than left dangling: the `.husky/pre-commit` comment now states the Docker-only lint policy directly, and the jest `moduleFileExtensions` fix is inlined in the 0.20.5 entry below instead of pointing at a deleted file.
