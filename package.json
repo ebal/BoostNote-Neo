@@ -235,6 +235,7 @@
     "webpack": "^5.90.0",
     "eslint/ajv": "^6.12.3",
     "eslint/table/ajv": "^6.12.3",
+    "hosted-git-info": "^2.8.9",
     "read-pkg/normalize-package-data": "^2.5.0",
     "read-pkg/normalize-package-data/semver": "^5.7.2",
     "websocket-driver": "^0.7.5",
