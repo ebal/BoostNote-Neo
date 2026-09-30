@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.7] - 2026-09-30
+
+Build and release pipeline changes only; no application code changed.
+
+### Changed
+
+- **Apple Silicon builds run on a native ARM runner** — the job moved from `ubuntu-24.04` + `docker/setup-qemu-action` to `runs-on: ubuntu-24.04-arm`, and the QEMU setup step is gone. On the v0.20.6 run the emulated job took 16m20s against 4m50s/4m54s for the two native amd64 jobs, gating the whole workflow at 17m14s. GitHub's hosted arm64 Linux runners are free for public repositories. Validated before committing on an arm64 workstation with native aarch64 Docker: the build completes in ~2m10s and `file` confirms the packaged binary is arm64 ([`8aae3c35`](../../commit/8aae3c35)).
+- **Releases ship `.tar.gz` only** — the `.zip` of each target was redundant, since the Dockerfile's `zip -r -y` and `tar -czf` both preserve the symlinks inside a macOS `.app`. Nothing depended on the zip: Squirrel auto-update is Windows-only in `index.js`, so no macOS update channel expects a zipped `.app`. Artifacts per release go from 6 to 3 ([`931a9de0`](../../commit/931a9de0)).
+
+### Fixed
+
+- **Release flatten step used a mis-parenthesised `find`** — `find dist-artifacts -type f -name "*.zip" -o -name "*.tar.gz"` applied `-type f` only to the `.zip` branch, because `-o` binds looser than the implicit `-a`; the `.tar.gz` branch would have matched directories too. It worked by luck. Now parenthesised so the predicate holds for every pattern ([`931a9de0`](../../commit/931a9de0)).
+
+### Notes
+
+- A `.dmg` artifact was considered and deferred. It cannot be produced inside the Linux Docker build — that is precisely why the original DMG pipeline was removed as "broken" in 0.17.13, since `appdmg` drives macOS `hdiutil`. The workable route is a separate `runs-on: macos-latest` job that repackages the built `.app`, but the result would be unsigned and still trip Gatekeeper, so it buys little until a signing certificate is available.
+- The gruntfile's `zip:osx` task still shells out to the `zip` binary (hence the `zip` apt package remains in the image) but now produces an artifact no release consumes. A candidate for separate retirement.
+
 ## [0.20.6] - 2026-09-30
 
 Security and maintenance release. Clears every open Dependabot alert (59 → 0 over the cycle), removes the AI agent tooling from the repository, and retires a large amount of dead code and obsolete dependency pins — several of which were actively blocking security fixes.
