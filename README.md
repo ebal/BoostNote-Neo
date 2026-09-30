@@ -38,6 +38,7 @@ BoostNote-Neo is a modernized fork of Boostnote Legacy — a markdown-first, ope
 
 | Version | What changed |
 |---------|-------------|
+| 0.20.5 | **Dependency security sweep** — 56 of 59 open Dependabot alerts cleared across 19 packages: Electron 42.3.0→42.9.2 (8 sandbox/CORS advisories), js-yaml, linkify-it, mermaid, toml on the note-render path; websocket-driver (critical), @xmldom/xmldom, fast-uri, undici, brace-expansion, postcss and others on dev/build paths; 2 left open by design (extract-zip has no fix, decode-uri-component blocked on query-string) |
 | 0.20.4 | Security: patch markdown-it smartquotes quadratic DoS (14.2.0), bump dompurify / undici / form-data; maintenance: js-yaml 3→4, webpack-dev-server, http-proxy-middleware, launch-editor |
 | 0.20.3 | Dockerfile cleanup (drop fakeroot, fix node:20 comment drift); refresh dep-resolve + version-bump skills; add React 19 unblock recipe to bisect plan |
 | 0.20.2 | Patch semver + markdown-it ReDoS alerts; bundle redux + react-redux (drop UMD externals); KaTeX mhchem + auto-render extensions; bridge renderer clipboard through ipcMain |
@@ -168,11 +169,11 @@ browser/main/index.js (webpack entry → compiled/main.js)
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Electron 42.3.0 (Chromium 138, Node 22, V8 13.x) |
+| Runtime | Electron 42.9.2 (Chromium 138, Node 22, V8 13.x) |
 | UI | React 18.3.1 + React Router 5 |
-| State | Redux 5.0.1 + react-redux 9.2.0 + Immutable.js (via Mutable.js wrappers) |
+| State | Redux 5.0.1 + react-redux 9.2.0 + Mutable.js (native Map/Set wrappers) |
 | Editor | CodeMirror 5.65 (GFM mode + custom BFM mode) |
-| Markdown | markdown-it 14.1.1 (15 plugins) |
+| Markdown | markdown-it 14.2.0 (15 plugins) |
 | CSS | Stylus + CSS Modules |
 | Build | Webpack 5.90 + Babel 7 + Grunt |
 | Packaging | electron-packager 17.1.2 |
