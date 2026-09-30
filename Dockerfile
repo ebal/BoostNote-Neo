@@ -11,10 +11,8 @@
 #
 # Export:
 #   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64 ./dist/
-#   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-darwin-x64.zip ./dist/
 #   docker cp $(docker create --rm boostnote-neo):/app/dist/Boostnote-linux-x64.tar.gz ./dist/
 #   docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64 ./dist/
-#   docker cp $(docker create --rm boostnote-neo-arm64):/app/dist/Boostnote-darwin-arm64.zip ./dist/
 
 ARG BUILDARCH=amd64
 
@@ -93,15 +91,11 @@ RUN npm run compile && \
   PACK_OUT_DIR=/build/out-linux grunt pack:linux && \
   mkdir -p /app/dist && \
   tar -czf /app/dist/Boostnote-linux-x64.tar.gz -C /build/out-linux/Boostnote-linux-x64 . && \
-  (cd /build/out-linux/Boostnote-linux-x64 && zip -r -y -q /app/dist/Boostnote-linux-x64.zip .) && \
   cd /build/out/Boostnote-darwin-$ARCH_SUFFIX && \
-  zip -r -y -q /app/dist/Boostnote-darwin-$ARCH_SUFFIX.zip Boostnote.app && \
   tar -czf /app/dist/Boostnote-darwin-$ARCH_SUFFIX.tar.gz Boostnote.app
 
 # Output:
 #   /app/dist/Boostnote-darwin-{x64,arm64}/Boostnote.app
-#   /app/dist/Boostnote-darwin-{x64,arm64}.zip
 #   /app/dist/Boostnote-darwin-{x64,arm64}.tar.gz
 #   /app/dist/Boostnote-linux-x64.tar.gz
-#   /app/dist/Boostnote-linux-x64.zip
 CMD ["sh", "-c", "ls -la dist/"]

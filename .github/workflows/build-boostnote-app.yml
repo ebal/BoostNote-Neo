@@ -44,7 +44,6 @@ jobs:
 
       - name: Export Intel macOS artifacts
         run: |
-          docker cp boostnote-x64:/app/dist/Boostnote-darwin-x64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.zip
           docker cp boostnote-x64:/app/dist/Boostnote-darwin-x64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.tar.gz
           docker rm boostnote-x64
 
@@ -53,7 +52,6 @@ jobs:
         with:
           name: boostnote-darwin-x64
           path: |
-            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.zip
             dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-x64.tar.gz
 
   build-darwin-arm64:
@@ -78,7 +76,6 @@ jobs:
 
       - name: Export Apple Silicon macOS artifacts
         run: |
-          docker cp boostnote-arm64:/app/dist/Boostnote-darwin-arm64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.zip
           docker cp boostnote-arm64:/app/dist/Boostnote-darwin-arm64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.tar.gz
           docker rm boostnote-arm64
 
@@ -87,7 +84,6 @@ jobs:
         with:
           name: boostnote-darwin-arm64
           path: |
-            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.zip
             dist/Boostnote-v${{ needs.compute-version.outputs.version }}.darwin-arm64.tar.gz
 
   build-linux-x64:
@@ -110,7 +106,6 @@ jobs:
       - name: Export Linux x64 artifacts
         run: |
           docker cp boostnote-linux:/app/dist/Boostnote-linux-x64.tar.gz ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.tar.gz
-          docker cp boostnote-linux:/app/dist/Boostnote-linux-x64.zip ./dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.zip
           docker rm boostnote-linux
 
       - name: Upload Linux x64 artifacts
@@ -119,7 +114,6 @@ jobs:
           name: boostnote-linux-x64
           path: |
             dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.tar.gz
-            dist/Boostnote-v${{ needs.compute-version.outputs.version }}.linux-x64.zip
 
   create-release:
     name: Create GitHub Release
@@ -140,7 +134,10 @@ jobs:
       - name: Flatten artifacts directory
         run: |
           mkdir -p release-artifacts
-          find dist-artifacts -type f -name "*.zip" -o -name "*.tar.gz" | xargs -I {} cp {} release-artifacts/
+          # -o binds looser than the implicit -a, so the original
+          # `-type f -name "*.zip" -o -name "*.tar.gz"` applied -type f to the
+          # first branch only. Parenthesise so it holds for every pattern.
+          find dist-artifacts -type f \( -name "*.tar.gz" \) -exec cp {} release-artifacts/ \;
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
