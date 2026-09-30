@@ -13,10 +13,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **moment `^2.30.1` → `^2.31.0`** — clears #330 (medium): path traversal via a crafted non-string locale name. Resolution bumped in lockstep ([`52f763d5`](../../commit/52f763d5)).
 - **undici `7.29.0` → `7.29.1`** — clears 6 alerts, all dev-scope: TLS certificate validation bypass via dropped `connect` options in `BalancedPool` (#323, high), cross-user cookie disclosure via `Set-Cookie` caching (#325), DoS via orphaned `RetryHandler` body (#329), unsafe-method response caching and replay (#322), response truncation in the dump interceptor (#324), and downstream response splitting via the retry interceptor (#328). undici reaches the tree only through `@electron/get` during `grunt pack` ([`3e7eaed6`](../../commit/3e7eaed6)).
 
-Three alerts remain open, unchanged from 0.20.5:
+- **electron-packager 17 → @electron/packager 20.3.0** — clears #278 and #306 (both high): extract-zip symlink path traversal and arbitrary file writes. `extract-zip` still has no patched release, but `electron@42.11.10` had already moved to the hardened `@electron-internal` fork, leaving `electron-packager@17` as the last consumer; v20 is the first packager release on that fork (18.x is CJS but still carries extract-zip, 19.x is ESM and still carries it). `extract-zip` is now absent from the lockfile. v20 is ESM-only, so the CJS gruntfile dynamic-imports it behind a wrapper preserving the old promise signature; all four call sites unchanged ([`fb337f0d`](../../commit/fb337f0d)).
 
-- **extract-zip #278/#306 (high)** — still no patched release; 2.0.1 remains both latest and vulnerable.
-- **decode-uri-component #280 (medium)** — no CJS fix exists. The advisory's first patched version is 0.5.0, which is ESM-only and drops the `+` → space substitution that CJS `query-string@6.14.1` depends on; every version at or below 0.4.2 is vulnerable. Genuinely blocked until `query-string` is replaced with `URLSearchParams`.
+### Removed
+
+- **Two obsolete global resolutions** — `minimatch "^3.1.4"` and `brace-expansion "^1.1.18"`. Both were collapsing every copy in the tree to an old CJS major, which broke `@electron/packager` 20's ESM named imports (`import { minimatch }`, `import { expand }`). Neither was still doing work: minimatch was pinned for CVE-2022-3517 (fixed in 3.0.5) and brace-expansion for #256/#273/#282 (fixed in 1.1.18), and every legacy consumer's declared range already resolves at or above those. The tree now carries minimatch 3.1.5 + 10.2.6 and brace-expansion 1.1.21 + 5.0.12, keeping both advisories patched on the legacy majors while letting the modern majors work ([`fb337f0d`](../../commit/fb337f0d)).
+
+One alert remains open:
+
+- **decode-uri-component #280 (medium)** — no fixed version is usable. Every `query-string` major (6, 7, 8 and 9) depends on `decode-uri-component`, and the only patched version, 0.5.0, is ESM-only *and* drops the `+` → space substitution that CJS `query-string@6.14.1` relies on; everything at or below 0.4.2 is vulnerable. There is no upgrade path — the fix is to drop `query-string` for `URLSearchParams` (8 files, ~24 call sites, two distinct operations), deferred as a standalone change since it is routing code with thin test coverage and the decoded input is app-generated (`?key=<noteHash>`).
 
 ### Removed
 
