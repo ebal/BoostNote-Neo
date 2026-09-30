@@ -17,6 +17,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Removed
 
+- **Dead modules** — `browser/lib/markdown2.js` (a 0-byte empty file), `browser/main/lib/Commander.js` (30-line command registry with no callers) and `browser/main/lib/notify.js` (superseded by the local `notify()` methods in `MarkdownPreview` and `SnippetTab`; still referenced the webpack-1-era `global.__dirname`). Plus the `@babel/register` devDependency, an AVA leftover unused since v0.18.2 ([`fb554885`](../../commit/fb554885)).
+- **Unimported stylesheets** — `browser/styles/mixins/{alert,btn,fullsize,marked,util}.styl` and `browser/styles/shared/btn.styl`, ~290 lines never compiled: the stylus pipeline auto-imports only `nib` and `styles/index.styl`, and neither pulls them in. Also removed `#content { fullsize() }` from `global.styl` — `#content` is the React mount point and that was its only style rule, but `fullsize()` lived solely in the deleted mixin and nib does not provide it, so stylus silently emitted nothing and the rule never applied. Not repaired by re-importing the mixin, since that would newly apply absolute positioning to the app root. Verified by sha256: `compiled/main.js` is byte-identical before and after ([`17761edc`](../../commit/17761edc)).
+- **`json-loader`** — rule removed from both webpack configs plus the devDependency; webpack 5 handles JSON natively. The one JSON import (`codemirror/package.json` in `formatHTML.js`) still inlines ([`fb7da905`](../../commit/fb7da905)).
+- **Ten obsolete resolutions** — four orphaned (`json-schema`, `tmp`, `got`, `merge`: present in the lock only under the resolution's own spec with zero consumers, since yarn 1 materializes a pin even with no requester) ([`975a6128`](../../commit/975a6128)), and six stale security pins (`ansi-regex`, `glob-parent`, `json5`, `open`, `y18n`, `async`) where every consumer's natural resolution already lands outside the advisory's vulnerable ranges. Three of those six were actively harmful: `json5` forced babel's `^2.2.3` down to 1.0.2, `open` forced webpack-dev-server's `^10.0.3` down four majors to a CJS 6.4.0, and `async` forced both consumers to 2.6.4 — a version satisfying neither declared range ([`55ddca15`](../../commit/55ddca15)).
+
 - **`query-string` dependency and its `decode-uri-component` resolution** — the resolution was left orphaned once nothing required the package; yarn 1 keeps materializing a resolved entry even with no requester, so the lock carried 0.2.2 until the resolution was removed as well ([`f01b7195`](../../commit/f01b7195)).
 - **Two obsolete global resolutions** — `minimatch "^3.1.4"` and `brace-expansion "^1.1.18"`. Both were collapsing every copy in the tree to an old CJS major, which broke `@electron/packager` 20's ESM named imports (`import { minimatch }`, `import { expand }`). Neither was still doing work: minimatch was pinned for CVE-2022-3517 (fixed in 3.0.5) and brace-expansion for #256/#273/#282 (fixed in 1.1.18), and every legacy consumer's declared range already resolves at or above those. The tree now carries minimatch 3.1.5 + 10.2.6 and brace-expansion 1.1.21 + 5.0.12, keeping both advisories patched on the legacy majors while letting the modern majors work ([`fb337f0d`](../../commit/fb337f0d)).
 
@@ -38,6 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- **`npm test` no longer scans build output** — jest was picking up the copies of the test files inside a packaged `dist/Boostnote.app`, reporting 79 suites instead of 40 and double-counting every failure; `testPathIgnorePatterns` now excludes `dist/` and `compiled/` ([`fb7da905`](../../commit/fb7da905)).
 - **`.gitignore`** — ignore the local `apple.silicon.sh` build helper.
 
 ## [0.20.5] - 2026-09-30
