@@ -154,7 +154,6 @@
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.5.1",
     "jest-localstorage-mock": "^2.4.26",
-    "json-loader": "^0.5.4",
     "markdownlint": "^0.37.4",
     "nib": "^1.2.0",
     "react-css-modules": "^4.7.11",
@@ -178,6 +177,11 @@
     "setupFiles": [
       "<rootDir>/tests/jest.js",
       "jest-localstorage-mock"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      "/compiled/"
     ]
   },
   "resolutions": {

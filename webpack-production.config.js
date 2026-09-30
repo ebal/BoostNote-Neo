@@ -60,11 +60,6 @@ var config = Object.assign({}, skeleton, {
           },
           { loader: 'stylus-loader', options: stylusLoaderOptions }
         ]
-      },
-      {
-        test: /\.json$/,
-        type: 'javascript/auto',
-        use: 'json-loader'
       }
     ]
   },
