@@ -1,7 +1,23 @@
 const fs = require('fs')
 const path = require('path')
 const ChildProcess = require('child_process')
-const packager = require('electron-packager')
+
+// @electron/packager v20+ is ESM-only ("type": "module", no CJS export
+// condition), and this gruntfile is CJS loaded by grunt. Import it lazily
+// via dynamic import() and keep the same promise-of-appPaths signature
+// electron-packager's default export had, so every packager(opts).then(...)
+// call site below is unchanged.
+//
+// v20 is the first release that drops the vulnerable `extract-zip` for
+// `@electron-internal/extract-zip` (GHSA #278 / #306); v18 is CJS but still
+// carries extract-zip, so downgrading to avoid the dynamic import would
+// reintroduce both advisories. Requires Node >= 22.12.0 -- the Docker image
+// runs 22.x.
+function packager(opts) {
+  return import('@electron/packager').then(function (mod) {
+    return mod.packager(opts)
+  })
+}
 
 module.exports = function (grunt) {
   var authCode
