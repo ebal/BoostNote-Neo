@@ -20,7 +20,7 @@ import i18n from 'browser/lib/i18n'
 import { confirmDeleteNote } from 'browser/lib/confirmDeleteNote'
 import context from 'browser/lib/context'
 import filenamify from 'filenamify'
-import queryString from 'query-string'
+import queryString from 'browser/lib/queryString'
 
 const remote = require('@electron/remote')
 const { dialog } = remote

@@ -28,7 +28,7 @@ import { formatDate } from 'browser/lib/date-formatter'
 import i18n from 'browser/lib/i18n'
 import { confirmDeleteNote } from 'browser/lib/confirmDeleteNote'
 import markdownToc from 'browser/lib/markdown-toc-generator'
-import queryString from 'query-string'
+import queryString from 'browser/lib/queryString'
 import { replace } from 'connected-react-router'
 
 const remote = require('@electron/remote')

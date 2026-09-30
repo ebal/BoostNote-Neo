@@ -1,6 +1,6 @@
 import dataApi from 'browser/main/lib/dataApi'
 import ee from 'browser/main/lib/eventEmitter'
-import queryString from 'query-string'
+import queryString from 'browser/lib/queryString'
 import { push } from 'connected-react-router'
 
 export function createMarkdownNote(

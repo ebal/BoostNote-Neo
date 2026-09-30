@@ -6,7 +6,7 @@ import i18n from 'browser/lib/i18n'
 import { openModal } from 'browser/main/lib/modal'
 import CreateMarkdownFromURLModal from '../modals/CreateMarkdownFromURLModal'
 import { createMarkdownNote, createSnippetNote } from 'browser/lib/newNote'
-import queryString from 'query-string'
+import queryString from 'browser/lib/queryString'
 
 class NewNoteModal extends React.Component {
   constructor(props) {

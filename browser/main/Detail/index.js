@@ -10,7 +10,7 @@ import StatusBar from '../StatusBar'
 import i18n from 'browser/lib/i18n'
 import debounceRender from 'react-debounce-render'
 import searchFromNotes from 'browser/lib/search'
-import queryString from 'query-string'
+import queryString from 'browser/lib/queryString'
 
 const OSX = global.process.platform === 'darwin'
 
