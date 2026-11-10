@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Patch dependency advisories:
   - Shipped with the app: dompurify 3.4.17, toml 5.0.1, markdown-it 14.3.3.
   - Dev and build tools only: undici 7.30.2, follow-redirects 1.16.3, launch-editor 2.14.2, fast-uri 3.1.9, source-map-js 1.2.2, express 4.22.3, proxy-addr 2.0.8, body-parser 1.20.9, compression 1.8.2, qs 6.17.1.
+  - minimatch 11.0.5 and glob 14.0.4 under `@electron/asar`, which still asks for the vulnerable majors. Packaging with `USE_ASAR=true` produces the same files as before.
+- Bump KaTeX from 0.16.47 to 0.19.1, including the copy used by mermaid. KaTeX 0.18 renamed a few internal CSS classes (`base`, `strut`, `sizing`); the app does not style those, and formulas render with the same layout.
 
 ### Fixed
 
@@ -31,9 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Notes
 
-- KaTeX stays on 0.16.x. Its low-severity advisory needs an existing prototype-pollution bug to exploit. Upgrading to 0.18 renames KaTeX's internal CSS classes, which `markdown.styl` styles directly.
-- `deepmerge` (reached only through jest) has no patched release.
-- `glob` and `minimatch`, reached through `@electron/asar`, need major upgrades that `@electron/asar` does not yet support. They run only at packaging time.
+- `deepmerge` has no patched release. Only jest uses it, to merge its own configuration, so no untrusted input reaches it.
 - Links in notes still open through the OS for any URL scheme. Restricting schemes would break deliberate app links such as `obsidian://` or `zotero://`.
 
 ## [0.20.7] - 2026-09-30
