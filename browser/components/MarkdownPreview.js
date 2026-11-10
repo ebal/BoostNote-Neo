@@ -266,7 +266,11 @@ class MarkdownPreview extends React.Component {
       this.contextMenuHandler
     )
 
+    // The preview document is same-origin with the Node-enabled app page,
+    // so nothing inside it may run script: rendering, diagrams and event
+    // listeners are all driven from the parent.
     let styles = `
+      <meta http-equiv="Content-Security-Policy" content="script-src 'none'">
       <style id='style'></style>
       <link rel="stylesheet" id="codeTheme">
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
