@@ -1,5 +1,17 @@
 'use strict'
 
+// Fence metadata (file name, parameter values) comes straight from the
+// note and is interpolated into HTML by the renderers, after the
+// sanitizer has run, so it must be escaped here.
+const escapeHtml = str =>
+  str.replace(
+    /[&<>"']/g,
+    ch =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[
+        ch
+      ])
+  )
+
 module.exports = function (md, renderers, defaultRenderer) {
   const paramsRE =
     /^[ \t]*([\w+#-]+)?(?:\((\s*\w[-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?(?:\s+\w[-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?)*\s*)\))?(?::([^:]*)(?::(\d+))?)?\s*$/
@@ -82,7 +94,7 @@ module.exports = function (md, renderers, defaultRenderer) {
         langType = match[1]
       }
       if (match[3]) {
-        fileName = match[3]
+        fileName = escapeHtml(match[3])
       }
       if (match[4]) {
         firstLineNumber = parseInt(match[4], 10)
@@ -97,6 +109,7 @@ module.exports = function (md, renderers, defaultRenderer) {
         while ((match = regex.exec(params))) {
           name = match[1]
           value = match[2] || match[3] || match[4] || null
+          if (value !== null) value = escapeHtml(value)
 
           const height = /^(\d+)h$/.exec(name)
           if (height && !value) {

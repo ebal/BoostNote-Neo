@@ -198,3 +198,20 @@ test('Markdown.render() should not let attribute values break out of quotes', ()
     }
   }
 })
+
+test('Markdown.render() should escape code fence metadata', () => {
+  const html = new Markdown().render(
+    '```js(x="a\\"b"):<img src=x onerror=alert(1)>\nvar a\n```\n\n' +
+      '```flowchart(h="1&quot; onclick=&quot;x"):f\nst=>start: S\n```'
+  )
+  const doc = new window.DOMParser().parseFromString(html, 'text/html')
+  expect(doc.querySelector('img')).toBe(null)
+  for (const el of doc.body.querySelectorAll('*')) {
+    for (const attr of el.attributes) {
+      expect(attr.name.startsWith('on')).toBe(false)
+    }
+  }
+  expect(doc.querySelector('.filename').textContent).toBe(
+    '<img src=x onerror=alert(1)>'
+  )
+})
