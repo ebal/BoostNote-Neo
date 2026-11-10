@@ -1,6 +1,14 @@
 'use strict'
 
-jest.mock('fs')
+// Automock fs, but keep the stream classes: the graceful-fs copies bundled
+// with fs-extra and sander subclass them as soon as they load.
+jest.mock('fs', () => {
+  const actual = jest.requireActual('fs')
+  const mocked = jest.createMockFromModule('fs')
+  mocked.ReadStream = actual.ReadStream
+  mocked.WriteStream = actual.WriteStream
+  return mocked
+})
 const fs = require('fs')
 const path = require('path')
 const findStorage = require('browser/lib/findStorage')
