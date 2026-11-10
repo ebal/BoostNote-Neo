@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.20.8] - 2026-11-10
+
+Security release. Closes four ways an untrusted note could run code through the preview, blocks window and navigation hijacking in the main window, and clears all but one open Dependabot alert (`deepmerge`, which has no fix). The test suite runs again and now gates releases.
+
 ### Security
 
 - **Untrusted notes could run code through the preview.** Fixed four ways markup could get past the STRICT sanitizer and run with the app's Node access:
@@ -718,7 +722,8 @@ Two alerts remain open by design:
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
-[unreleased]: ../../compare/v0.20.7...HEAD
+[unreleased]: ../../compare/v0.20.8...HEAD
+[0.20.8]: ../../compare/v0.20.7...v0.20.8
 [0.20.7]: ../../compare/v0.20.6...v0.20.7
 [0.20.6]: ../../compare/v0.20.5...v0.20.6
 [0.20.5]: ../../compare/v0.20.4...v0.20.5
