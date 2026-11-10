@@ -171,11 +171,11 @@ browser/main/index.js (webpack entry → compiled/main.js)
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Electron 42.11.10 (Chromium 138, Node 22, V8 13.x) |
+| Runtime | Electron 42.11.18 (Chromium 138, Node 22, V8 13.x) |
 | UI | React 18.3.1 + React Router 5 |
 | State | Redux 5.0.1 + react-redux 9.2.0 + Mutable.js (native Map/Set wrappers) |
 | Editor | CodeMirror 5.65 (GFM mode + custom BFM mode) |
-| Markdown | markdown-it 14.3.2 (15 plugins) |
+| Markdown | markdown-it 14.3.3 (15 plugins) |
 | CSS | Stylus + CSS Modules |
 | Build | Webpack 5.90 + Babel 7 + Grunt |
 | Packaging | @electron/packager 20.3.0 |
