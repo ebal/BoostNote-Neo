@@ -246,6 +246,8 @@
     "@xmldom/xmldom": "^0.9.12",
     "immutable": "^4.3.9",
     "markdownlint/markdown-it": "14.3.3",
+    "**/@electron/asar/minimatch": "^11.0.5",
+    "**/@electron/asar/glob": "^14.0.4",
     "source-map-js": "^1.2.2"
   }
 }
