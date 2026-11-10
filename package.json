@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BoostIO/Boostnote.git"
+    "url": "git+https://github.com/ebal/BoostNote-Neo.git"
   },
   "keywords": [
     "boostnote",
@@ -46,9 +46,9 @@
     "Milo Todt (https://github.com/MiloTodt)"
   ],
   "bugs": {
-    "url": "https://github.com/BoostIO/Boostnote/issues"
+    "url": "https://github.com/ebal/BoostNote-Neo/issues"
   },
-  "homepage": "https://boostnote.io",
+  "homepage": "https://github.com/ebal/BoostNote-Neo",
   "dependencies": {
     "@electron/remote": "^2.1.3",
     "@enyaxu/markdown-it-anchor": "^5.0.2",
