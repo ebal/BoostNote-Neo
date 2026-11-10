@@ -1,19 +1,13 @@
-let menuBuilderParameter
-jest.mock('electron', () => {
-  return {
-    remote: {
-      require: jest.fn(() => {
-        return {
-          Menu: {
-            buildFromTemplate: jest.fn(param => {
-              menuBuilderParameter = param
-            })
-          }
-        }
-      })
-    }
+let mockMenuBuilderParameter
+// contextMenuBuilder builds menus through @electron/remote; capture the
+// template it passes to Menu.buildFromTemplate.
+jest.mock('@electron/remote', () => ({
+  Menu: {
+    buildFromTemplate: jest.fn(param => {
+      mockMenuBuilderParameter = param
+    })
   }
-})
+}))
 
 const spellcheck = require('browser/lib/spellcheck')
 const buildEditorContextMenu =
@@ -22,7 +16,7 @@ const buildMarkdownPreviewContextMenu =
   require('browser/lib/contextMenuBuilder').buildMarkdownPreviewContextMenu
 
 beforeEach(() => {
-  menuBuilderParameter = null
+  mockMenuBuilderParameter = null
 })
 
 // Editor Context Menu
@@ -32,7 +26,7 @@ it('should make sure that no context menu is build if the passed editor instance
     pageY: 12
   }
   buildEditorContextMenu(null, event)
-  expect(menuBuilderParameter).toEqual(null)
+  expect(mockMenuBuilderParameter).toEqual(null)
 })
 
 it('should make sure that word suggestions are only requested if the word contained a typo', function () {
@@ -55,7 +49,7 @@ it('should make sure that word suggestions are only requested if the word contai
     { role: 'selectall' }
   ]
   buildEditorContextMenu(editor, event)
-  expect(menuBuilderParameter).toEqual(expectedMenuParameter)
+  expect(mockMenuBuilderParameter).toEqual(expectedMenuParameter)
   expect(spellcheck.getSpellingSuggestion).not.toHaveBeenCalled()
 })
 
@@ -81,7 +75,7 @@ it('should make sure that word suggestions are only requested if the word contai
     { role: 'selectall' }
   ]
   buildEditorContextMenu(editor, event)
-  expect(menuBuilderParameter).toEqual(expectedMenuParameter)
+  expect(mockMenuBuilderParameter).toEqual(expectedMenuParameter)
   expect(spellcheck.getSpellingSuggestion).not.toHaveBeenCalled()
 })
 
@@ -134,17 +128,17 @@ it('should make sure that word suggestions creates a correct menu if there was a
     pageY: 12
   }
   buildEditorContextMenu(editor, event)
-  expect(menuBuilderParameter[0].label).toEqual(suggestions[0])
-  expect(menuBuilderParameter[0].click).not.toBeNull()
-  expect(menuBuilderParameter[1].label).toEqual(suggestions[1])
-  expect(menuBuilderParameter[1].click).not.toBeNull()
-  expect(menuBuilderParameter[2].label).toEqual(suggestions[2])
-  expect(menuBuilderParameter[2].click).not.toBeNull()
-  expect(menuBuilderParameter[3].type).toEqual('separator')
-  expect(menuBuilderParameter[4].role).toEqual('cut')
-  expect(menuBuilderParameter[5].role).toEqual('copy')
-  expect(menuBuilderParameter[6].role).toEqual('paste')
-  expect(menuBuilderParameter[7].role).toEqual('selectall')
+  expect(mockMenuBuilderParameter[0].label).toEqual(suggestions[0])
+  expect(mockMenuBuilderParameter[0].click).not.toBeNull()
+  expect(mockMenuBuilderParameter[1].label).toEqual(suggestions[1])
+  expect(mockMenuBuilderParameter[1].click).not.toBeNull()
+  expect(mockMenuBuilderParameter[2].label).toEqual(suggestions[2])
+  expect(mockMenuBuilderParameter[2].click).not.toBeNull()
+  expect(mockMenuBuilderParameter[3].type).toEqual('separator')
+  expect(mockMenuBuilderParameter[4].role).toEqual('cut')
+  expect(mockMenuBuilderParameter[5].role).toEqual('copy')
+  expect(mockMenuBuilderParameter[6].role).toEqual('paste')
+  expect(mockMenuBuilderParameter[7].role).toEqual('selectall')
   expect(spellcheck.getSpellingSuggestion).toHaveBeenCalledWith(wordToCorrect)
 })
 
@@ -155,5 +149,5 @@ it('should make sure that no context menu is built if the Markdown Preview insta
     pageY: 12
   }
   buildMarkdownPreviewContextMenu(null, event)
-  expect(menuBuilderParameter).toEqual(null)
+  expect(mockMenuBuilderParameter).toEqual(null)
 })
