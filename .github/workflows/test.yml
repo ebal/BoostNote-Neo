@@ -1,0 +1,36 @@
+name: Lint and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch: {}
+  workflow_call: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Lint and test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # Docker-only policy: node_modules live in the image's deps stage,
+      # the checkout is copied over them and checked there.
+      - name: Build dependency image
+        run: docker build --target deps -t boostnote-neo-deps .
+
+      - name: Lint and test
+        run: |
+          docker run --rm -v "$PWD":/src:ro boostnote-neo-deps sh -c '
+            cd /app && cp -a /src/. /app/ &&
+            npm run lint &&
+            npm test
+          '
