@@ -173,3 +173,11 @@ test('Markdown.render() should keep <details> body inside the element', () => {
 
   expect(rendered.match(/<\/details>/g).length).toBe(1)
 })
+
+test('Markdown.render() should parse fence parameters', () => {
+  const rendered = md.render(
+    '```flowchart(450h):chart.flow:3\nst=>start: Start\n```'
+  )
+  expect(rendered).toContain('<span class="filename">chart.flow</span>')
+  expect(rendered).toContain('data-height="450"')
+})

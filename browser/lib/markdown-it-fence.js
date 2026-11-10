@@ -2,7 +2,7 @@
 
 module.exports = function (md, renderers, defaultRenderer) {
   const paramsRE =
-    /^[ \t]*([\w+#-]+)?(?:\(\s*[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?(?:\s+[A-Za-z_][-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?)*\s*\))?(?::([^:]*)(?::(\d+))?)?\s*$/
+    /^[ \t]*([\w+#-]+)?(?:\((\s*\w[-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?(?:\s+\w[-A-Za-z0-9_]*(?:=(?:'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|[^'"()\s]+))?)*\s*)\))?(?::([^:]*)(?::(\d+))?)?\s*$/
 
   function fence(state, startLine, endLine, silent) {
     let pos = state.bMarks[startLine] + state.tShift[startLine]
