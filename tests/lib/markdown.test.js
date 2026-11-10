@@ -215,3 +215,12 @@ test('Markdown.render() should escape code fence metadata', () => {
     '<img src=x onerror=alert(1)>'
   )
 })
+
+test('Markdown.render() should escape KaTeX error messages', () => {
+  const html = new Markdown().render(
+    '$\\badcmd <b>x</b>$\n\n$$\n\\badcmd <svg/onload=x>\n$$'
+  )
+  const doc = new window.DOMParser().parseFromString(html, 'text/html')
+  expect(doc.querySelectorAll('.katex-error').length).toBe(2)
+  expect(doc.querySelector('.katex-error *')).toBe(null)
+})

@@ -209,7 +209,9 @@ class Markdown {
         try {
           output = katex.renderToString(str.trim())
         } catch (err) {
-          output = `<span class="katex-error">${err.message}</span>`
+          output = `<span class="katex-error">${escapeHtmlCharacters(
+            err.message
+          )}</span>`
         }
         return output
       },
@@ -218,7 +220,9 @@ class Markdown {
         try {
           output = katex.renderToString(str.trim(), { displayMode: true })
         } catch (err) {
-          output = `<div class="katex-error">${err.message}</div>`
+          output = `<div class="katex-error">${escapeHtmlCharacters(
+            err.message
+          )}</div>`
         }
         return output
       }
