@@ -6,7 +6,7 @@ import CodeMirror from 'codemirror'
 require('codemirror/addon/search/searchcursor.js')
 const markdownToc = require('browser/lib/markdown-toc-generator')
 
-test(() => {
+test('markdownToc.generate() should build a TOC from headings', () => {
   /**
    * Contains array of test cases in format :
    * [
@@ -262,7 +262,7 @@ this is a text
   })
 })
 
-test(() => {
+test('markdownToc.generateInEditor() should insert or update the TOC', () => {
   /**
    * Contains array of test cases in format :
    * [

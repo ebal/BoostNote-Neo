@@ -3,7 +3,7 @@
  */
 const markdown = require('browser/lib/markdownTextHelper')
 
-test(() => {
+test('markdownTextHelper.strip() should remove markdown syntax', () => {
   // [input, expected]
   const testCases = [
     // List
