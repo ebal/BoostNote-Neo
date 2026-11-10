@@ -10,9 +10,14 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    name: Lint and test
+    uses: ./.github/workflows/test.yml
+
   compute-version:
     name: Compute version
     runs-on: ubuntu-24.04
+    needs: test
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
