@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+- **Untrusted notes could run code through the preview.** Fixed four ways markup could get past the STRICT sanitizer and run with the app's Node access:
+  - Single-quoted HTML attributes could break out of their quotes, e.g. `<img src='x" onerror="…'>`.
+  - Code-fence file names and parameters were inserted into the HTML without escaping.
+  - KaTeX error messages quoted the user's input as raw HTML.
+  - The preview document now carries a `script-src 'none'` Content Security Policy, so inline handlers and `javascript:` URLs cannot run even if markup slips through. The preview's `sandbox` attribute was set after load and never took effect.
+- **`window.open` and navigation are blocked in the main window.** The old `new-window` guard has not fired since Electron 22, so page content could open windows or navigate the app away from itself.
+- Bump Electron to 42.11.18 (compromised eMudhra intermediate certificate).
+- Patch dependency advisories:
+  - Shipped with the app: dompurify 3.4.17, toml 5.0.1, markdown-it 14.3.3.
+  - Dev and build tools only: undici 7.30.2, follow-redirects 1.16.3, launch-editor 2.14.2, fast-uri 3.1.9, source-map-js 1.2.2, express 4.22.3, proxy-addr 2.0.8, body-parser 1.20.9, compression 1.8.2, qs 6.17.1.
+
+### Fixed
+
+- Code-fence options such as `(450h)` or `(yaml)` were ignored, and `js:file.js:2` showed the line number as the file name.
+- An editor font family given as a list (e.g. `Monaco, Consolas` in `.boostnoterc`) was quoted as a single name and fell back to the default font.
+
+### Changed
+
+- Docker builds install with `--frozen-lockfile` and no longer overwrite the committed `yarn.lock`, so release builds are reproducible.
+- CI runs lint and the test suite on pushes and pull requests, and release builds wait for it. The test suite runs again under jest 27: 177 tests across 40 suites, up from 81 of 96 passing.
+
+### Notes
+
+- KaTeX stays on 0.16.x. Its low-severity advisory needs an existing prototype-pollution bug to exploit. Upgrading to 0.18 renames KaTeX's internal CSS classes, which `markdown.styl` styles directly.
+- `deepmerge` (reached only through jest) has no patched release.
+- `glob` and `minimatch`, reached through `@electron/asar`, need major upgrades that `@electron/asar` does not yet support. They run only at packaging time.
+- Links in notes still open through the OS for any URL scheme. Restricting schemes would break deliberate app links such as `obsidian://` or `zotero://`.
+
 ## [0.20.7] - 2026-09-30
 
 Build and release pipeline changes only; no application code changed.
@@ -686,6 +718,11 @@ Two alerts remain open by design:
 
 - Add update menu item with download confirmation dialog ([`25c97930`](../../commit/25c97930), [`b74f54ec`](../../commit/b74f54ec)).
 
+[unreleased]: ../../compare/v0.20.7...HEAD
+[0.20.7]: ../../compare/v0.20.6...v0.20.7
+[0.20.6]: ../../compare/v0.20.5...v0.20.6
+[0.20.5]: ../../compare/v0.20.4...v0.20.5
+[0.20.4]: ../../compare/v0.20.3...v0.20.4
 [0.20.3]: ../../compare/v0.20.2...v0.20.3
 [0.20.2]: ../../compare/v0.20.1...v0.20.2
 [0.17.19]: ../../compare/v0.17.18...v0.17.19
