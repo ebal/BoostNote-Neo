@@ -172,7 +172,9 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less|styl)$": "identity-obj-proxy",
       "^browser/(.*)$": "<rootDir>/browser/$1",
-      "^lib/(.*)$": "<rootDir>/lib/$1"
+      "^lib/(.*)$": "<rootDir>/lib/$1",
+      "^markdown-it/lib/token$": "<rootDir>/__mocks__/markdown-it-token.js",
+      "^katex/contrib/(.*)$": "<rootDir>/node_modules/katex/dist/contrib/$1.js"
     },
     "setupFiles": [
       "<rootDir>/tests/jest.js",
