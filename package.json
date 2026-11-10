@@ -17,7 +17,7 @@
     "prepare": "husky"
   },
   "config": {
-    "electron-version": "42.11.10"
+    "electron-version": "42.11.18"
   },
   "repository": {
     "type": "git",
@@ -134,7 +134,7 @@
     "copy-to-clipboard": "^3.3.3",
     "cross-env": "^10.1.0",
     "css-loader": "^6.10.0",
-    "electron": "42.11.10",
+    "electron": "42.11.18",
     "electron-debug": "^4.1.0",
     "electron-devtools-installer": "^4.0.0",
     "eslint": "^8.57.1",
