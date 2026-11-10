@@ -26,22 +26,20 @@ RUN apt-get update && apt-get install -y \
   zip \
   && rm -rf /var/lib/apt/lists/*
 
-# ── deps stage: install node_modules and resolve yarn.lock ──────────────────
+# ── deps stage: install node_modules exactly as pinned in yarn.lock ─────────
 FROM base AS deps
 WORKDIR /app
 COPY package.json yarn.lock ./
 # node:22-bookworm ships yarn; skip reinstalling it to avoid symlink conflict
 RUN npm install -g grunt-cli@1.3.2 && \
   git config --global url."https://".insteadOf git:// && \
-  yarn install --ignore-engines
+  yarn install --ignore-engines --frozen-lockfile
 
 # ── build stage: compile and package ────────────────────────────────────────
 FROM deps AS build
 ARG GIT_COMMIT=unknown
 ARG BUILDARCH
 COPY . .
-# Restore yarn.lock resolved in deps stage (COPY . . overwrites with host version)
-COPY --from=deps /app/yarn.lock ./yarn.lock
 RUN echo "$GIT_COMMIT" > /app/commit-hash.txt
 
 # Patch CodeMirror's on() function to mark touchstart/touchmove listeners as
