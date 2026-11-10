@@ -16,7 +16,7 @@ beforeEach(() => {
   localStorage.setItem('storages', JSON.stringify([storageContext.cache]))
 })
 
-it('Create a note', done => {
+it('Create a note', () => {
   const storageKey = storageContext.cache.key
   const folderKey = storageContext.json.folders[0].key
 
@@ -96,8 +96,6 @@ it('Create a note', done => {
       expect(input2.tags.length).toEqual(jsonData2.tags.length)
       expect(input2.linesHighlighted).toEqual(data2.linesHighlighted)
       expect(input2.linesHighlighted).toEqual(jsonData2.linesHighlighted)
-
-      done()
     })
 })
 

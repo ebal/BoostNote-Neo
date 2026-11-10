@@ -18,16 +18,10 @@ beforeAll(() => {
   fs.writeFileSync(srcPath, 'test')
 })
 
-it('`copyFile` should handle encoded URI on src path', done => {
-  return copyFile(encodeURI(srcPath), dstPath)
-    .then(() => {
-      expect(true).toBe(true)
-      done()
-    })
-    .catch(() => {
-      expect(false).toBe(true)
-      done()
-    })
+it('`copyFile` should handle encoded URI on src path', () => {
+  return copyFile(encodeURI(srcPath), dstPath).then(() => {
+    expect(fs.readFileSync(dstPath, 'utf8')).toBe('test')
+  })
 })
 
 afterAll(() => {

@@ -16,7 +16,7 @@ beforeAll(() => {
   localStorage.setItem('storages', JSON.stringify([storageContext.cache]))
 })
 
-it('Create a folder', done => {
+it('Create a folder', () => {
   const storageKey = storageContext.cache.key
   const input = {
     name: 'created',
@@ -32,7 +32,6 @@ it('Create a folder', done => {
         path.join(data.storage.path, 'boostnote.json')
       )
       expect(_.find(jsonData.folders, input)).not.toBeNull()
-      done()
     })
 })
 
