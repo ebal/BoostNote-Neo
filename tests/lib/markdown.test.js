@@ -181,3 +181,20 @@ test('Markdown.render() should parse fence parameters', () => {
   expect(rendered).toContain('<span class="filename">chart.flow</span>')
   expect(rendered).toContain('data-height="450"')
 })
+
+test('Markdown.render() should not let attribute values break out of quotes', () => {
+  const cases = [
+    `<img src='x" onerror="alert(1)'>`,
+    `<a href="#" title='" onmouseover="alert(1)'>x</a>`,
+    `<img src=x"onerror="alert(1)>`
+  ]
+  for (const input of cases) {
+    const html = new Markdown().render(input)
+    const doc = new window.DOMParser().parseFromString(html, 'text/html')
+    for (const el of doc.body.querySelectorAll('*')) {
+      for (const attr of el.attributes) {
+        expect(attr.name.startsWith('on')).toBe(false)
+      }
+    }
+  }
+})

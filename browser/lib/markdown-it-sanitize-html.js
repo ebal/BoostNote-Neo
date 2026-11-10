@@ -121,7 +121,9 @@ function sanitizeInline(html, options) {
 
         attrs += ` ${name}`
         if (hasValue) {
-          attrs += `="${value}"`
+          // Values are always re-emitted double-quoted, so a `"` taken from a
+          // single-quoted or unquoted source value must not end the attribute.
+          attrs += `="${value.replace(/"/g, '&quot;')}"`
         }
       }
     }
